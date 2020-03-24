@@ -1,0 +1,32 @@
+* Schematics Aliases *
+
+.ALIASES
+C_C1            C1(1=$N_0001 2=$N_0002 )
+C_C2            C2(1=$N_0003 2=$N_0004 )
+C_C3            C3(1=$N_0005 2=0 )
+V_V1i           V1i(+=VCCi -=0 )
+R_R3i           R3i(1=VCCi 2=$N_0006 )
+R_R2i           R2i(1=VCCi 2=$N_0007 )
+R_R1i           R1i(1=VCCi 2=$N_0008 )
+C_C3i           C3i(1=$N_0009 2=0 )
+C_C2i           C2i(1=$N_0008 2=$N_0010 )
+V_V3            V3(+=$N_0010 -=0 )
+C_C1i           C1i(1=0 2=$N_0007 )
+R_R4i           R4i(1=$N_0008 2=$N_0009 )
+Q_Q4i           Q4i(c=$N_0006 b=$N_0011 e=0 )
+Q_Q1i           Q1i(c=$N_0009 b=$N_0011 e=0 )
+Q_Q2i           Q2i(c=$N_0008 b=$N_0007 e=$N_0009 )
+R_R1            R1(1=VCC 2=$N_0003 )
+R_R2            R2(1=VCC 2=$N_0002 )
+R_Rp            Rp(1=$N_0004 2=0 )
+R_R4            R4(1=$N_0003 2=$N_0005 )
+Q_Q1            Q1(c=$N_0005 b=$N_0012 e=0 )
+Q_Q4            Q4(c=$N_0012 b=$N_0012 e=0 )
+V_V2            V2(+=$N_0001 -=0 )
+V_V1            V1(+=VCC -=0 )
+R_R3            R3(1=VCC 2=$N_0012 )
+Q_Q2            Q2(c=$N_0003 b=$N_0002 e=$N_0005 )
+_    _(VCCi=VCCi)
+_    _(VCC=VCC)
+.ENDALIASES
+

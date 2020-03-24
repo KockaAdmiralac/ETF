@@ -1,0 +1,281 @@
+
+**** 01/22/20 18:41:27 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\OneDrive - student.etf.bg.ac.rs\OE\D3N\D3N.sch
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+* Schematics Version 9.1 - Web Update 1
+* Wed Jan 22 18:41:27 2020
+
+
+
+** Analysis setup **
+.tran 0 10ms
+.OP 
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "D3N.net"
+
+**** INCLUDING D3N.net ****
+* Schematics Netlist *
+
+
+
+C_C1         $N_0001 $N_0002  100u  
+C_C2         $N_0003 $N_0004  100u  
+C_C3         $N_0005 0  100u  
+V_V1i         VCCi 0 12
+R_R3i         VCCi $N_0006  5512  
+R_R2i         VCCi $N_0007  730k  
+R_R1i         VCCi $N_0008  2k  
+C_C3i         $N_0009 0  100u  
+C_C2i         $N_0008 $N_0010  100u  
+V_V3         $N_0010 0  
++SIN 0 1m 1k 0 0 0
+C_C1i         0 $N_0007  100u  
+R_R4i         $N_0008 $N_0009  4k  
+Q_Q4i         $N_0006 $N_0011 0 QbreakN 
+Q_Q1i         $N_0009 $N_0011 0 QbreakN 
+Q_Q2i         $N_0008 $N_0007 $N_0009 QbreakN 
+R_R1         VCC $N_0003  2k  
+R_R2         VCC $N_0002  730k  
+R_Rp         $N_0004 0  200k  
+R_R4         $N_0003 $N_0005  4k  
+Q_Q1         $N_0005 $N_0012 0 QbreakN 
+Q_Q4         $N_0012 $N_0012 0 QbreakN 
+V_V2         $N_0001 0  
++SIN 0 1m 1k 0 0 0
+V_V1         VCC 0 12
+R_R3         VCC $N_0012  5512  
+Q_Q2         $N_0003 $N_0002 $N_0005 QbreakN 
+
+**** RESUMING D3N.cir ****
+.INC "D3N.als"
+
+
+
+**** INCLUDING D3N.als ****
+* Schematics Aliases *
+
+.ALIASES
+C_C1            C1(1=$N_0001 2=$N_0002 )
+C_C2            C2(1=$N_0003 2=$N_0004 )
+C_C3            C3(1=$N_0005 2=0 )
+V_V1i           V1i(+=VCCi -=0 )
+R_R3i           R3i(1=VCCi 2=$N_0006 )
+R_R2i           R2i(1=VCCi 2=$N_0007 )
+R_R1i           R1i(1=VCCi 2=$N_0008 )
+C_C3i           C3i(1=$N_0009 2=0 )
+C_C2i           C2i(1=$N_0008 2=$N_0010 )
+V_V3            V3(+=$N_0010 -=0 )
+C_C1i           C1i(1=0 2=$N_0007 )
+R_R4i           R4i(1=$N_0008 2=$N_0009 )
+Q_Q4i           Q4i(c=$N_0006 b=$N_0011 e=0 )
+Q_Q1i           Q1i(c=$N_0009 b=$N_0011 e=0 )
+Q_Q2i           Q2i(c=$N_0008 b=$N_0007 e=$N_0009 )
+R_R1            R1(1=VCC 2=$N_0003 )
+R_R2            R2(1=VCC 2=$N_0002 )
+R_Rp            Rp(1=$N_0004 2=0 )
+R_R4            R4(1=$N_0003 2=$N_0005 )
+Q_Q1            Q1(c=$N_0005 b=$N_0012 e=0 )
+Q_Q4            Q4(c=$N_0012 b=$N_0012 e=0 )
+V_V2            V2(+=$N_0001 -=0 )
+V_V1            V1(+=VCC -=0 )
+R_R3            R3(1=VCC 2=$N_0012 )
+Q_Q2            Q2(c=$N_0003 b=$N_0002 e=$N_0005 )
+_    _(VCCi=VCCi)
+_    _(VCC=VCC)
+.ENDALIASES
+
+
+**** RESUMING D3N.cir ****
+.probe
+
+
+.END
+
+**** 01/22/20 18:41:27 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\OneDrive - student.etf.bg.ac.rs\OE\D3N\D3N.sch
+
+
+ ****     BJT MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               QbreakN         
+               NPN             
+          IS  100.000000E-18 
+          BF  100            
+          NF    1            
+          BR    1            
+          NR    1            
+          CN    2.42         
+           D     .87         
+
+
+**** 01/22/20 18:41:27 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\OneDrive - student.etf.bg.ac.rs\OE\D3N\D3N.sch
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(  VCC)   12.0000  ( VCCi)   12.0000  ($N_0001)    0.0000                       
+
+($N_0002)    4.8110                   ($N_0003)    8.0327                       
+
+($N_0004)    0.0000                   ($N_0005)    4.0372                       
+
+($N_0006)   12.0000                   ($N_0007)   12.0000                       
+
+($N_0008)   12.0000                   ($N_0009)   12.0000                       
+
+($N_0010)    0.0000                   ($N_0011)     .4207                       
+
+($N_0012)     .7921                   
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1i       -2.362E-09
+    V_V3         0.000E+00
+    V_V2         0.000E+00
+    V_V1        -4.027E-03
+
+    TOTAL POWER DISSIPATION   4.83E-02  WATTS
+
+
+**** 01/22/20 18:41:27 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\OneDrive - student.etf.bg.ac.rs\OE\D3N\D3N.sch
+
+
+ ****     OPERATING POINT INFORMATION      TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+
+
+**** BIPOLAR JUNCTION TRANSISTORS
+
+
+NAME         Q_Q4i       Q_Q1i       Q_Q2i       Q_Q1        Q_Q4      
+MODEL        QbreakN     QbreakN     QbreakN     QbreakN     QbreakN   
+IB           2.85E-18    3.43E-18    2.44E-18    1.99E-05    1.99E-05 
+IC           1.18E-09    1.18E-09    2.37E-18    1.99E-03    1.99E-03 
+VBE          4.21E-01    4.21E-01    7.09E-06    7.92E-01    7.92E-01 
+VBC         -1.16E+01   -1.16E+01    2.36E-06   -3.25E+00    0.00E+00 
+VCE          1.20E+01    1.20E+01    4.72E-06    4.04E+00    7.92E-01 
+BETADC       4.15E+08    3.45E+08    9.71E-01    1.00E+02    1.00E+02 
+GM           4.48E-08    4.48E-08    7.06E-19    7.71E-02    7.71E-02 
+RPI          2.23E+09    2.23E+09    9.96E+13    1.30E+03    1.30E+03 
+RX           0.00E+00    0.00E+00    0.00E+00    0.00E+00    0.00E+00 
+RO           1.00E+12    1.00E+12    9.96E+11    1.00E+12    9.96E+11 
+CBE          0.00E+00    0.00E+00    0.00E+00    0.00E+00    0.00E+00 
+CBC          0.00E+00    0.00E+00    0.00E+00    0.00E+00    0.00E+00 
+CJS          0.00E+00    0.00E+00    0.00E+00    0.00E+00    0.00E+00 
+BETAAC       1.00E+02    1.00E+02    7.04E-05    1.00E+02    1.00E+02 
+CBX/CBX2     0.00E+00    0.00E+00    0.00E+00    0.00E+00    0.00E+00 
+FT/FT2       7.12E+11    7.12E+11    1.12E+01    1.23E+18    1.23E+18 
+
+
+
+NAME         Q_Q2      
+MODEL        QbreakN   
+IB           9.85E-06 
+IC           9.85E-04 
+VBE          7.74E-01 
+VBC         -3.22E+00 
+VCE          4.00E+00 
+BETADC       1.00E+02 
+GM           3.81E-02 
+RPI          2.63E+03 
+RX           0.00E+00 
+RO           1.00E+12 
+CBE          0.00E+00 
+CBC          0.00E+00 
+CJS          0.00E+00 
+BETAAC       1.00E+02 
+CBX/CBX2     0.00E+00 
+FT/FT2       6.06E+17 
+
+
+**** 01/22/20 18:41:27 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\OneDrive - student.etf.bg.ac.rs\OE\D3N\D3N.sch
+
+
+ ****     INITIAL TRANSIENT SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(  VCC)   12.0000  ( VCCi)   12.0000  ($N_0001)    0.0000                       
+
+($N_0002)    4.8110                   ($N_0003)    8.0327                       
+
+($N_0004)    0.0000                   ($N_0005)    4.0372                       
+
+($N_0006)   12.0000                   ($N_0007)   12.0000                       
+
+($N_0008)   12.0000                   ($N_0009)   12.0000                       
+
+($N_0010)    0.0000                   ($N_0011)     .4207                       
+
+($N_0012)     .7921                   
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1i       -2.362E-09
+    V_V3         0.000E+00
+    V_V2         0.000E+00
+    V_V1        -4.027E-03
+
+    TOTAL POWER DISSIPATION   4.83E-02  WATTS
+
+
+
+          JOB CONCLUDED
+
+          TOTAL JOB TIME             .06
+

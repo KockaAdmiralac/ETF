@@ -1,0 +1,170 @@
+
+**** 12/29/19 23:18:37 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D21\D21.sch
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+* Schematics Version 9.1 - Web Update 1
+* Sun Dec 29 22:48:40 2019
+
+
+
+** Analysis setup **
+.DC LIN V_Vg -3.5 3.5 0.1 
+.OP 
+.LIB "C:\Users\sl190368d\Downloads\OE\D21\D21.lib"
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "D21.net"
+
+**** INCLUDING D21.net ****
+* Schematics Netlist *
+
+
+
+R_R2         $N_0002 $N_0001  10k  
+V_V4         0 $N_0003 2.5
+R_R4         $N_0001 $N_0004  20k  
+V_Vg         $N_0002 0 0
+R_R5         $N_0005 $N_0004  10k  
+V_V3         $N_0006 $N_0005 5
+E_U1         $N_0004 0 VALUE {LIMIT(V(0,$N_0001)*1E6,-900V,+900V)}
+R_R1         $N_0002 $N_0007  10k  
+R_R3         $N_0003 $N_0001  10k  
+V_V2         $N_0008 $N_0007 2.5
+D_D1         $N_0008 $N_0001 Dideal 
+D_D2         $N_0001 $N_0006 Dideal 
+
+**** RESUMING D21.cir ****
+.INC "D21.als"
+
+
+
+**** INCLUDING D21.als ****
+* Schematics Aliases *
+
+.ALIASES
+R_R2            R2(1=$N_0002 2=$N_0001 )
+V_V4            V4(+=0 -=$N_0003 )
+R_R4            R4(1=$N_0001 2=$N_0004 )
+V_Vg            Vg(+=$N_0002 -=0 )
+R_R5            R5(1=$N_0005 2=$N_0004 )
+V_V3            V3(+=$N_0006 -=$N_0005 )
+E_U1            U1(OUT=$N_0004 +=0 -=$N_0001 )
+R_R1            R1(1=$N_0002 2=$N_0007 )
+R_R3            R3(1=$N_0003 2=$N_0001 )
+V_V2            V2(+=$N_0008 -=$N_0007 )
+D_D1            D1(1=$N_0008 2=$N_0001 )
+D_D2            D2(1=$N_0001 2=$N_0006 )
+.ENDALIASES
+
+
+**** RESUMING D21.cir ****
+.probe
+
+
+.END
+
+**** 12/29/19 23:18:37 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D21\D21.sch
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               Dideal          
+          IS   10.000000E-15 
+           N    1.000000E-03 
+
+
+**** 12/29/19 23:18:37 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D21\D21.sch
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+($N_0001)-1.238E-09                   ($N_0002)    0.0000                       
+
+($N_0003)   -2.5000                   ($N_0004)     .0012                       
+
+($N_0005)     .0012                   ($N_0006)    5.0012                       
+
+($N_0007)   -2.4994                   ($N_0008) 619.2E-06                   
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V4        -2.500E-04
+    V_Vg        -2.499E-04
+    V_V3        -5.011E-12
+    V_V2        -2.499E-04
+
+    TOTAL POWER DISSIPATION   1.25E-03  WATTS
+
+
+**** 12/29/19 23:18:37 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D21\D21.sch
+
+
+ ****     OPERATING POINT INFORMATION      TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+
+
+**** VOLTAGE-CONTROLLED VOLTAGE SOURCES
+
+
+NAME         E_U1      
+V-SOURCE     1.238E-03
+I-SOURCE    -6.192E-08
+
+
+**** DIODES
+
+
+NAME         D_D1        D_D2      
+MODEL        Dideal      Dideal    
+ID           2.50E-04   -5.01E-12 
+VD           6.19E-04   -5.00E+00 
+REQ          1.03E-01    1.00E+12 
+CAP          0.00E+00    0.00E+00 
+
+          JOB CONCLUDED
+
+          TOTAL JOB TIME             .03
+

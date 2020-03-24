@@ -1,0 +1,134 @@
+2015; 0060; Milica; Vlasonjić; OO; Python; DA; Python
+2015; 0091; Aleksandar; Radojković; SI; Python; DA; Python
+2015; 0129; Aleksa; Marušić; OO; Python; DA; Python
+2015; 0308; Filip; Mandić; OO; Python; NE
+2016; 0039; Miloš; Mićović; SI; Python; NE
+2016; 0040; Jovan; Nikolov; OO; Pascal; NE
+2016; 0063; Nemanja; Divnić; OO; Pascal; DA; Python
+2016; 0070; Gojko; Vučinić; OO; Python; DA; Python
+2016; 0074; Đorđe; Nikolašević; OO; Python; DA; Python
+2016; 0076; Mihailo; Obradović; OO; Python; DA; Python
+2016; 0077; Filip; Tanić; OO; Pascal; DA; Python
+2016; 0078; Nebojša; Savić; OO; Python; DA; Python
+2016; 0083; Pavle; Šoškić; OO; Python; NE
+2016; 0084; Milica; Batinić; OO; Python; DA; Pascal
+2016; 0088; Stefan; Pušica; OO; Pascal; DA; Python
+2016; 0090; Petar; Palibrk; OO; Pascal; DA; Python
+2016; 0094; Nikola; Mandić; SI; Python; DA; Python
+2016; 0098; Balša; Knežević; OO; Python; NE
+2016; 0103; Aleksandar; Cvetić; OO; Python; DA; Pascal
+2016; 0105; Miloš; Obradović; OO; Python; DA; Python
+2016; 0116; Danilo; Đokić; OO; Pascal; DA; Pascal
+2016; 0121; Kosta; Bizetić; OO; Pascal; NE
+2016; 0130; Strahinja; Stefanović; OO; Pascal; NE
+2016; 0135; Luka; Dojčilović; OO; Python; DA; Python
+2016; 0138; Gojko; Čutura; OO; Pascal; NE
+2016; 0139; Nedeljko; Jokić; OO; Python; NE
+2016; 0143; Zorana; Janković; OO; Pascal; DA; Pascal
+2016; 0151; Jovan; Stojković; OO; Python; DA; Pascal
+2016; 0154; Anastasija; Đorđević; OO; Python; NE
+2016; 0158; Sava; Kezić; OO; Pascal; DA; Python
+2016; 0188; Jovana; Dimković; OO; Pascal; DA; Python
+2016; 0190; Jana; Kovačević; SI; Python; DA; Python
+2016; 0236; Dunja; Ćulafić; OO; Pascal; DA; Python
+2016; 0245; Lazar; Lazić; OO; Python; DA; Pascal
+2016; 0246; Mihajlo; Ogrizović; SI; Pascal; DA; Python
+2016; 0253; Željana; Torlak; OO; Pascal; NE
+2016; 0304; Nikola; Milosavljević; OO; Python; NE
+2016; 0312; Željko; Dakić; OO; Python; NE
+2016; 0326; Sara; Milovanović; SI; Python; DA; Python
+2016; 0328; Andrija; Veljković; OO; Pascal; DA; Python
+2016; 0342; Filip; Tanić; OO; Python; DA; Python
+2016; 0352; Milica; Milošević; OO; Python; DA; Pascal
+2016; 0353; Vukašin; Manojlović; SI; Pascal; DA; Python
+2016; 0366; Aleksandar; Pavlović; OO; Pascal; DA; Python
+2016; 0368; Sanja; Mijović; OO; Pascal; DA; Python
+2016; 0403; Marko; Milićević; OO; Python; DA; Python
+2016; 0412; Mateja; Milić; SI; Python; DA; Pascal
+2016; 0417; Aleksandar; Paripović; OO; Pascal; NE
+2016; 0419; Iva; Veljković; OO; Python; DA; Python
+2016; 0425; Marko; Stefanović; OO; Pascal; DA; Python
+2016; 0433; Anica; Tešić; OO; Python; DA; Python
+2016; 0439; Nikola; Božović; OO; Pascal; DA; Python
+2016; 0475; Toma; Gavrić; OO; Pascal; DA; Python
+2016; 0491; Maja; Skoko; OO; Python; DA; Python
+2016; 0541; Aleksandra; Žigan; OO; Python; DA; Python
+2016; 0579; Ivan; Džambasanović; OO; Pascal; DA; Python
+2016; 0585; Nenad; Babin; SI; Python; NE
+2016; 0604; Dušan; Nikolić; OO; Pascal; DA; Python
+2016; 0642; Nikola; Kesić; OO; Python; NE
+2017; 0011; Bogdan; Bebić; SI; Pascal; NE
+2017; 0016; Danilo; Kitanović; OO; Python; DA; Pascal
+2017; 0017; Nikolina; Bunijevac; SI; Python; DA; Python
+2017; 0018; Filip; Vesović; SI; Python; DA; Python
+2017; 0019; Valentina; Bujić; OO; Python; DA; Python
+2017; 0021; Ivana; Burmazović; OO; Pascal; NE
+2017; 0031; Lazar; Lazarević; OO; Pascal; DA; Python
+2017; 0032; Nenad; Džamić; SI; Pascal; DA; Python
+2017; 0036; Dimitrije; Jovanović; OO; Pascal; DA; Python
+2017; 0040; Ivan; Kukrkić; OO; Python; DA; Python
+2017; 0046; Ervin; Seke; OO; Pascal; DA; Python
+2017; 0050; Viktor; Todosijević; OO; Pascal; DA; Python
+2017; 0056; Marta; Bošnjak; OO; Pascal; DA; Python
+2017; 0059; Uroš; Stojiljković; OO; Python; DA; Python
+2017; 0065; Filip; Carević; OO; Pascal; DA; Python
+2017; 0073; Milica; Matić; SI; Pascal; NE
+2017; 0077; Pavle; Radojković; OO; Pascal; NE
+2017; 0085; Natalija; Mitić; OO; Pascal; DA; Python
+2017; 0086; Mirko; Krajcer; OO; Pascal; DA; Python
+2017; 0096; Miloš; Đorđević; SI; Pascal; NE
+2017; 0100; Kosta; Maloparac; OO; Python; DA; Python
+2017; 0106; Miloš; Popović; OO; Pascal; DA; Python
+2017; 0108; Marko; Praščević; OO; Python; NE
+2017; 0111; Ana; Šaponjić; OO; Python; NE
+2017; 0117; Edvin; Maid; OO; Pascal; DA; Python
+2017; 0119; Vuk; Vuković; OO; Python; DA; Python
+2017; 0121; Sara; Živković; SI; Pascal; NE
+2017; 0125; Lazar; Smiljković; OO; Python; DA; Pascal
+2017; 0129; Barbara; Hajdarević; OO; Python; DA; Python
+2017; 0130; Andrija; Kolić; SI; Python; DA; Python
+2017; 0137; Jelena; Radojković; OO; Pascal; DA; Python
+2017; 0139; Nikita; Jokić; OO; Python; DA; Python
+2017; 0144; Jelena; Lazić; SI; Pascal; NE
+2017; 0145; Dušan; Stijović; OO; Pascal; DA; Python
+2017; 0162; Svetislav; Gajić; OO; Pascal; NE
+2017; 0196; Petar; Stojković; OO; Python; DA; Python
+2017; 0203; Lazar; Stojanović; OO; Python; DA; Python
+2017; 0204; Olja; Jakovljević; OO; Pascal; DA; Python
+2017; 0228; Uroš; Krstić; OO; Pascal; DA; Python
+2017; 0239; Veljko; Đorović; OO; Python; DA; Python
+2017; 0247; Vojislava; Janković; OO; Pascal; NE
+2017; 0250; Sonja; Glišović; OO; Python; NE
+2017; 0264; Miljan; Đorđević; OO; Pascal; DA; Python
+2017; 0296; Vladana; Pavićević; OO; Python; NE
+2017; 0305; Aleksa; Novaković; OO; Python; NE
+2017; 0323; Draško; Petrović; OO; Python; NE
+2017; 0325; Nikola; Mirković; OO; Pascal; DA; Pascal
+2017; 0338; Simona; Denić; OO; Pascal; DA; Python
+2017; 0367; Ognjen; Nenezić; OO; Pascal; DA; Python
+2017; 0369; Nikola; Tatomirović; OO; Pascal; DA; Python
+2017; 0379; Miloš; Ćurčić; OO; Pascal; DA; Pascal
+2017; 0381; Strahinja; Perak; SI; Pascal; NE
+2017; 0392; Milan; Lazić; OO; Pascal; DA; Python
+2017; 0398; Rastko; Šapić; OO; Pascal; NE
+2017; 0409; Pavle; Divović; OO; Python; DA; Python
+2017; 0420; Anja; Marković; SI; Pascal; NE
+2017; 0428; Matija; Pešić; OO; Python; DA; Python
+2017; 0438; Vlade; Lekić; OO; Pascal; NE
+2017; 0500; Ana; Milinović; SI; Python; NE
+2018; 3252; Andrija; Boričić; OO; Pascal; DA; Python
+2019; 3011; Milica; Despotović; OO; Pascal; DA; Pascal
+2019; 3023; Marija; Kostić; OO; Pascal; DA; Pascal
+2019; 3033; Filip; Đukić; OO; Python; DA; Python
+2019; 3054; Nemanja; Milovančević; OO; Python; NE
+2019; 3059; Miloš; Matijašević; OO; Pascal; NE
+2019; 3065; Sanja; Perišić; OO; Pascal; DA; Python
+2019; 3075; Predrag; Jelisavčić; OO; Python; NE
+2019; 3079; Sofija; Mitrović; OO; Python; DA; Python
+2019; 3082; Aleksa; Srbljanović; OO; Python; DA; Pascal
+2019; 3085; Aleksa; Simović; OO; Python; DA; Python
+2019; 3087; Vladimir; Otašević; OO; Pascal; DA; Python
+2019; 3098; Stefan; Milanović; OO; Python; NE
+2019; 3154; Jovan; Stevanović; OO; Python; DA; Python
+2019; 3167; Aleksandar; Gradinac; OO; Python; DA; Python
+2019; 3212; Nikola; Tomašević; OO; Pascal; DA; Pascal

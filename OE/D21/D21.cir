@@ -1,0 +1,24 @@
+* C:\Users\sl190368d\Downloads\OE\D21\D21.sch
+
+* Schematics Version 9.1 - Web Update 1
+* Sun Dec 29 22:48:40 2019
+
+
+
+** Analysis setup **
+.DC LIN V_Vg -3.5 3.5 0.1 
+.OP 
+.LIB "C:\Users\sl190368d\Downloads\OE\D21\D21.lib"
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "D21.net"
+.INC "D21.als"
+
+
+.probe
+
+
+.END

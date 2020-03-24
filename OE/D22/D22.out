@@ -1,0 +1,176 @@
+
+**** 12/29/19 22:59:22 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D22\D22.sch
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+* Schematics Version 9.1 - Web Update 1
+* Sun Dec 29 22:59:21 2019
+
+
+
+** Analysis setup **
+.DC LIN V_Vg 0 4 0.1 
+.OP 
+.LIB "C:\Users\sl190368d\Downloads\OE\D22\D22.lib"
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "D22.net"
+
+**** INCLUDING D22.net ****
+* Schematics Netlist *
+
+
+
+R_R5         $N_0002 $N_0001  20k  
+R_R6         $N_0004 $N_0003  10k  
+R_R7         $N_0004 0  10k  
+V_Vcc         $N_0003 0 5
+R_R3         $N_0006 $N_0005  10k  
+R_R4         $N_0006 0  10k  
+E_U1         $N_0005 0 VALUE {LIMIT(V($N_0007,$N_0006)*1E6,-15V,+15V)}
+E_U2         $N_0002 0 VALUE {LIMIT(V($N_0001,$N_0004)*1E6,-15V,+15V)}
+R_R2         $N_0007 $N_0008  10k  
+R_R1         $N_0009 $N_0007  10k  
+V_Vg         $N_0009 0 0
+R_R8         $N_0001 $N_0005  10k  
+D_D1         $N_0008 $N_0002 Dbreak 
+
+**** RESUMING D22.cir ****
+.INC "D22.als"
+
+
+
+**** INCLUDING D22.als ****
+* Schematics Aliases *
+
+.ALIASES
+R_R5            R5(1=$N_0002 2=$N_0001 )
+R_R6            R6(1=$N_0004 2=$N_0003 )
+R_R7            R7(1=$N_0004 2=0 )
+V_Vcc           Vcc(+=$N_0003 -=0 )
+R_R3            R3(1=$N_0006 2=$N_0005 )
+R_R4            R4(1=$N_0006 2=0 )
+E_U1            U1(OUT=$N_0005 +=$N_0007 -=$N_0006 )
+E_U2            U2(OUT=$N_0002 +=$N_0001 -=$N_0004 )
+R_R2            R2(1=$N_0007 2=$N_0008 )
+R_R1            R1(1=$N_0009 2=$N_0007 )
+V_Vg            Vg(+=$N_0009 -=0 )
+R_R8            R8(1=$N_0001 2=$N_0005 )
+D_D1            D1(1=$N_0008 2=$N_0002 )
+.ENDALIASES
+
+
+**** RESUMING D22.cir ****
+.probe
+
+
+.END
+
+Unable to find index file D22.ind for library file D22.lib
+Making new index file D22.ind for library file D22.lib
+Index has 1 entries from 1 file(s).
+
+**** 12/29/19 22:59:22 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D22\D22.sch
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               Dbreak          
+          IS   10.000000E-15 
+           N     .7          
+
+
+**** 12/29/19 22:59:22 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D22\D22.sch
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+($N_0001)    2.5000                   ($N_0002)    7.5000                       
+
+($N_0003)    5.0000                   ($N_0004)    2.5000                       
+
+($N_0005) 150.2E-09                   ($N_0006) 75.10E-09                       
+
+($N_0007) 75.10E-09                   ($N_0008) 150.2E-09                       
+
+($N_0009)    0.0000                   
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_Vcc       -2.500E-04
+    V_Vg         7.510E-12
+
+    TOTAL POWER DISSIPATION   1.25E-03  WATTS
+
+
+**** 12/29/19 22:59:22 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Downloads\OE\D22\D22.sch
+
+
+ ****     OPERATING POINT INFORMATION      TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+
+
+**** VOLTAGE-CONTROLLED VOLTAGE SOURCES
+
+
+NAME         E_U1        E_U2      
+V-SOURCE     1.502E-07   7.500E+00
+I-SOURCE     2.500E-04  -2.500E-04
+
+
+**** DIODES
+
+
+NAME         D_D1      
+MODEL        Dbreak    
+ID          -7.51E-12 
+VD          -7.50E+00 
+REQ          1.00E+12 
+CAP          0.00E+00 
+
+          JOB CONCLUDED
+
+          TOTAL JOB TIME             .09
+

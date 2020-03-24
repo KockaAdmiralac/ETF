@@ -1,0 +1,25 @@
+* C:\Users\sl190368d\Desktop\Schematic1.sch
+
+* Schematics Version 9.1 - Web Update 1
+* Fri Nov 22 15:31:52 2019
+
+
+.PARAM         rvar=1 
+.PARAM         vvar1=5 
+
+** Analysis setup **
+.DC LIN PARAM rvar 100 2k 20 
+.OP 
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "Schematic1.net"
+.INC "Schematic1.als"
+
+
+.probe
+
+
+.END

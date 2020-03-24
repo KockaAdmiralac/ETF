@@ -1,0 +1,23 @@
+* C:\Users\sl190368d\OneDrive - student.etf.bg.ac.rs\OE\D3N\D3N.sch
+
+* Schematics Version 9.1 - Web Update 1
+* Wed Jan 22 18:41:27 2020
+
+
+
+** Analysis setup **
+.tran 0 10ms
+.OP 
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "D3N.net"
+.INC "D3N.als"
+
+
+.probe
+
+
+.END

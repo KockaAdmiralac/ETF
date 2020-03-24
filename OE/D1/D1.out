@@ -1,0 +1,171 @@
+
+**** 11/23/19 23:48:14 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Desktop\Schematic1.sch
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+* Schematics Version 9.1 - Web Update 1
+* Fri Nov 22 15:31:52 2019
+
+
+.PARAM         rvar=1 
+.PARAM         vvar1=5 
+
+** Analysis setup **
+.DC LIN PARAM rvar 100 2k 20 
+.OP 
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "nom.lib"
+
+.INC "Schematic1.net"
+
+**** INCLUDING Schematic1.net ****
+* Schematics Netlist *
+
+
+
+E_MULT1         $N_0001 0 VALUE {V(A)*V($N_0002)}
+R_R6         $N_0004 $N_0003  10k  
+F_F1         $N_0006 A VF_F1 9
+VF_F1        $N_0005 A 0V
+F_F2         $N_0004 A1 VF_F2 9
+VF_F2        $N_0003 A1 0V
+R_Rs         $N_0002 0  1m  
+R_Rp         A $N_0002  {rvar}  
+R_Rm         $N_0001 0  1g  
+R_R1         $N_0006 $N_0005  10k  
+R_R2         A 0  1k  
+V_V1         $N_0006 0 5V
+R_R12         0 $N_0007  10k  
+F_F3         0 $N_0008 VF_F3 9
+VF_F3        $N_0007 $N_0008 0V
+R_R11         $N_0008 0  1k  
+V_V2         $N_0004 0 {vvar1}
+R_R7         A1 0  1k  
+V_V4         $N_0008 0 5V
+
+**** RESUMING Schematic1.cir ****
+.INC "Schematic1.als"
+
+
+
+**** INCLUDING Schematic1.als ****
+* Schematics Aliases *
+
+.ALIASES
+E_MULT1          MULT1(OUT=$N_0001 IN1=A IN2=$N_0002 )
+R_R6            R6(1=$N_0004 2=$N_0003 )
+F_F1            F1(3=$N_0006 4=A )
+VF_F1           F1(1=$N_0005 2=A )
+F_F2            F2(3=$N_0004 4=A1 )
+VF_F2           F2(1=$N_0003 2=A1 )
+R_Rs            Rs(1=$N_0002 2=0 )
+R_Rp            Rp(1=A 2=$N_0002 )
+R_Rm            Rm(1=$N_0001 2=0 )
+R_R1            R1(1=$N_0006 2=$N_0005 )
+R_R2            R2(1=A 2=0 )
+V_V1            V1(+=$N_0006 -=0 )
+R_R12           R12(1=0 2=$N_0007 )
+F_F3            F3(3=0 4=$N_0008 )
+VF_F3           F3(1=$N_0007 2=$N_0008 )
+R_R11           R11(1=$N_0008 2=0 )
+V_V2            V2(+=$N_0004 -=0 )
+R_R7            R7(1=A1 2=0 )
+V_V4            V4(+=$N_0008 -=0 )
+_    _(A=A)
+_    _(A1=A1)
+_    _(B=0)
+_    _(B1=0)
+.ENDALIASES
+
+
+**** RESUMING Schematic1.cir ****
+.probe
+
+
+.END
+
+**** 11/23/19 23:48:14 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Desktop\Schematic1.sch
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(    A)     .0050  (   A1)    2.5000  ($N_0001) 24.93E-09                       
+
+($N_0002) 4.990E-06                   ($N_0003)    2.5000                       
+
+($N_0004)    5.0000                   ($N_0005)     .0050                       
+
+($N_0006)    5.0000                   ($N_0007)    5.0000                       
+
+($N_0008)    5.0000                   
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    VF_F1        4.995E-04
+    VF_F2        2.500E-04
+    V_V1        -4.995E-03
+    VF_F3       -5.000E-04
+    V_V2        -2.500E-03
+    V_V4        -1.000E-02
+
+    TOTAL POWER DISSIPATION   8.75E-02  WATTS
+
+
+**** 11/23/19 23:48:14 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\sl190368d\Desktop\Schematic1.sch
+
+
+ ****     OPERATING POINT INFORMATION      TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+
+
+**** VOLTAGE-CONTROLLED VOLTAGE SOURCES
+
+
+NAME         E_MULT1   
+V-SOURCE     2.493E-08
+I-SOURCE    -2.493E-17
+
+
+**** CURRENT-CONTROLLED CURRENT SOURCES
+
+
+NAME         F_F1        F_F2        F_F3      
+I-SOURCE     4.496E-03   2.250E-03  -4.500E-03
+
+          JOB CONCLUDED
+
+          TOTAL JOB TIME             .15
+

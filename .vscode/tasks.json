@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "command": "sh",
+    "type": "shell",
+    "args": [
+        "-c"
+    ],
+    "label": "all",
+    "tasks": [
+        {
+            "label": "clean",
+            "command": "rm",
+            "args": [
+                "-f",
+                "a.out"
+            ]
+        },
+        {
+            "label": "build",
+            "command": "gcc",
+            "args": [
+                "${file}",
+                "-Wall",
+                "-Wextra",
+                "-g"
+            ],
+            "dependsOn": [
+                "clean"
+            ],
+            "dependsOrder": "sequence"
+        }
+    ]
+}

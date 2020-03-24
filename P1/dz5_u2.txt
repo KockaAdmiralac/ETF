@@ -1,0 +1,10 @@
+2019; 0119; Petar; Petrovic; OO; Pascal; NE
+2019; 0038; Jovan; Jovanovic; SI; Python; DA; Python
+2019; 0345; Marina; Marinkovic; SI; Pascal; NE
+2015; 0212; Ana; Anic; OO; Pascal; DA; Python
+2019; 0011; Marko; Markovic; OO; Pascal; DA; Pascal
+2018; 0768; Milan; Milanovic; SI; Python; DA; Pascal
+2019; 0244; Sara; Saric; OO; Python; DA; Python
+2019; 0147; Tanja; Tanic; SI; Pascal; DA; Python
+2017; 0417; Stefan; Stefanovic; SI; Python; DA; Python
+2019; 0035; Kosta; Kostic; OO; Python; NE

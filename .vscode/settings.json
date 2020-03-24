@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "__node_handle": "c",
+        "random": "c",
+        "*.tcc": "c",
+        "*.ipp": "c",
+        "string_view": "c",
+        "__locale": "c",
+        "__string": "c",
+        "string": "c",
+        "tuple": "c"
+    }
+}

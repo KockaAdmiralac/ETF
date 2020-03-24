@@ -1,0 +1,31 @@
+* Schematics Netlist *
+
+
+
+C_C1         $N_0001 $N_0002  100u  
+C_C2         $N_0003 $N_0004  100u  
+C_C3         $N_0005 0  100u  
+V_V1i         VCCi 0 12
+R_R3i         VCCi $N_0006  5512  
+R_R2i         VCCi $N_0007  730k  
+R_R1i         VCCi $N_0008  2k  
+C_C3i         $N_0009 0  100u  
+C_C2i         $N_0008 $N_0010  100u  
+V_V3         $N_0010 0  
++SIN 0 1m 1k 0 0 0
+C_C1i         0 $N_0007  100u  
+R_R4i         $N_0008 $N_0009  4k  
+Q_Q4i         $N_0006 $N_0011 0 QbreakN 
+Q_Q1i         $N_0009 $N_0011 0 QbreakN 
+Q_Q2i         $N_0008 $N_0007 $N_0009 QbreakN 
+R_R1         VCC $N_0003  2k  
+R_R2         VCC $N_0002  730k  
+R_Rp         $N_0004 0  200k  
+R_R4         $N_0003 $N_0005  4k  
+Q_Q1         $N_0005 $N_0012 0 QbreakN 
+Q_Q4         $N_0012 $N_0012 0 QbreakN 
+V_V2         $N_0001 0  
++SIN 0 1m 1k 0 0 0
+V_V1         VCC 0 12
+R_R3         VCC $N_0012  5512  
+Q_Q2         $N_0003 $N_0002 $N_0005 QbreakN 

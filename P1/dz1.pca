@@ -1,0 +1,62 @@
+; Smatramo da je nula paran broj.
+; Kada nema parnih brojeva u nizu ispisujemo sve.
+        N = 1
+        A = 100
+        B = 200
+        adrA = 2
+
+        adrB = 3
+        MIN = 4
+        I = 5
+        TEMP = 6
+        MAXINT = 32767
+
+        ORG 8
+loop1:  IN N
+        BGT 0, N, end
+        BEQ 0, N, loop1
+        MOV MIN, 100
+        BGT N, MIN, end
+        MOV adrA, #A
+        MOV adrB, #B
+        IN (adrA), N
+        JSR pp
+        MOV adrB, #B
+        BEQ N, 0, loop1
+        OUT (adrB), N
+        BEQ N, N, loop1
+end:    STOP
+
+
+pp:     MOV MIN, #MAXINT
+        MOV I, N
+loop2:  JSR paran
+        SUB I, I, 1
+        ADD adrA, adrA, 1
+        BGT I, 0, loop2
+        MOV I, N
+        MOV N, 0
+        MOV adrA, #A
+loop3:  JSR veci
+        SUB I, I, 1
+        ADD adrA, adrA, 1
+        BGT I, 0, loop3
+        RTS
+
+
+paran:  DIV TEMP, (adrA), 2
+        MUL TEMP, TEMP, 2
+        BGT (adrA), TEMP, endpar
+        BGT TEMP, (adrA), endpar
+        BGT (adrA), MIN, endpar
+        MOV MIN, (adrA)
+endpar: RTS
+
+
+veci:   MOV TEMP, #MAXINT
+        BEQ MIN, TEMP, okvec
+okvec:  BEQ MIN, (adrA), endvec
+        MOV (adrB), (adrA)
+        ADD adrB, adrB, 1
+        ADD N, N, 1
+endvec: RTS
