@@ -113,6 +113,6 @@ int main() {
     if (niz[0] == 1) {
         final = -final;
     }
-    printf("%d\n", final);
+    printf("%d", final);
     return 0;
 }
