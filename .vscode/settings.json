@@ -9,6 +9,9 @@
         "__locale": "c",
         "__string": "c",
         "string": "c",
-        "tuple": "c"
+        "tuple": "c",
+        "stdio.h": "c",
+        "stdbool.h": "c",
+        "functional": "c"
     }
 }
