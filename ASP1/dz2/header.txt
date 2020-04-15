@@ -1,0 +1,7 @@
+/**
+ * Usvojene pretpostavke:
+ * - Program se može kompajlirati preko GCC. (Kompatibilnost sa
+ *   Majkrosoftovim razlikama od normalnih C kompajlera nije testirana.)
+ *   Konkretna verzija GCC korišćena za kompilaciju jeste
+ *   "gcc (Arch Linux 9.3.0-1) 9.3.0"
+ */
