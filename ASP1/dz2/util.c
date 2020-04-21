@@ -5,5 +5,7 @@
  * @see https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html
  */
 void clear() {
+    #ifndef DEBUG
     printf("%c[2J%c[f", VT100_ESCAPE, VT100_ESCAPE);
+    #endif
 }

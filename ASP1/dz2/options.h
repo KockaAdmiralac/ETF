@@ -1,11 +1,14 @@
 #ifndef _OPTIONS_H
 #define _OPTIONS_H
+#include "math.h"
+#include "stack.h"
 #include "tree.h"
 #include "util.h"
+#include "queue.h"
 
-Result printTree(Tree *tree);
-Result printPostfix(Tree *tree);
-Result calculateExpression(Tree *tree);
-Result differentiate(Tree *tree);
+Result printTree(TreeList **trees, InputVariable variables[26]);
+Result printPostfix(TreeList **trees, InputVariable variables[26]);
+Result calculateExpression(TreeList **trees, InputVariable variables[26]);
+Result differentiate(TreeList **trees, InputVariable variables[26]);
 
 #endif

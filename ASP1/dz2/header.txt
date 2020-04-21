@@ -4,4 +4,9 @@
  *   Majkrosoftovim razlikama od normalnih C kompajlera nije testirana.)
  *   Konkretna verzija GCC korišćena za kompilaciju jeste
  *   "gcc (Arch Linux 9.3.0-1) 9.3.0"
+ *
+ * Korisni test primeri:
+ * - (A+B)/C*D
+ * - ln(A+B)^(C*D-E)
+ * - min((A+ln(A*B))/min(tg(-C), D)-E, ln(tg(-F)))
  */

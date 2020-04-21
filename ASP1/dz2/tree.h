@@ -3,14 +3,28 @@
 #include "util.h"
 
 /**
- * Struktura drveta korišćena u daljoj implementaciji.
+ * Struktura stabla korišćena u daljoj implementaciji.
  */
 typedef struct tree {
-    struct tree *left, *right;
+    struct tree *left, *right, *original;
     char value;
 } Tree;
 
-Tree *getNode(char value);
-void freeNode(Tree *node);
+/**
+ * Struktura čvora ulančane liste za čuvanje stabala.
+ */
+typedef struct tree_list {
+    struct tree_list *next;
+    char *label;
+    Tree *tree;
+} TreeList;
 
+Tree *getNode(char value);
+Result freeTree(Tree *tree);
+Result freeTrees(TreeList *trees);
+Tree *copyTree(Tree *original);
+Result addTree(TreeList **trees, Tree *tree, char *label);
+bool containsNode(Tree *tree, char node);
+
+#include "stack.h"
 #endif

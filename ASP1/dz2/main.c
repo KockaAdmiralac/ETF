@@ -28,25 +28,46 @@ void menu(int* option) {
  * Ulazna tačka za program.
  */
 int main(void) {
-    Tree *const tree = inputExpression();
-    if (tree == NULL) {
-        // Desila se greška.
+    int option;
+    // Alociranje niza stabala.
+    TreeList *trees = NULL;
+    const char *originalLabelConst = "Originalno stablo";
+    char *originalLabel = malloc((strlen(originalLabelConst) + 1) * sizeof(char));
+    if (originalLabel == NULL) {
         return EXIT_FAILURE;
     }
-    int option = 1;
-    Result (*options[])(Tree*) = {
+    strcpy(originalLabel, originalLabelConst);
+    // Inicijalizacija promenljivih za evaluaciju.
+    InputVariable variables[26];
+    for (int i = 0; i < 26; ++i) {
+        variables[i].present = false;
+        variables[i].value = 0;
+    }
+    Tree *const inputTree = inputExpression(variables);
+    if (inputTree == NULL) {
+        // Desila se greška.
+        free(originalLabel);
+        return EXIT_FAILURE;
+    }
+    addTree(&trees, inputTree, originalLabel);
+    // Glavna petlja.
+    Result (*options[])(TreeList**, InputVariable[26]) = {
         printTree,
         printPostfix,
         calculateExpression,
         differentiate
     };
     clear();
-    while (option) {
+    do {
         menu(&option);
         clear();
         if (option > 0 && option < 5) {
-            switch (options[option - 1](tree)) {
-                case OK: break;
+            switch (options[option - 1](&trees, variables)) {
+                case OK:
+                    // Sve je u redu.
+                case RTFM:
+                    // Očekujemo da će pozivajući kod da ispiše grešku.
+                    break;
                 case OOM:
                     printf(
                         "Ponestalo je memorije tokom izvršavanja operacije.\n"
@@ -57,9 +78,10 @@ int main(void) {
                     printf("Desila se nepoznata greška.\n");
                     break;
             }
-        } else {
+        } else if (option != 0) {
             printf("Nije izabrana validna opcija.\n");
         }
-    }
+    } while (option);
+    freeTrees(trees);
     return EXIT_SUCCESS;
 }
