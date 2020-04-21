@@ -12,6 +12,25 @@
         "tuple": "c",
         "stdio.h": "c",
         "stdbool.h": "c",
-        "functional": "c"
+        "functional": "c",
+        "variant": "c",
+        "chrono": "c",
+        "iterator": "c",
+        "__bit_reference": "c",
+        "__functional_base": "c",
+        "algorithm": "c",
+        "atomic": "c",
+        "bitset": "c",
+        "deque": "c",
+        "__memory": "c",
+        "filesystem": "c",
+        "limits": "c",
+        "locale": "c",
+        "memory": "c",
+        "optional": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "vector": "c"
     }
 }

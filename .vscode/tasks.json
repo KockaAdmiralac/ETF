@@ -12,18 +12,20 @@
             "command": "rm",
             "args": [
                 "-f",
-                "a.out"
+                // "a.out"
+                "ASP1/dz2/dz2"
             ]
         },
         {
             "label": "build",
-            "command": "gcc",
-            "args": [
-                "${file}",
-                "-Wall",
-                "-Wextra",
-                "-g"
-            ],
+            //"command": "gcc",
+            //"args": [
+            //    "${file}",
+            //    "-Wall",
+            //    "-Wextra",
+            //    "-g"
+            //],
+            "command": "./ASP1/dz2/build.sh",
             "dependsOn": [
                 "clean"
             ],
