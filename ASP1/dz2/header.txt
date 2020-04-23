@@ -4,9 +4,25 @@
  *   Majkrosoftovim razlikama od normalnih C kompajlera nije testirana.)
  *   Konkretna verzija GCC korišćena za kompilaciju jeste
  *   "gcc (Arch Linux 9.3.0-1) 9.3.0"
- *
+ * - Stabla nikada neće biti duboka preko log2(sizeof(long long)).
+ * - U skladu sa odgovorom profesora Mišića na mejl poslat 21. aprila,
+ *   usvajaju se sledeće pretpostavke u vezi sa funkcijom za minimum:
+ *   - Funkcija za minimum se gubi nakon prvog izvoda tako što se od korisnika
+ *     traži da unese vrednosti kojima se određuje koja funkcija se izvodi.
+ *   - Prvi izvod funkcije za minimum sadrži podstabla za sve četiri funkcije,
+ *     f(x), g(x), f'(x) i g'(x), kako bi se evaluacija ovog izraza, kao i
+ *     drugi izvod, mogli sprovoditi. Ovo stablo može izgledati kao što je
+ *     u gorepomenutom mejlu navedeno:
+ *              min
+ *            /    \
+ *         ?          ?
+ *       /  \      /    \
+ *     f(x) g(x)  f'(x) g'(x) *
+ *     Za ove potrebe uveden je kvazi-operator '?'.
  * Korisni test primeri:
  * - (A+B)/C*D
  * - ln(A+B)^(C*D-E)
  * - min((A+ln(A*B))/min(tg(-C), D)-E, ln(tg(-F)))
+ *
+ * Domaći je, barem delimično, proveren Valgrind-om protiv curenja memorije.
  */

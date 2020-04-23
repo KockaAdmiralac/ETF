@@ -7,13 +7,14 @@
  * Manipuliše prostorno-vremenskim kontinuumom tako da se u određenom
  * vremenskom periodu određen prostor kontinualno pojavi na ekranu korisnika
  * u vidu karaktera.
+ * @param {FILE*} file Datoteka nad kojom se vrši gorepomenuta magija.
  * @param {char*} space Prostor koji se pojavljuje na ekranu
  * @param {int} time Dužina vremenskom intervala tokom kojeg se prostor
  *                   pojavljuje na ekranu u femtogodinama.
  */
-void spacetime(char *space, int time) {
+void spacetime(FILE *file, char *space, int time) {
     for (int i = 0; i < time; ++i) {
-        printf(space);
+        fprintf(file, space);
     }
 }
 
@@ -112,6 +113,32 @@ NodeTree *getPostorderStack(Tree *tree) {
 }
 
 /**
+ * Dinamička alokacija unesenog teksta.
+ * @param {char**} str Pokazivač na tekst koji se unosi
+ * @returns {int} Dužina teksta, ili -1 ukoliko se desila greška
+ */
+int getString(char **str) {
+    *str = malloc(sizeof(char));
+    if (*str == NULL) {
+        return -1;
+    }
+    **str = '\0';
+    char input;
+    int strSize = 0;
+    while ((input = getchar()) == '\n');
+    do {
+        *((*str) + strSize) = input;
+        ++strSize;
+        *str = realloc(*str, (strSize + 1) * sizeof(char));
+        if (*str == NULL) {
+            return -1;
+        }
+        *((*str) + strSize) = '\0';
+    } while ((input = getchar()) != '\n');
+    return strSize;
+}
+
+/**
  * Ispisuje izgled formiranog stabla.
  * @param {TreeList**} trees Sva trenutno sačuvana stabla
  * @param {InputVariable[]} variables Podaci o svim promenljivama (nekorišćeno)
@@ -152,10 +179,37 @@ Result printTree(TreeList **trees, InputVariable variables[26]) {
         }
         free(currentNode);
     }
+    // Potencijalno ispisivanje u datoteku.
+    long long width = (1 << maxLevel) + 1;
+    char isFileInput, *fileName;
+    FILE *file = stdout;
+    if (maxLevel > 6) {
+        printf(
+            "Ispis stabla zauzima širinu od %lld karaktera. Da li želite da "
+            "ga ispišete u datoteku umesto na standardni izlaz? [d/n]: ",
+            width
+        );
+        scanf(" %c", &isFileInput);
+        if (isFileInput == 'd') {
+            printf("Unesite naziv datoteke: ");
+            if (getString(&fileName) == -1) {
+                return OOM;
+            }
+            file = fopen(fileName, "w");
+            free(fileName);
+            if (file == NULL) {
+                printf("Desila se greška prilikom otvaranja datoteke.\n");
+                return RTFM;
+            }
+        }
+    }
     // Formiranje punog stabla od trenutnog stabla.
-    int fullTreeNodeNumber = ((int)pow(2, maxLevel)) - 1;
+    long long fullTreeNodeNumber = width - 2;
     Tree **fullTree = malloc(fullTreeNodeNumber * sizeof(Tree*));
-    for (int i = 0; i < fullTreeNodeNumber; ++i) {
+    if (fullTree == NULL) {
+        return OOM;
+    }
+    for (long long i = 0; i < fullTreeNodeNumber; ++i) {
         *(fullTree + i) = NULL;
     }
     // Populacija punog stabla pokazivačima na čvorove level-order obilaskom.
@@ -191,29 +245,27 @@ Result printTree(TreeList **trees, InputVariable variables[26]) {
         baseSpace = pow(2, maxLevel) - 1;
     char currValue;
     printf(
-        "Napomena: Zbog preglednosti stabla, funkcije se ispisuju sa svojim "
-        "prvim slovom umesto celim imenom. Ako je generisani ispis "
-        "preširok za trenutni medijum prikaza, možete uključiti horizontalni "
-        "scroll ili kopirati ispis u datoteku.\n"
+        "Napomena: Zbog preglednosti stabla, funkcije se ispisuju sa "
+        "svojim prvim slovom umesto celim imenom.\n"
     );
     for (int i = 0; i < maxLevel; ++i) {
         // Ispisivanje čvorova.
         for (int j = 0; j < currentLevelNodes; ++j) {
             if (j == 0) {
-                spacetime(" ", baseSpace / 2);
+                spacetime(file, " ", baseSpace / 2);
             } else {
-                spacetime(" ", baseSpace);
+                spacetime(file, " ", baseSpace);
             }
             if (*(fullTree + index1) == NULL) {
-                printf(" ");
+                fprintf(file, " ");
             } else {
                 currValue = (*(fullTree + index1))->value;
-                printf("%c", currValue == '_' ? '-' : currValue);
+                fprintf(file, "%c", currValue == '_' ? '-' : currValue);
             }
             ++index1;
         }
         baseSpace /= 2;
-        printf("\n");
+        fprintf(file, "\n");
         // Ispisivanje strelica.
         if (i != maxLevel - 1) {
             for (int j = 0; j < currentLevelNodes; ++j) {
@@ -229,32 +281,32 @@ Result printTree(TreeList **trees, InputVariable variables[26]) {
                     }
                 }
                 if (leftChildExists) {
-                    spacetime(" ", baseSpace / 2);
-                    printf("┌");
-                    spacetime("─", baseSpace / 2);
+                    spacetime(file, " ", baseSpace / 2);
+                    fprintf(file, "┌");
+                    spacetime(file, "─", baseSpace / 2);
                 } else {
-                    spacetime(" ", baseSpace);
+                    spacetime(file, " ", baseSpace);
                 }
                 if (leftChildExists && rightChildExists) {
-                    printf("┴");
+                    fprintf(file, "┴");
                 } else if (leftChildExists) {
-                    printf("┘");
+                    fprintf(file, "┘");
                 } else if (rightChildExists) {
-                    printf("└");
+                    fprintf(file, "└");
                 } else {
-                    printf(" ");
+                    fprintf(file, " ");
                 }
                 if (rightChildExists) {
-                    spacetime("─", baseSpace / 2);
-                    printf("┐");
-                    spacetime(" ", baseSpace / 2);
+                    spacetime(file, "─", baseSpace / 2);
+                    fprintf(file, "┐");
+                    spacetime(file, " ", baseSpace / 2);
                 } else {
-                    spacetime(" ", baseSpace);
+                    spacetime(file, " ", baseSpace);
                 }
-                printf(" ");
+                fprintf(file, " ");
                 ++index2;
             }
-            printf("\n");
+            fprintf(file, "\n");
         }
         currentLevelNodes *= 2;
     }
@@ -282,23 +334,10 @@ Result printPostfix(TreeList **trees, InputVariable variables[26]) {
     return OK;
 }
 
-/**
- * Računa vrednost izraza.
- * @param {TreeList**} trees Sva trenutno sačuvana stabla
- * @param {InputVariable[]} variables Podaci o svim promenljivama
- * @returns {Result} Rezultat operacije
- */
-Result calculateExpression(TreeList **trees, InputVariable variables[26]) {
-    for (int i = 0; i < 26; ++i) {
-        if (variables[i].present) {
-            printf("Unesite vrednost promenljive %c: ", 'A' + i);
-            scanf("%lf", &variables[i].value);
-        }
-    }
+Result calculateExpressionInner(Tree *tree, InputVariable variables[26], double *output) {
     NodeOperand *operandStack = NULL;
-    Tree *next = chooseTree(trees, "koje predstavlja izraz za izračunavanje");
-    NodeTree *postorderStack = getPostorderStack(next);
-    double firstOperand, secondOperand, result;
+    NodeTree *postorderStack = getPostorderStack(tree);
+    double firstOperand, secondOperand, thirdOperand, fourthOperand, result;
     char value;
     while (postorderStack != NULL) {
         value = treeStackPop(&postorderStack)->value;
@@ -383,13 +422,15 @@ Result calculateExpression(TreeList **trees, InputVariable variables[26]) {
                 );
                 break;
             case 'm':
+                fourthOperand = operandStackPop(&operandStack);
+                thirdOperand = operandStackPop(&operandStack);
                 secondOperand = operandStackPop(&operandStack);
                 firstOperand = operandStackPop(&operandStack);
                 operandStackPush(
                     &operandStack,
-                    firstOperand < secondOperand ?
-                        firstOperand :
-                        secondOperand
+                    firstOperand <= secondOperand ?
+                        thirdOperand :
+                        fourthOperand
                 );
                 break;
             case 's':
@@ -405,6 +446,9 @@ Result calculateExpression(TreeList **trees, InputVariable variables[26]) {
                     &operandStack,
                     cos(operandStackPop(&operandStack))
                 );
+                break;
+            case '?':
+                // Nije pravi operator.
                 break;
             default:
                 if (value >= 'A' && value <= 'Z') {
@@ -433,7 +477,30 @@ Result calculateExpression(TreeList **trees, InputVariable variables[26]) {
         }
         return OOPS;
     }
-    printf("Rezultat: %lf\n", result);
+    *output = result;
+    return OK;
+}
+
+/**
+ * Računa vrednost izraza.
+ * @param {TreeList**} trees Sva trenutno sačuvana stabla
+ * @param {InputVariable[]} variables Podaci o svim promenljivama
+ * @returns {Result} Rezultat operacije
+ */
+Result calculateExpression(TreeList **trees, InputVariable variables[26]) {
+    for (int i = 0; i < 26; ++i) {
+        if (variables[i].present) {
+            printf("Unesite vrednost promenljive %c: ", 'A' + i);
+            scanf("%lf", &variables[i].value);
+        }
+    }
+    Tree *tree = chooseTree(trees, "koje predstavlja izraz za izračunavanje");
+    double output;
+    Result result = calculateExpressionInner(tree, variables, &output);
+    if (result != OK) {
+        return result;
+    }
+    printf("Rezultat: %lf\n", output);
     return OK;
 }
 
@@ -628,6 +695,7 @@ void pojednostabljenje(Tree *tree) {
                     next->value = '1';
                 }
                 break;
+            case '?':
             default:
                 // Nemamo šta da pojednostablimo.
                 break;
@@ -643,24 +711,17 @@ void pojednostabljenje(Tree *tree) {
  * @returns {Result} Rezultat operacije
  */
 Result differentiate(TreeList **trees, InputVariable variables[26]) {
-    // Nekorišćene promenljive.
-    (void) variables;
     Tree *tree = chooseTree(trees, "koje predstavlja izraz za diferenciranje"),
          *differentialTree = copyTree(tree);
     printf(
         "Unesite oznaku diferenciranog stabla kako biste mogli da izaberete "
         "ovo stablo u ostalim opcijama u meniju kasnije: "
     );
-    char *label = malloc(sizeof(char)), input;
-    *label = '\0';
-    int labelSize = 0;
-    while ((input = getchar()) == '\n');
-    do {
-        *(label + labelSize) = input;
-        ++labelSize;
-        label = realloc(label, (labelSize + 1) * sizeof(char));
-        *(label + labelSize) = '\0';
-    } while ((input = getchar()) != '\n');
+    char *label, input;
+    if (getString(&label) == -1) {
+        freeTree(differentialTree);
+        return OOM;
+    }
     while (true) {
         printf("Unesite promenljivu po kojoj se diferencira: ");
         scanf(" %c", &input);
@@ -675,15 +736,17 @@ Result differentiate(TreeList **trees, InputVariable variables[26]) {
     // Postorder obilazak stabla prilikom diferenciranja.
     NodeTree *postorderStack = getPostorderStack(differentialTree);
     Tree *next, *tmpLeft, *tmpRight;
+    bool alreadyRead = false;
     while (postorderStack != NULL) {
         next = treeStackPop(&postorderStack);
         switch (next->value) {
             case '+':
             case '-':
-            case 'm':
                 // Leva i desna strana su već diferencirani.
             case '_':
                 // Levi operand je već diferenciran.
+            case '?':
+                // Ovo nije operator.
                 break;
             case '*':
                 // (A*B)' = A'B + AB'
@@ -786,6 +849,70 @@ Result differentiate(TreeList **trees, InputVariable variables[26]) {
                 next->left->right->right = getNode('c');
                 next->left->right->right->left = copyTree(tmpLeft->original);
                 break;
+            case 'm':
+                // Ako nije jasno kako diferenciranje minimuma funkcioniše,
+                // pogledati zaglavlje datoteke i mejl profesoru Mišiću.
+                if ((*trees)->tree == (*trees)->next->tree) {
+                    // Diferenciramo originalno stablo.
+                    tmpLeft = next->left;
+                    tmpRight = next->right;
+                    next->left = getNode('?');
+                    next->right = getNode('?');
+                    next->left->left = copyTree(tmpLeft->original);
+                    next->left->right = copyTree(tmpRight->original);
+                    next->right->left = tmpLeft;
+                    next->right->right = tmpRight;
+                } else {
+                    // Prvo evaluiramo izraz pa biramo diferencijal koji treba.
+                    double resultLeft, resultRight;
+                    if (!alreadyRead) {
+                        printf(
+                            "U skladu sa pretpostavkama zadatka, minimum se "
+                            "ne diferencira dalje od prvog izvoda. Unesite "
+                            "promenljive izraza kako biste nastavili sa "
+                            "diferenciranjem.\n"
+                        );
+                        for (int i = 0; i < 26; ++i) {
+                            if (variables[i].present) {
+                                printf(
+                                    "Unesite vrednost promenljive %c: ",
+                                    'A' + i
+                                );
+                                scanf("%lf", &variables[i].value);
+                            }
+                        }
+                        alreadyRead = true;
+                    }
+                    calculateExpressionInner(
+                        next->left->left->original,
+                        variables,
+                        &resultLeft
+                    );
+                    calculateExpressionInner(
+                        next->left->right->original,
+                        variables,
+                        &resultRight
+                    );
+                    freeTree(next->left);
+                    if (resultLeft <= resultRight) {
+                        next->value = next->right->left->value;
+                        next->left = next->right->left->left;
+                        tmpRight = next->right->left->right;
+                        freeTree(next->right->right);
+                        free(next->right->left);
+                        free(next->right);
+                        next->right = tmpRight;
+                    } else {
+                        next->value = next->right->right->value;
+                        next->left = next->right->right->left;
+                        tmpRight = next->right->right->right;
+                        freeTree(next->right->left);
+                        free(next->right->right);
+                        free(next->right);
+                        next->right = tmpRight;
+                    }
+                }
+                break;
             default:
                 if (next->value >= 'A' && next->value <= 'Z') {
                     if (next->value == input) {
@@ -797,6 +924,7 @@ Result differentiate(TreeList **trees, InputVariable variables[26]) {
                     next->value = '0';
                 } else {
                     // Ne znamo šta diferenciramo.
+                    freeTree(differentialTree);
                     while (postorderStack != NULL) {
                         treeStackPop(&postorderStack);
                     }
