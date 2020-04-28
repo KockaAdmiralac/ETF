@@ -334,7 +334,15 @@ Result printPostfix(TreeList **trees, InputVariable variables[26]) {
     return OK;
 }
 
-Result calculateExpressionInner(Tree *tree, InputVariable variables[26], double *output) {
+/**
+ * Radi računanje za calculateExpression.
+ * @param {Tree*} tree Stablo koje se računa
+ * @param {InputVariable[]} variables Promenljive u izrazu
+ * @param {double*} output Rezultat računanja
+ * @param {bool} original Da li se računa originalno stablo ili izvedeno
+ * @returns {Result} Uspešnost operacije
+ */
+Result calculateExpressionInner(Tree *tree, InputVariable variables[26], double *output, bool original) {
     NodeOperand *operandStack = NULL;
     NodeTree *postorderStack = getPostorderStack(tree);
     double firstOperand, secondOperand, thirdOperand, fourthOperand, result;
@@ -422,16 +430,29 @@ Result calculateExpressionInner(Tree *tree, InputVariable variables[26], double 
                 );
                 break;
             case 'm':
-                fourthOperand = operandStackPop(&operandStack);
-                thirdOperand = operandStackPop(&operandStack);
-                secondOperand = operandStackPop(&operandStack);
-                firstOperand = operandStackPop(&operandStack);
-                operandStackPush(
-                    &operandStack,
-                    firstOperand <= secondOperand ?
-                        thirdOperand :
-                        fourthOperand
-                );
+                // U originalnom stablu ovde ima dva operanda, u prvom izvodu
+                // četiri a u ostalima ne postoji.
+                if (original) {
+                    secondOperand = operandStackPop(&operandStack);
+                    firstOperand = operandStackPop(&operandStack);
+                    operandStackPush(
+                        &operandStack,
+                        firstOperand <= secondOperand ?
+                            firstOperand :
+                            secondOperand
+                    );
+                } else {
+                    fourthOperand = operandStackPop(&operandStack);
+                    thirdOperand = operandStackPop(&operandStack);
+                    secondOperand = operandStackPop(&operandStack);
+                    firstOperand = operandStackPop(&operandStack);
+                    operandStackPush(
+                        &operandStack,
+                        firstOperand <= secondOperand ?
+                            thirdOperand :
+                            fourthOperand
+                    );
+                }
                 break;
             case 's':
                 // TODO: Provera domena.
@@ -494,9 +515,18 @@ Result calculateExpression(TreeList **trees, InputVariable variables[26]) {
             scanf("%lf", &variables[i].value);
         }
     }
+    TreeList *originalTree = *trees;
+    do {
+        originalTree = originalTree->next;
+    } while (originalTree->next != (*trees));
     Tree *tree = chooseTree(trees, "koje predstavlja izraz za izračunavanje");
     double output;
-    Result result = calculateExpressionInner(tree, variables, &output);
+    Result result = calculateExpressionInner(
+        tree,
+        variables,
+        &output,
+        originalTree->tree == tree
+    );
     if (result != OK) {
         return result;
     }
@@ -640,6 +670,7 @@ void pojednostabljenje(Tree *tree) {
                 if (next->left->value == '0') {
                     // -0 = 0
                     freeTree(next->left);
+                    next->left = NULL;
                     next->value = '0';
                 }
                 break;
@@ -669,32 +700,6 @@ void pojednostabljenje(Tree *tree) {
                 }
                 break;
             case 'm':
-                if (
-                    (
-                        next->left->value == '0' && (
-                            next->right->value == '0' ||
-                            next->right->value == '1'
-                        )
-                    ) ||
-                    (next->right->value == '0' && next->left->value == '1')
-                ) {
-                    // min(0, 1) = 0, min(0, 0) = 0
-                    freeTree(next->left);
-                    freeTree(next->right);
-                    next->left = NULL;
-                    next->right = NULL;
-                    next->value = '0';
-                } else if (
-                    next->left->value == '0' &&
-                    next->right->value == '1'
-                ) {
-                    freeTree(next->left);
-                    freeTree(next->right);
-                    next->left = NULL;
-                    next->right = NULL;
-                    next->value = '1';
-                }
-                break;
             case '?':
             default:
                 // Nemamo šta da pojednostablimo.
@@ -713,6 +718,10 @@ void pojednostabljenje(Tree *tree) {
 Result differentiate(TreeList **trees, InputVariable variables[26]) {
     Tree *tree = chooseTree(trees, "koje predstavlja izraz za diferenciranje"),
          *differentialTree = copyTree(tree);
+    TreeList *originalTree = *trees;
+    do {
+        originalTree = originalTree->next;
+    } while (originalTree->next != (*trees));
     printf(
         "Unesite oznaku diferenciranog stabla kako biste mogli da izaberete "
         "ovo stablo u ostalim opcijama u meniju kasnije: "
@@ -852,7 +861,7 @@ Result differentiate(TreeList **trees, InputVariable variables[26]) {
             case 'm':
                 // Ako nije jasno kako diferenciranje minimuma funkcioniše,
                 // pogledati zaglavlje datoteke i mejl profesoru Mišiću.
-                if ((*trees)->tree == (*trees)->next->tree) {
+                if (originalTree->tree == tree) {
                     // Diferenciramo originalno stablo.
                     tmpLeft = next->left;
                     tmpRight = next->right;
@@ -886,12 +895,14 @@ Result differentiate(TreeList **trees, InputVariable variables[26]) {
                     calculateExpressionInner(
                         next->left->left->original,
                         variables,
-                        &resultLeft
+                        &resultLeft,
+                        true
                     );
                     calculateExpressionInner(
                         next->left->right->original,
                         variables,
-                        &resultRight
+                        &resultRight,
+                        true
                     );
                     freeTree(next->left);
                     if (resultLeft <= resultRight) {
