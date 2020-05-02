@@ -6,6 +6,8 @@ char *readWord() {
     int length = 0;
     char *word = malloc(sizeof(char)), *tempWord, input;
     if (word == NULL) {
+        printf("MEM_GRESKA");
+        exit(0);
         return NULL;
     }
     *word = '\0';
@@ -39,7 +41,8 @@ char **readWords(int *n) {
                 }
                 free(words);
             }
-            *n = -1;
+            printf("MEM_GRESKA");
+            exit(0);
             return NULL;
         } else if (*newWord == '\0') {
             free(newWord);
@@ -55,7 +58,8 @@ char **readWords(int *n) {
                     free(words);
                 }
                 free(newWord);
-                *n = -1;
+                printf("MEM_GRESKA");
+                exit(0);
                 return NULL;
             }
             words = tempWords;
@@ -84,10 +88,7 @@ int main() {
     int n, rotate;
     char **words = readWords(&n);
     scanf("%d", &rotate);
-    if (n == -1) {
-        printf("MEM_GRESKA");
-        return 0;
-    } else if (n == 0) {
+    if (n == 0) {
         printf("GRESKA");
         return 0;
     }
