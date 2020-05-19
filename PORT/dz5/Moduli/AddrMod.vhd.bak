@@ -1,0 +1,43 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity AddrMod is
+	port 
+	(
+		wr	   : in std_logic;
+		clk	: in std_logic;
+		empty	: out std_logic;
+		addWr	: out std_logic_vector(3 downto 0)
+		cnt	: out std_logic_vector(3 downto 0)
+	);
+
+end entity;
+
+architecture rtl of AddrMod is
+	signal v : std_logic_vector(2 downto 0):="000";
+begin
+
+	process (clk)
+	begin
+		if (rising_edge(clk)) then
+			if (cl='1') then
+				v<=(others=>'0');
+			elsif (ld ='1') then
+				v<= input;
+			elsif (sr ='1') then
+				v<= ir&v(2 downto 1);
+			elsif (sl ='1') then
+				v<= v(1 downto 0)&il;
+			elsif (inc ='1') then
+				v<= std_logic_vector( unsigned(v) + 1 );
+			elsif (dec ='1') then
+				v<= std_logic_vector( unsigned(v) - 1 );
+			end if;
+			
+		end if;
+	end process;
+
+	output <= v;
+
+end rtl;

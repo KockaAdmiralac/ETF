@@ -1,0 +1,47 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ALU7 is
+
+	port 
+	(
+		A	   : in std_logic_vector  (6 downto 0);
+		B	   : in std_logic_vector  (6 downto 0);
+		Cin   : in std_logic;
+		S0		: in std_logic;
+		S1		: in std_logic;
+		F		: out std_logic_vector (6 downto 0);
+		Cout  : out std_logic
+	);
+
+end entity;
+
+architecture rtl of ALU7 is
+	
+begin
+
+	process (A,B,S1,S0,Cin) is
+		variable varA,varB,varF: std_logic_vector (7 downto 0);
+		variable op:std_logic_vector(2	downto 0);
+	begin
+			varA(7 downto 0):=A(6)&A(6 downto 0);
+			varB(7 downto 0):=B(6)&B(6 downto 0);
+			op:=S1 & S0 & Cin;
+			case op is
+				when "000" => varF := varB;
+				when "001" => varF := std_logic_vector(unsigned(varB)+1);
+				when "010" => varF := varB;
+				when "011" => varF := std_logic_vector(unsigned(varB)-1);
+				when "100" => varF := std_logic_vector(unsigned(varA)+unsigned(varB));
+				when "101" => varF := std_logic_vector(unsigned(varA)+unsigned(varB)+1);
+				when "110" => varF := std_logic_vector(unsigned(varA)-unsigned(varB));
+				when "111" => varF := std_logic_vector(unsigned(varA)-unsigned(varB)-1);
+			end case;
+			F(6 downto 0)<=varF(6 downto 0);
+			Cout <=varF(7);
+	end process;
+
+
+
+end rtl;
