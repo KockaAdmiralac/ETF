@@ -31,6 +31,8 @@
         "ratio": "c",
         "system_error": "c",
         "type_traits": "c",
-        "vector": "c"
+        "vector": "c",
+        "sstream": "c",
+        "strstream": "c"
     }
 }

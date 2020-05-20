@@ -1,0 +1,98 @@
+begin:vcard
+fn:Ivan Jovanovic
+n:Jovanovic;Ivan
+email;internet:ajvanho@mail.ru
+tel;home:011/310-2955
+tel;cell:064/555-555
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Marko Misic
+n:Misic;Marko
+org:Elektrotehnicki fakultet;RTI
+adr;dom:;;Bulevar kralja Aleksandra 73;Beograd;;11000
+email;internet:marko.misic@etf.rs
+title:Asistent
+url:http://www.etf.rs
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Nikola Nikolic
+n:Nikolic;Nikola
+email;internet:nik@yahoo.com
+version:2.1
+end:vcard
+
+begin:vcard
+fn:oo1pp2 Lista
+n:Lista;oo1pp2
+email;internet:oo1pp2@lists.etf.rs
+note:Lista za predmet PP2
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Petar Peric
+n:Peric;Petar
+org:Elektrotehnicki fakultet;RTI
+adr:;;Bulevar Kralja Aleksandra;Beograd;Beograd;11000;Srbija
+email;internet:peraperic@etf.rs
+title:Dipl. ing
+tel;work:011/222-555
+tel;fax:011/888-555
+tel;pager:060/112
+tel;home:013/777-555
+tel;cell:064/999-999
+note:Pera je mnogo dobar covek
+url:http://home.etf.rs/~pera
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Marko Misic
+n:Misic;Marko
+email;internet:marko.misic@etf.bg.ac.rs
+version:2.1
+end:vcard
+
+begin:vcard
+fn:oo1pp2 Lista
+n:Lista;oo1pp2
+email;internet:13e111pp2@lists.etf.rs
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Mika Petrovic
+n:Petrovic;Mika
+email;internet:mika@gmail.com
+tel;cell:064/333-555
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Radovan Radic
+n:Radic;Radovan
+org:Zmaj Software
+email;internet:ralezmaj@gmail.com
+tel;work:011/111-555
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Nikola Teslic
+n:Teslic;Nikola
+email;internet:nikola.teslic@gmail.com
+version:2.1
+end:vcard
+
+begin:vcard
+fn:Pero Antic
+n:Antic;Pero
+org:MK Basketball
+email;internet:pera.antic@nba.com
+version:2.1
+end:vcard
+
