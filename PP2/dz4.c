@@ -2,8 +2,7 @@
  * Assumptions made:
  * - All comments should and will be writte in English, for consistency with
  *   the language used in the actual code.
- * - The year is 2020.
- *     - What this practically means is that February has 29 days.
+ * - February has 28 days.
  */
 #include <stdbool.h>
 #include <stdio.h>
@@ -132,7 +131,7 @@ int daysInMonth(int month) {
         case 11:
             return 30;
         case 2:
-            return 29;
+            return 28;
         default:
             return 0;
     }
