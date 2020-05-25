@@ -46,7 +46,7 @@ applicable agreement for further details.
 		(line (pt 109 12)(pt 113 8))
 	)
 	(text "VCC" (rect 128 7 149 17)(font "Arial" (font_size 6)))
-	(annotation_block (location)(rect -832 -440 -776 -424))
+	(annotation_block (location)(rect -824 -440 -768 -424))
 )
 (pin
 	(input)
@@ -63,7 +63,7 @@ applicable agreement for further details.
 		(line (pt 109 12)(pt 113 8))
 	)
 	(text "VCC" (rect 128 7 149 17)(font "Arial" (font_size 6)))
-	(annotation_block (location)(rect -832 -280 -776 -264))
+	(annotation_block (location)(rect -824 -280 -768 -264))
 )
 (pin
 	(input)
@@ -80,7 +80,7 @@ applicable agreement for further details.
 		(line (pt 109 12)(pt 113 8))
 	)
 	(text "VCC" (rect 128 7 149 17)(font "Arial" (font_size 6)))
-	(annotation_block (location)(rect -832 -344 -776 -328))
+	(annotation_block (location)(rect -824 -344 -768 -328))
 )
 (pin
 	(input)
@@ -2159,16 +2159,6 @@ applicable agreement for further details.
 	(pt 56 224)
 )
 (connector
-	(text "SW8" (rect 272 10 283 35)(font "Arial" )(vertical))
-	(pt 288 8)
-	(pt 288 32)
-)
-(connector
-	(text "SW9" (rect 256 10 267 35)(font "Arial" )(vertical))
-	(pt 272 8)
-	(pt 272 32)
-)
-(connector
 	(text "SW4" (rect -278 -160 -253 -149)(font "Arial" ))
 	(pt -256 -144)
 	(pt -288 -144)
@@ -2266,7 +2256,7 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(text "state[6..0]" (rect 262 56 273 104)(font "Arial" )(vertical))
+	(text "state[6..0]" (rect 260 54 271 102)(font "Arial" )(vertical))
 	(pt 280 104)
 	(pt 280 88)
 	(bus)
@@ -2306,6 +2296,16 @@ applicable agreement for further details.
 	(pt 336 -240)
 	(pt 376 -240)
 	(bus)
+)
+(connector
+	(text "SW8" (rect 256 10 267 35)(font "Arial" )(vertical))
+	(pt 272 8)
+	(pt 272 32)
+)
+(connector
+	(text "SW9" (rect 272 10 283 35)(font "Arial" )(vertical))
+	(pt 288 8)
+	(pt 288 32)
 )
 (junction (pt -496 -272))
 (junction (pt 496 -72))

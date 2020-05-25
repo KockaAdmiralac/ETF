@@ -67,27 +67,7 @@
     </tool>
   </lib>
   <lib desc="#I/O" name="5"/>
-  <lib desc="#TTL" name="6"/>
-  <lib desc="#TCL" name="7">
-    <tool name="TclGeneric">
-      <a name="content">library ieee;
-use ieee.std_logic_1164.all;
-
-entity TCL_Generic is
-  port(
-    --Insert input ports below
-    horloge_i  : in  std_logic;                    -- input bit example
-    val_i      : in  std_logic_vector(3 downto 0); -- input vector example
-
-	  --Insert output ports below
-    max_o      : out std_logic;                    -- output bit example
-    cpt_o      : out std_logic_Vector(3 downto 0)  -- output vector example
-  );
-end TCL_Generic;
-</a>
-    </tool>
-  </lib>
-  <lib desc="#Base" name="8">
+  <lib desc="#Base" name="6">
     <tool name="Text Tool">
       <a name="font" val="SansSerif plain 12"/>
       <a name="halign" val="center"/>
@@ -95,34 +75,10 @@ end TCL_Generic;
       <a name="valign" val="base"/>
     </tool>
   </lib>
-  <lib desc="#BFH-Praktika" name="9"/>
-  <lib desc="#Input/Output-Extra" name="10"/>
-  <lib desc="#Soc" name="11">
-    <tool name="Rv32im">
-      <a name="SocBusSelection" val=""/>
-    </tool>
-    <tool name="Nios2">
-      <a name="SocBusSelection" val=""/>
-    </tool>
-    <tool name="SocBus">
-      <a name="SocBusIdentifier" val="0x00000171F8FF7BFB4407b0e0"/>
-    </tool>
-    <tool name="Socmem">
-      <a name="SocBusSelection" val=""/>
-    </tool>
-    <tool name="SocPio">
-      <a name="SocBusSelection" val=""/>
-    </tool>
-    <tool name="SocVga">
-      <a name="SocBusSelection" val=""/>
-    </tool>
-    <tool name="SocJtagUart">
-      <a name="SocBusSelection" val=""/>
-    </tool>
-  </lib>
-  <lib desc="file#../ETF.circ" name="12"/>
-  <lib desc="file#../RisingEdge.circ" name="13"/>
-  <lib desc="file#/home/perapisar/Projects/ETF/PORT/dz2/dz2.circ" name="14"/>
+  <lib desc="#BFH-Praktika" name="7"/>
+  <lib desc="file#../ETF.circ" name="8"/>
+  <lib desc="file#../RisingEdge.circ" name="9"/>
+  <lib desc="file#/home/perapisar/Projects/ETF/PORT/dz2/dz2.circ" name="10"/>
   <main name="dz4"/>
   <options>
     <a name="gateUndefined" val="ignore"/>
@@ -130,15 +86,15 @@ end TCL_Generic;
     <a name="simrand" val="0"/>
   </options>
   <mappings>
-    <tool lib="8" map="Button2" name="Menu Tool"/>
-    <tool lib="8" map="Button3" name="Menu Tool"/>
-    <tool lib="8" map="Ctrl Button1" name="Menu Tool"/>
+    <tool lib="6" map="Button2" name="Menu Tool"/>
+    <tool lib="6" map="Button3" name="Menu Tool"/>
+    <tool lib="6" map="Ctrl Button1" name="Menu Tool"/>
   </mappings>
   <toolbar>
-    <tool lib="8" name="Poke Tool"/>
-    <tool lib="8" name="Edit Tool"/>
-    <tool lib="8" name="Wiring Tool"/>
-    <tool lib="8" name="Text Tool">
+    <tool lib="6" name="Poke Tool"/>
+    <tool lib="6" name="Edit Tool"/>
+    <tool lib="6" name="Wiring Tool"/>
+    <tool lib="6" name="Text Tool">
       <a name="font" val="SansSerif plain 12"/>
       <a name="halign" val="center"/>
       <a name="text" val=""/>
@@ -302,11 +258,8 @@ end TCL_Generic;
     <comp lib="1" loc="(790,220)" name="AND Gate">
       <a name="size" val="30"/>
     </comp>
-    <comp lib="13" loc="(330,80)" name="RisingEdge"/>
-    <comp lib="13" loc="(350,270)" name="RisingEdge"/>
-    <comp lib="13" loc="(350,340)" name="RisingEdge"/>
-    <comp lib="14" loc="(590,190)" name="PRandom07"/>
-    <comp lib="14" loc="(590,60)" name="PRandom07"/>
+    <comp lib="10" loc="(590,190)" name="PRandom07"/>
+    <comp lib="10" loc="(590,60)" name="PRandom07"/>
     <comp lib="2" loc="(170,500)" name="Priority Encoder">
       <a name="select" val="2"/>
     </comp>
@@ -342,12 +295,15 @@ end TCL_Generic;
     <comp lib="5" loc="(990,340)" name="7-Segment Display">
       <a name="labelvisible" val="true"/>
     </comp>
-    <comp lib="9" loc="(1000,450)" name="Binairy_to_BCD_converter">
+    <comp lib="7" loc="(1000,450)" name="Binairy_to_BCD_converter">
       <a name="binvalue" val="8"/>
     </comp>
-    <comp lib="9" loc="(1050,340)" name="BCD_to_7_Segment_decoder"/>
-    <comp lib="9" loc="(1110,340)" name="BCD_to_7_Segment_decoder"/>
-    <comp lib="9" loc="(990,340)" name="BCD_to_7_Segment_decoder"/>
+    <comp lib="7" loc="(1050,340)" name="BCD_to_7_Segment_decoder"/>
+    <comp lib="7" loc="(1110,340)" name="BCD_to_7_Segment_decoder"/>
+    <comp lib="7" loc="(990,340)" name="BCD_to_7_Segment_decoder"/>
+    <comp lib="9" loc="(330,80)" name="RisingEdge"/>
+    <comp lib="9" loc="(350,270)" name="RisingEdge"/>
+    <comp lib="9" loc="(350,340)" name="RisingEdge"/>
     <comp loc="(610,280)" name="Number"/>
     <comp loc="(920,340)" name="Streak"/>
     <comp loc="(950,450)" name="Chips"/>
@@ -614,7 +570,7 @@ end TCL_Generic;
       <a name="inputs" val="3"/>
       <a name="size" val="30"/>
     </comp>
-    <comp lib="12" loc="(470,150)" name="REG8"/>
+    <comp lib="8" loc="(470,150)" name="REG8"/>
     <wire from="(130,100)" to="(240,100)"/>
     <wire from="(130,140)" to="(150,140)"/>
     <wire from="(130,180)" to="(410,180)"/>
@@ -699,7 +655,7 @@ end TCL_Generic;
       <a name="inputs" val="3"/>
       <a name="size" val="30"/>
     </comp>
-    <comp lib="12" loc="(700,130)" name="REG8"/>
+    <comp lib="8" loc="(700,130)" name="REG8"/>
     <wire from="(100,120)" to="(480,120)"/>
     <wire from="(100,160)" to="(640,160)"/>
     <wire from="(100,40)" to="(520,40)"/>
@@ -768,10 +724,10 @@ end TCL_Generic;
     <comp lib="1" loc="(350,50)" name="AND Gate">
       <a name="size" val="30"/>
     </comp>
-    <comp lib="12" loc="(240,100)" name="ADD8">
+    <comp lib="8" loc="(240,100)" name="ADD8">
       <a name="facing" val="north"/>
     </comp>
-    <comp lib="12" loc="(360,170)" name="REG8"/>
+    <comp lib="8" loc="(360,170)" name="REG8"/>
     <wire from="(140,160)" to="(280,160)"/>
     <wire from="(140,200)" to="(300,200)"/>
     <wire from="(140,40)" to="(320,40)"/>

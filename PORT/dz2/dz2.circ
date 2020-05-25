@@ -22,16 +22,7 @@
       <a name="table" val=""/>
     </tool>
   </lib>
-  <lib desc="#Plexers" name="2">
-    <tool name="Multiplexer">
-      <a name="enable" val="false"/>
-    </tool>
-    <tool name="Demultiplexer">
-      <a name="enable" val="false"/>
-    </tool>
-  </lib>
-  <lib desc="#Arithmetic" name="3"/>
-  <lib desc="#Memory" name="4">
+  <lib desc="#Memory" name="2">
     <tool name="D Flip-Flop">
       <a name="appearance" val="logisim_evolution"/>
     </tool>
@@ -66,70 +57,8 @@
 </a>
     </tool>
   </lib>
-  <lib desc="#I/O" name="5"/>
-  <lib desc="#HDL-IP" name="6">
-    <tool name="VHDL Entity">
-      <a name="content">--------------------------------------------------------------------------------
--- HEIG-VD, institute REDS, 1400 Yverdon-les-Bains
--- Project :
--- File    :
--- Autor   :
--- Date    :
---
---------------------------------------------------------------------------------
--- Description :
---
---------------------------------------------------------------------------------
-
-library ieee;
-  use ieee.std_logic_1164.all;
-  --use ieee.numeric_std.all;
-
-entity VHDL_Component is
-  port(
-  ------------------------------------------------------------------------------
-  --Insert input ports below
-    horloge_i  : in  std_logic;                    -- input bit example
-    val_i      : in  std_logic_vector(3 downto 0); -- input vector example
-  ------------------------------------------------------------------------------
-  --Insert output ports below
-    max_o      : out std_logic;                    -- output bit example
-    cpt_o      : out std_logic_Vector(3 downto 0)  -- output vector example
-    );
-end VHDL_Component;
-
---------------------------------------------------------------------------------
---Complete your VHDL description below
-architecture type_architecture of VHDL_Component is
-
-
-begin
-
-
-end type_architecture;
-</a>
-    </tool>
-  </lib>
-  <lib desc="#TCL" name="7">
-    <tool name="TclGeneric">
-      <a name="content">library ieee;
-use ieee.std_logic_1164.all;
-
-entity TCL_Generic is
-  port(
-    --Insert input ports below
-    horloge_i  : in  std_logic;                    -- input bit example
-    val_i      : in  std_logic_vector(3 downto 0); -- input vector example
-
-	  --Insert output ports below
-    max_o      : out std_logic;                    -- output bit example
-    cpt_o      : out std_logic_Vector(3 downto 0)  -- output vector example
-  );
-end TCL_Generic;
-</a>
-    </tool>
-  </lib>
-  <lib desc="#Base" name="8">
+  <lib desc="#I/O" name="3"/>
+  <lib desc="#Base" name="4">
     <tool name="Text Tool">
       <a name="font" val="SansSerif plain 12"/>
       <a name="halign" val="center"/>
@@ -137,8 +66,8 @@ end TCL_Generic;
       <a name="valign" val="base"/>
     </tool>
   </lib>
-  <lib desc="#BFH-Praktika" name="9"/>
-  <lib desc="file#../RisingEdge.circ" name="10"/>
+  <lib desc="#BFH-Praktika" name="5"/>
+  <lib desc="file#../RisingEdge.circ" name="6"/>
   <main name="dz2"/>
   <options>
     <a name="gateUndefined" val="ignore"/>
@@ -146,14 +75,14 @@ end TCL_Generic;
     <a name="simrand" val="0"/>
   </options>
   <mappings>
-    <tool lib="8" map="Button2" name="Menu Tool"/>
-    <tool lib="8" map="Button3" name="Menu Tool"/>
-    <tool lib="8" map="Ctrl Button1" name="Menu Tool"/>
+    <tool lib="4" map="Button2" name="Menu Tool"/>
+    <tool lib="4" map="Button3" name="Menu Tool"/>
+    <tool lib="4" map="Ctrl Button1" name="Menu Tool"/>
   </mappings>
   <toolbar>
-    <tool lib="8" name="Poke Tool"/>
-    <tool lib="8" name="Edit Tool"/>
-    <tool lib="8" name="Text Tool">
+    <tool lib="4" name="Poke Tool"/>
+    <tool lib="4" name="Edit Tool"/>
+    <tool lib="4" name="Text Tool">
       <a name="font" val="SansSerif plain 12"/>
       <a name="halign" val="center"/>
       <a name="text" val=""/>
@@ -320,13 +249,13 @@ end TCL_Generic;
       <a name="facing" val="south"/>
       <a name="inputs" val="3"/>
     </comp>
-    <comp lib="4" loc="(1030,370)" name="T Flip-Flop">
+    <comp lib="2" loc="(1030,370)" name="T Flip-Flop">
       <a name="appearance" val="logisim_evolution"/>
     </comp>
-    <comp lib="4" loc="(1030,480)" name="T Flip-Flop">
+    <comp lib="2" loc="(1030,480)" name="T Flip-Flop">
       <a name="appearance" val="logisim_evolution"/>
     </comp>
-    <comp lib="4" loc="(1030,590)" name="T Flip-Flop">
+    <comp lib="2" loc="(1030,590)" name="T Flip-Flop">
       <a name="appearance" val="logisim_evolution"/>
     </comp>
     <wire from="(1000,420)" to="(1000,640)"/>
@@ -487,11 +416,11 @@ end TCL_Generic;
     <wire from="(710,360)" to="(710,400)"/>
     <wire from="(710,360)" to="(810,360)"/>
     <wire from="(710,400)" to="(720,400)"/>
-    <wire from="(720,140)" to="(1080,140)"/>
     <wire from="(720,140)" to="(720,320)"/>
+    <wire from="(720,140)" to="(770,140)"/>
     <wire from="(720,400)" to="(720,480)"/>
     <wire from="(730,260)" to="(730,320)"/>
-    <wire from="(730,260)" to="(770,260)"/>
+    <wire from="(730,260)" to="(870,260)"/>
     <wire from="(740,380)" to="(740,480)"/>
     <wire from="(740,380)" to="(830,380)"/>
     <wire from="(740,530)" to="(740,550)"/>
@@ -501,8 +430,8 @@ end TCL_Generic;
     <wire from="(760,110)" to="(760,320)"/>
     <wire from="(760,110)" to="(800,110)"/>
     <wire from="(760,350)" to="(760,480)"/>
-    <wire from="(770,260)" to="(770,320)"/>
-    <wire from="(770,260)" to="(870,260)"/>
+    <wire from="(770,140)" to="(1080,140)"/>
+    <wire from="(770,140)" to="(770,320)"/>
     <wire from="(790,20)" to="(790,320)"/>
     <wire from="(790,20)" to="(890,20)"/>
     <wire from="(790,370)" to="(790,410)"/>
@@ -573,16 +502,16 @@ end TCL_Generic;
     <comp lib="1" loc="(450,60)" name="OR Gate">
       <a name="size" val="30"/>
     </comp>
-    <comp lib="10" loc="(360,140)" name="RisingEdge"/>
-    <comp lib="10" loc="(360,70)" name="RisingEdge"/>
-    <comp lib="5" loc="(650,20)" name="7-Segment Display"/>
-    <comp lib="5" loc="(70,110)" name="Button">
+    <comp lib="3" loc="(650,20)" name="7-Segment Display"/>
+    <comp lib="3" loc="(70,110)" name="Button">
       <a name="label" val="btn1"/>
     </comp>
-    <comp lib="5" loc="(70,70)" name="Button">
+    <comp lib="3" loc="(70,70)" name="Button">
       <a name="label" val="btn0"/>
     </comp>
-    <comp lib="9" loc="(650,20)" name="BCD_to_7_Segment_decoder"/>
+    <comp lib="5" loc="(650,20)" name="BCD_to_7_Segment_decoder"/>
+    <comp lib="6" loc="(360,140)" name="RisingEdge"/>
+    <comp lib="6" loc="(360,70)" name="RisingEdge"/>
     <comp loc="(580,60)" name="PRandom07"/>
     <wire from="(110,110)" to="(110,140)"/>
     <wire from="(110,140)" to="(140,140)"/>

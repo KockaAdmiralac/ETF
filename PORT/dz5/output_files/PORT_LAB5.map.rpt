@@ -1,6 +1,6 @@
 Analysis & Synthesis report for PORT_LAB5
-Sat May 16 15:57:14 2020
-Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
+Sun May 24 01:56:43 2020
+Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
 ---------------------
@@ -13,9 +13,11 @@ Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
   5. Analysis & Synthesis Source Files Read
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
-  8. General Register Statistics
-  9. Elapsed Time Per Partition
- 10. Analysis & Synthesis Messages
+  8. Registers Removed During Synthesis
+  9. General Register Statistics
+ 10. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 11. Elapsed Time Per Partition
+ 12. Analysis & Synthesis Messages
 
 
 
@@ -38,24 +40,24 @@ applicable agreement for further details.
 
 
 
-+---------------------------------------------------------------------------------+
-; Analysis & Synthesis Summary                                                    ;
-+------------------------------------+--------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Sat May 16 15:57:14 2020      ;
-; Quartus II 64-Bit Version          ; 13.1.0 Build 162 10/23/2013 SJ Web Edition ;
-; Revision Name                      ; PORT_LAB5                                  ;
-; Top-level Entity Name              ; PORT_LAB5                                  ;
-; Family                             ; Cyclone III                                ;
-; Total logic elements               ; 0                                          ;
-;     Total combinational functions  ; 0                                          ;
-;     Dedicated logic registers      ; 0                                          ;
-; Total registers                    ; 0                                          ;
-; Total pins                         ; 45                                         ;
-; Total virtual pins                 ; 0                                          ;
-; Total memory bits                  ; 0                                          ;
-; Embedded Multiplier 9-bit elements ; 0                                          ;
-; Total PLLs                         ; 0                                          ;
-+------------------------------------+--------------------------------------------+
++--------------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                         ;
++------------------------------------+-------------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Sun May 24 01:56:43 2020           ;
+; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
+; Revision Name                      ; PORT_LAB5                                       ;
+; Top-level Entity Name              ; PORT_LAB5                                       ;
+; Family                             ; Cyclone III                                     ;
+; Total logic elements               ; 417                                             ;
+;     Total combinational functions  ; 312                                             ;
+;     Dedicated logic registers      ; 183                                             ;
+; Total registers                    ; 183                                             ;
+; Total pins                         ; 46                                              ;
+; Total virtual pins                 ; 0                                               ;
+; Total memory bits                  ; 0                                               ;
+; Embedded Multiplier 9-bit elements ; 0                                               ;
+; Total PLLs                         ; 0                                               ;
++------------------------------------+-------------------------------------------------+
 
 
 +----------------------------------------------------------------------------------------------------------------------+
@@ -145,82 +147,142 @@ applicable agreement for further details.
 +----------------------------------------------------------------------------+--------------------+--------------------+
 
 
-Parallel compilation was disabled, but you have multiple processors available. Enable parallel compilation to reduce compilation time.
-+-------------------------------------+
-; Parallel Compilation                ;
-+----------------------------+--------+
-; Processors                 ; Number ;
-+----------------------------+--------+
-; Number detected on machine ; 12     ;
-; Maximum allowed            ; 1      ;
-+----------------------------+--------+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 2           ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
+;     Processors 2-4         ;   0.0%      ;
++----------------------------+-------------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                                           ;
-+-------------------------------------+-----------------+------------------------------------+-------------------------------------------------------------------------------------------+---------+
-; File Name with User-Entered Path    ; Used in Netlist ; File Type                          ; File Name with Absolute Path                                                              ; Library ;
-+-------------------------------------+-----------------+------------------------------------+-------------------------------------------------------------------------------------------+---------+
-; Moduli/DC4_16.vhd                   ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/DC4_16.vhd                   ;         ;
-; Moduli/ALU8.vhd                     ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/ALU8.vhd                     ;         ;
-; Moduli/MEM_16_8.vhd                 ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/MEM_16_8.vhd                 ;         ;
-; Moduli/SevenSegmentInterfaceDEC.vhd ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/SevenSegmentInterfaceDEC.vhd ;         ;
-; Moduli/RisingEdge.vhd               ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/RisingEdge.vhd               ;         ;
-; Moduli/REG8.vhd                     ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/REG8.vhd                     ;         ;
-; Moduli/REG5.vhd                     ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/REG5.vhd                     ;         ;
-; Moduli/RandomGenerator.vhd          ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/RandomGenerator.vhd          ;         ;
-; Moduli/MX2_1.vhd                    ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/MX2_1.vhd                    ;         ;
-; Moduli/Chips.bdf                    ; yes             ; User Block Diagram/Schematic File  ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/Chips.bdf                    ;         ;
-; Moduli/Binary2BCD.vhd               ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/Binary2BCD.vhd               ;         ;
-; Moduli/ADD8.vhd                     ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/ADD8.vhd                     ;         ;
-; PORT_LAB5.bdf                       ; yes             ; User Block Diagram/Schematic File  ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/PORT_LAB5.bdf                       ;         ;
-; Moduli/SUB8.vhd                     ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/SUB8.vhd                     ;         ;
-; Moduli/Timer.bdf                    ; yes             ; User Block Diagram/Schematic File  ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/Timer.bdf                    ;         ;
-; Moduli/Number.vhd                   ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/Number.vhd                   ;         ;
-; Moduli/AddrMod.vhd                  ; yes             ; User VHDL File                     ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/Moduli/AddrMod.vhd                  ;         ;
-; MeanGain_operaciona_jedinica.bdf    ; yes             ; User Block Diagram/Schematic File  ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/MeanGain_operaciona_jedinica.bdf    ;         ;
-; MeanGain_upravljacka_jedinica.bdf   ; yes             ; User Block Diagram/Schematic File  ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/MeanGain_upravljacka_jedinica.bdf   ;         ;
-; MeanGain.bdf                        ; yes             ; User Block Diagram/Schematic File  ; C:/Users/danko/Desktop/Lab 5/LAB5 - Postavka projekta/MeanGain.bdf                        ;         ;
-+-------------------------------------+-----------------+------------------------------------+-------------------------------------------------------------------------------------------+---------+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                           ;
++-------------------------------------+-----------------+------------------------------------+---------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path    ; Used in Netlist ; File Type                          ; File Name with Absolute Path                                              ; Library ;
++-------------------------------------+-----------------+------------------------------------+---------------------------------------------------------------------------+---------+
+; Moduli/DC4_16.vhd                   ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/DC4_16.vhd                   ;         ;
+; Moduli/ALU8.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/ALU8.vhd                     ;         ;
+; Moduli/MEM_16_8.vhd                 ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/MEM_16_8.vhd                 ;         ;
+; Moduli/SevenSegmentInterfaceDEC.vhd ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/SevenSegmentInterfaceDEC.vhd ;         ;
+; Moduli/RisingEdge.vhd               ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/RisingEdge.vhd               ;         ;
+; Moduli/REG8.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/REG8.vhd                     ;         ;
+; Moduli/REG5.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/REG5.vhd                     ;         ;
+; Moduli/REG3.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/REG3.vhd                     ;         ;
+; Moduli/RandomGenerator.vhd          ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/RandomGenerator.vhd          ;         ;
+; Moduli/MX4_1.vhd                    ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/MX4_1.vhd                    ;         ;
+; Moduli/MX2_1.vhd                    ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/MX2_1.vhd                    ;         ;
+; Moduli/CMP5.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/CMP5.vhd                     ;         ;
+; Moduli/Chips.bdf                    ; yes             ; User Block Diagram/Schematic File  ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/Chips.bdf                    ;         ;
+; Moduli/CD4_2.vhd                    ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/CD4_2.vhd                    ;         ;
+; Moduli/Binary2BCD.vhd               ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/Binary2BCD.vhd               ;         ;
+; Moduli/ADD8.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/ADD8.vhd                     ;         ;
+; PORT_LAB5.bdf                       ; yes             ; User Block Diagram/Schematic File  ; /home/perapisar/Projects/ETF/PORT/dz5/PORT_LAB5.bdf                       ;         ;
+; Moduli/SUB8.vhd                     ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/SUB8.vhd                     ;         ;
+; Moduli/Timer.bdf                    ; yes             ; User Block Diagram/Schematic File  ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/Timer.bdf                    ;         ;
+; Moduli/Number.vhd                   ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/Number.vhd                   ;         ;
+; Moduli/AddrMod.vhd                  ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/AddrMod.vhd                  ;         ;
+; MeanGain_operaciona_jedinica.bdf    ; yes             ; User Block Diagram/Schematic File  ; /home/perapisar/Projects/ETF/PORT/dz5/MeanGain_operaciona_jedinica.bdf    ;         ;
+; MeanGain_upravljacka_jedinica.bdf   ; yes             ; User Block Diagram/Schematic File  ; /home/perapisar/Projects/ETF/PORT/dz5/MeanGain_upravljacka_jedinica.bdf   ;         ;
+; MeanGain.bdf                        ; yes             ; User Block Diagram/Schematic File  ; /home/perapisar/Projects/ETF/PORT/dz5/MeanGain.bdf                        ;         ;
+; Moduli/FallingEdge.vhd              ; yes             ; User VHDL File                     ; /home/perapisar/Projects/ETF/PORT/dz5/Moduli/FallingEdge.vhd              ;         ;
++-------------------------------------+-----------------+------------------------------------+---------------------------------------------------------------------------+---------+
 
 
-+-------------------------------------------------------------+
-; Analysis & Synthesis Resource Usage Summary                 ;
-+---------------------------------------------+---------------+
-; Resource                                    ; Usage         ;
-+---------------------------------------------+---------------+
-;                                             ;               ;
-; Total combinational functions               ; 0             ;
-; Logic element usage by number of LUT inputs ;               ;
-;     -- 4 input functions                    ; 0             ;
-;     -- 3 input functions                    ; 0             ;
-;     -- <=2 input functions                  ; 0             ;
-;                                             ;               ;
-; Logic elements by mode                      ;               ;
-;     -- normal mode                          ; 0             ;
-;     -- arithmetic mode                      ; 0             ;
-;                                             ;               ;
-; Total registers                             ; 0             ;
-;     -- Dedicated logic registers            ; 0             ;
-;     -- I/O registers                        ; 0             ;
-;                                             ;               ;
-; I/O pins                                    ; 45            ;
-; Embedded Multiplier 9-bit elements          ; 0             ;
-; Maximum fan-out node                        ; HEX1_0~output ;
-; Maximum fan-out                             ; 1             ;
-; Total fan-out                               ; 45            ;
-; Average fan-out                             ; 0.50          ;
-+---------------------------------------------+---------------+
++---------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary             ;
++---------------------------------------------+-----------+
+; Resource                                    ; Usage     ;
++---------------------------------------------+-----------+
+; Estimated Total logic elements              ; 417       ;
+;                                             ;           ;
+; Total combinational functions               ; 312       ;
+; Logic element usage by number of LUT inputs ;           ;
+;     -- 4 input functions                    ; 208       ;
+;     -- 3 input functions                    ; 52        ;
+;     -- <=2 input functions                  ; 52        ;
+;                                             ;           ;
+; Logic elements by mode                      ;           ;
+;     -- normal mode                          ; 279       ;
+;     -- arithmetic mode                      ; 33        ;
+;                                             ;           ;
+; Total registers                             ; 183       ;
+;     -- Dedicated logic registers            ; 183       ;
+;     -- I/O registers                        ; 0         ;
+;                                             ;           ;
+; I/O pins                                    ; 46        ;
+; Embedded Multiplier 9-bit elements          ; 0         ;
+; Maximum fan-out node                        ; CLK~input ;
+; Maximum fan-out                             ; 183       ;
+; Total fan-out                               ; 1716      ;
+; Average fan-out                             ; 2.92      ;
++---------------------------------------------+-----------+
 
 
-+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Resource Utilization by Entity                                                                                                                         ;
-+----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------+--------------+
-; Compilation Hierarchy Node ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name ; Library Name ;
-+----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------+--------------+
-; |PORT_LAB5                 ; 0 (0)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 45   ; 0            ; |PORT_LAB5          ; work         ;
-+----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------+--------------+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                 ;
++---------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------+--------------+
+; Compilation Hierarchy Node                  ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                        ; Library Name ;
++---------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------+--------------+
+; |PORT_LAB5                                  ; 312 (8)           ; 183 (0)      ; 0           ; 0            ; 0       ; 0         ; 46   ; 0            ; |PORT_LAB5                                                                 ; work         ;
+;    |Binary2BCD:inst15|                      ; 29 (29)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Binary2BCD:inst15                                               ; work         ;
+;    |CD4_2:inst19|                           ; 1 (1)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|CD4_2:inst19                                                    ; work         ;
+;    |CMP5:inst25|                            ; 1 (1)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|CMP5:inst25                                                     ; work         ;
+;    |Chips:inst13|                           ; 17 (1)            ; 8 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Chips:inst13                                                    ; work         ;
+;       |REG8:inst6|                          ; 8 (8)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Chips:inst13|REG8:inst6                                         ; work         ;
+;       |SUB8:inst2|                          ; 8 (8)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Chips:inst13|SUB8:inst2                                         ; work         ;
+;    |FallingEdge:inst44|                     ; 0 (0)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|FallingEdge:inst44                                              ; work         ;
+;    |MX2_1:inst24|                           ; 3 (3)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MX2_1:inst24                                                    ; work         ;
+;    |MX2_1:inst41|                           ; 6 (6)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MX2_1:inst41                                                    ; work         ;
+;    |MX2_1:inst46|                           ; 3 (3)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MX2_1:inst46                                                    ; work         ;
+;    |MX2_1:inst6|                            ; 8 (8)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MX2_1:inst6                                                     ; work         ;
+;    |MX4_1:inst22|                           ; 2 (2)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MX4_1:inst22                                                    ; work         ;
+;    |MeanGain:inst5|                         ; 188 (0)           ; 149 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5                                                  ; work         ;
+;       |MeanGain_operaciona_jedinica:inst|   ; 177 (18)          ; 146 (0)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst                ; work         ;
+;          |ALU8:inst12|                      ; 9 (9)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|ALU8:inst12    ; work         ;
+;          |AddrMod:inst1|                    ; 16 (16)           ; 9 (9)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|AddrMod:inst1  ; work         ;
+;          |MEM_16_8:inst2|                   ; 92 (92)           ; 100 (100)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|MEM_16_8:inst2 ; work         ;
+;          |MX2_1:inst10|                     ; 7 (7)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|MX2_1:inst10   ; work         ;
+;          |REG5:inst3|                       ; 6 (6)             ; 5 (5)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG5:inst3     ; work         ;
+;          |REG8:inst13|                      ; 1 (1)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst13    ; work         ;
+;          |REG8:inst14|                      ; 9 (9)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst14    ; work         ;
+;          |REG8:inst17|                      ; 10 (10)           ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17    ; work         ;
+;          |REG8:inst|                        ; 9 (9)             ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst      ; work         ;
+;       |MeanGain_upravljacka_jedinica:inst1| ; 11 (7)            ; 3 (3)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_upravljacka_jedinica:inst1              ; work         ;
+;          |DC4_16:inst|                      ; 4 (4)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|MeanGain:inst5|MeanGain_upravljacka_jedinica:inst1|DC4_16:inst  ; work         ;
+;    |Number:inst9|                           ; 6 (6)             ; 5 (5)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Number:inst9                                                    ; work         ;
+;    |RandomGenerator:inst2|                  ; 5 (5)             ; 3 (3)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|RandomGenerator:inst2                                           ; work         ;
+;    |RandomGenerator:inst3|                  ; 1 (1)             ; 1 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|RandomGenerator:inst3                                           ; work         ;
+;    |RisingEdge:inst1|                       ; 1 (1)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|RisingEdge:inst1                                                ; work         ;
+;    |RisingEdge:inst21|                      ; 2 (2)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|RisingEdge:inst21                                               ; work         ;
+;    |RisingEdge:inst4|                       ; 0 (0)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|RisingEdge:inst4                                                ; work         ;
+;    |SevenSegmentInterfaceDEC:inst10|        ; 7 (7)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|SevenSegmentInterfaceDEC:inst10                                 ; work         ;
+;    |SevenSegmentInterfaceDEC:inst11|        ; 7 (7)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|SevenSegmentInterfaceDEC:inst11                                 ; work         ;
+;    |SevenSegmentInterfaceDEC:inst12|        ; 3 (3)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|SevenSegmentInterfaceDEC:inst12                                 ; work         ;
+;    |Timer:inst16|                           ; 14 (1)            ; 9 (1)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Timer:inst16                                                    ; work         ;
+;       |REG3:inst7|                          ; 6 (6)             ; 3 (3)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Timer:inst16|REG3:inst7                                         ; work         ;
+;       |RandomGenerator:inst1|               ; 5 (5)             ; 3 (3)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Timer:inst16|RandomGenerator:inst1                              ; work         ;
+;       |RisingEdge:inst|                     ; 2 (2)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB5|Timer:inst16|RisingEdge:inst                                    ; work         ;
++---------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
++--------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                             ;
++---------------------------------------+----------------------------------------+
+; Register name                         ; Reason for Removal                     ;
++---------------------------------------+----------------------------------------+
+; RandomGenerator:inst3|v[0,2]          ; Stuck at GND due to stuck port data_in ;
+; Total Number of Removed Registers = 2 ;                                        ;
++---------------------------------------+----------------------------------------+
 
 
 +------------------------------------------------------+
@@ -228,14 +290,34 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 0     ;
-; Number of registers using Synchronous Clear  ; 0     ;
-; Number of registers using Synchronous Load   ; 0     ;
-; Number of registers using Asynchronous Clear ; 0     ;
+; Total registers                              ; 183   ;
+; Number of registers using Synchronous Clear  ; 9     ;
+; Number of registers using Synchronous Load   ; 12    ;
+; Number of registers using Asynchronous Clear ; 3     ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 0     ;
+; Number of registers using Clock Enable       ; 158   ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
+
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                                   ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                                         ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------------+
+; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |PORT_LAB5|Timer:inst16|REG3:inst7|v[2]                                            ;
+; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG5:inst3|v[2]        ;
+; 3:1                ; 8 bits    ; 16 LEs        ; 8 LEs                ; 8 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst14|v[7]       ;
+; 3:1                ; 8 bits    ; 16 LEs        ; 8 LEs                ; 8 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst13|v[2]       ;
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|AddrMod:inst1|vAddr[1] ;
+; 4:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |PORT_LAB5|Number:inst9|v[0]                                                       ;
+; 4:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|AddrMod:inst1|vCnt[1]  ;
+; 10:1               ; 3 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |PORT_LAB5|RandomGenerator:inst2|v[0]                                              ;
+; 10:1               ; 3 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |PORT_LAB5|RandomGenerator:inst3|v[0]                                              ;
+; 10:1               ; 3 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |PORT_LAB5|Timer:inst16|RandomGenerator:inst1|v[2]                                 ;
+; 3:1                ; 8 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v[6]       ;
+; 4:1                ; 7 bits    ; 14 LEs        ; 14 LEs               ; 0 LEs                  ; Yes        ; |PORT_LAB5|MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst|v[3]         ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------------+
 
 
 +-------------------------------+
@@ -243,7 +325,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:00     ;
+; Top            ; 00:00:01     ;
 +----------------+--------------+
 
 
@@ -252,126 +334,92 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-------------------------------+
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
-    Info: Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
-    Info: Processing started: Sat May 16 15:57:13 2020
+    Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
+    Info: Processing started: Sun May 24 01:56:39 2020
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off PORT_LAB5 -c PORT_LAB5
-Warning (20028): Parallel compilation is not licensed and has been disabled
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/dc4_16.vhd
+Info (11104): Parallel Compilation has detected 4 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 2 of the 2 physical processors detected instead.
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/DC4_16.vhd
     Info (12022): Found design unit 1: DC4_16-rtl
     Info (12023): Found entity 1: DC4_16
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/alu8.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/ALU8.vhd
     Info (12022): Found design unit 1: ALU8-rtl
     Info (12023): Found entity 1: ALU8
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/mem_16_8.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/MEM_16_8.vhd
     Info (12022): Found design unit 1: MEM_16_8-rtl
     Info (12023): Found entity 1: MEM_16_8
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/sevensegmentinterfacedec.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/SevenSegmentInterfaceDEC.vhd
     Info (12022): Found design unit 1: SevenSegmentInterfaceDEC-rtl
     Info (12023): Found entity 1: SevenSegmentInterfaceDEC
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/risingedge.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/RisingEdge.vhd
     Info (12022): Found design unit 1: RisingEdge-rtl
     Info (12023): Found entity 1: RisingEdge
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/reg8.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/REG8.vhd
     Info (12022): Found design unit 1: REG8-rtl
     Info (12023): Found entity 1: REG8
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/reg5.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/REG5.vhd
     Info (12022): Found design unit 1: REG5-rtl
     Info (12023): Found entity 1: REG5
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/reg3.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/REG3.vhd
     Info (12022): Found design unit 1: REG3-rtl
     Info (12023): Found entity 1: REG3
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/randomgenerator.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/RandomGenerator.vhd
     Info (12022): Found design unit 1: RandomGenerator-rtl
     Info (12023): Found entity 1: RandomGenerator
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/mx4_1.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/MX4_1.vhd
     Info (12022): Found design unit 1: MX4_1-rtl
     Info (12023): Found entity 1: MX4_1
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/mx2_1.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/MX2_1.vhd
     Info (12022): Found design unit 1: MX2_1-rtl
     Info (12023): Found entity 1: MX2_1
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/dc2_4.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/DC2_4.vhd
     Info (12022): Found design unit 1: DC2_4-rtl
     Info (12023): Found entity 1: DC2_4
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/cmp5.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/CMP5.vhd
     Info (12022): Found design unit 1: CMP5-rtl
     Info (12023): Found entity 1: CMP5
-Info (12021): Found 1 design units, including 1 entities, in source file moduli/chips.bdf
+Info (12021): Found 1 design units, including 1 entities, in source file Moduli/Chips.bdf
     Info (12023): Found entity 1: Chips
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/cd4_2.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/CD4_2.vhd
     Info (12022): Found design unit 1: CD4_2-rtl
     Info (12023): Found entity 1: CD4_2
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/binary2bcd.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/Binary2BCD.vhd
     Info (12022): Found design unit 1: Binary2BCD-Behavioral
     Info (12023): Found entity 1: Binary2BCD
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/add8.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/ADD8.vhd
     Info (12022): Found design unit 1: ADD8-rtl
     Info (12023): Found entity 1: ADD8
-Info (12021): Found 1 design units, including 1 entities, in source file port_lab5.bdf
+Info (12021): Found 1 design units, including 1 entities, in source file PORT_LAB5.bdf
     Info (12023): Found entity 1: PORT_LAB5
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/sub8.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/SUB8.vhd
     Info (12022): Found design unit 1: SUB8-rtl
     Info (12023): Found entity 1: SUB8
-Info (12021): Found 1 design units, including 1 entities, in source file moduli/timer.bdf
+Info (12021): Found 1 design units, including 1 entities, in source file Moduli/Timer.bdf
     Info (12023): Found entity 1: Timer
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/number.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/Number.vhd
     Info (12022): Found design unit 1: Number-rtl
     Info (12023): Found entity 1: Number
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/reg4.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/REG4.vhd
     Info (12022): Found design unit 1: REG4-rtl
     Info (12023): Found entity 1: REG4
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/addrmod.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/AddrMod.vhd
     Info (12022): Found design unit 1: AddrMod-rtl
     Info (12023): Found entity 1: AddrMod
-Info (12021): Found 1 design units, including 1 entities, in source file meangain_operaciona_jedinica.bdf
+Info (12021): Found 1 design units, including 1 entities, in source file MeanGain_operaciona_jedinica.bdf
     Info (12023): Found entity 1: MeanGain_operaciona_jedinica
-Info (12021): Found 1 design units, including 1 entities, in source file meangain_upravljacka_jedinica.bdf
+Info (12021): Found 1 design units, including 1 entities, in source file MeanGain_upravljacka_jedinica.bdf
     Info (12023): Found entity 1: MeanGain_upravljacka_jedinica
-Info (12021): Found 1 design units, including 1 entities, in source file meangain.bdf
+Info (12021): Found 1 design units, including 1 entities, in source file MeanGain.bdf
     Info (12023): Found entity 1: MeanGain
-Info (12021): Found 2 design units, including 1 entities, in source file moduli/fallingedge.vhd
+Info (12021): Found 2 design units, including 1 entities, in source file Moduli/FallingEdge.vhd
     Info (12022): Found design unit 1: FallingEdge-rtl
     Info (12023): Found entity 1: FallingEdge
 Info (12127): Elaborating entity "PORT_LAB5" for the top level hierarchy
-Warning (275013): Port "clk" of type Chips and instance "inst13" is missing source signal
-Warning (275043): Pin "LED0" is missing source
-Warning (275043): Pin "LED1" is missing source
-Warning (275043): Pin "LED2" is missing source
-Warning (275043): Pin "LED3" is missing source
-Warning (275043): Pin "LED4" is missing source
-Warning (275043): Pin "LED5" is missing source
-Warning (275043): Pin "LED6" is missing source
-Warning (275043): Pin "LED7" is missing source
-Warning (275013): Port "clk" of type RisingEdge and instance "inst21" is missing source signal
-Warning (275013): Port "clk" of type MeanGain and instance "inst5" is missing source signal
-Warning (275013): Port "clk" of type Number and instance "inst9" is missing source signal
-Warning (275009): Pin "SW7" not connected
-Warning (275009): Pin "SW3" not connected
-Warning (275009): Pin "SW4" not connected
-Warning (275009): Pin "SW5" not connected
-Warning (275009): Pin "SW6" not connected
-Warning (275009): Pin "SW8" not connected
-Warning (275009): Pin "SW9" not connected
-Warning (275009): Pin "SW0" not connected
-Warning (275009): Pin "SW1" not connected
-Warning (275008): Primitive "XNOR" of instance "inst17" not used
-Warning (275008): Primitive "VCC" of instance "inst39" not used
-Warning (275008): Primitive "GND" of instance "inst40" not used
 Info (12128): Elaborating entity "SevenSegmentInterfaceDEC" for hierarchy "SevenSegmentInterfaceDEC:inst11"
 Info (12128): Elaborating entity "Binary2BCD" for hierarchy "Binary2BCD:inst15"
 Info (12128): Elaborating entity "Chips" for hierarchy "Chips:inst13"
-Warning (275043): Pin "chips[7..0]" is missing source
-Warning (275043): Pin "gain[7..0]" is missing source
-Warning (275009): Pin "calc" not connected
-Warning (275009): Pin "rst" not connected
-Warning (275009): Pin "clk" not connected
-Warning (275009): Pin "init" not connected
-Warning (275009): Pin "even_odd" not connected
-Warning (275009): Pin "stake" not connected
-Warning (275009): Pin "straight_up" not connected
-Warning (275008): Primitive "AND2" of instance "inst" not used
-Warning (275008): Primitive "OR2" of instance "inst4" not used
-Warning (275008): Primitive "NOT" of instance "inst5" not used
-Info (12128): Elaborating entity "ADD8" for hierarchy "Chips:inst13|ADD8:inst1"
+Info (12128): Elaborating entity "REG8" for hierarchy "Chips:inst13|REG8:inst6"
+Info (12128): Elaborating entity "MX2_1" for hierarchy "Chips:inst13|MX2_1:inst3"
+Info (12128): Elaborating entity "ADD8" for hierarchy "Chips:inst13|ADD8:inst7"
 Info (12128): Elaborating entity "SUB8" for hierarchy "Chips:inst13|SUB8:inst2"
 Warning (10631): VHDL Process Statement warning at SUB8.vhd(22): inferring latch(es) for signal or variable "varF", which holds its previous value in one or more paths through the process
 Info (10041): Inferred latch for "varF[0]" at SUB8.vhd(27)
@@ -383,121 +431,67 @@ Info (10041): Inferred latch for "varF[5]" at SUB8.vhd(27)
 Info (10041): Inferred latch for "varF[6]" at SUB8.vhd(27)
 Info (10041): Inferred latch for "varF[7]" at SUB8.vhd(27)
 Info (10041): Inferred latch for "varF[8]" at SUB8.vhd(27)
-Info (12128): Elaborating entity "MX2_1" for hierarchy "Chips:inst13|MX2_1:inst3"
+Info (12128): Elaborating entity "FallingEdge" for hierarchy "FallingEdge:inst44"
 Info (12128): Elaborating entity "Timer" for hierarchy "Timer:inst16"
-Warning (275043): Pin "out" is missing source
-Warning (275013): Port "clk" of type RisingEdge and instance "inst" is missing source signal
-Warning (275013): Port "CLK" of type RandomGenerator and instance "inst1" is missing source signal
-Warning (275009): Pin "rst" not connected
-Warning (275009): Pin "clk" not connected
-Warning (275009): Pin "start" not connected
-Warning (275008): Primitive "AND2" of instance "inst2" not used
-Warning (275008): Primitive "AND2" of instance "inst3" not used
-Warning (275008): Primitive "OR3" of instance "inst4" not used
-Warning (275008): Primitive "NOT" of instance "inst5" not used
-Warning (275008): Primitive "NOT" of instance "inst6" not used
+Info (12128): Elaborating entity "REG3" for hierarchy "Timer:inst16|REG3:inst7"
 Info (12128): Elaborating entity "RisingEdge" for hierarchy "Timer:inst16|RisingEdge:inst"
 Info (12128): Elaborating entity "RandomGenerator" for hierarchy "Timer:inst16|RandomGenerator:inst1"
+Info (12128): Elaborating entity "CMP5" for hierarchy "CMP5:inst25"
+Info (12128): Elaborating entity "MX4_1" for hierarchy "MX4_1:inst22"
+Info (12128): Elaborating entity "CD4_2" for hierarchy "CD4_2:inst19"
+Info (12128): Elaborating entity "Number" for hierarchy "Number:inst9"
 Info (12128): Elaborating entity "MeanGain" for hierarchy "MeanGain:inst5"
-Warning (275009): Pin "wr" not connected
 Info (12128): Elaborating entity "MeanGain_operaciona_jedinica" for hierarchy "MeanGain:inst5|MeanGain_operaciona_jedinica:inst"
-Warning (275083): Bus "AddrRd0" found using same base name as "AddrRd0", which might lead to a name conflict.
-Warning (275080): Converted elements in bus name "AddrRd" using legacy naming rules. Make any assignments on the new names, not on the original names.
-    Warning (275081): Converted element name(s) from "AddrRd[3..0]" to "AddrRd3..0"
-    Warning (275081): Converted element name(s) from "AddrRd[4..0]" to "AddrRd4..0"
-    Warning (275081): Converted element name(s) from "AddrRd[0]" to "AddrRd0"
-    Warning (275081): Converted element name(s) from "AddrRd[1]" to "AddrRd1"
-    Warning (275081): Converted element name(s) from "AddrRd[2]" to "AddrRd2"
-    Warning (275081): Converted element name(s) from "AddrRd[3]" to "AddrRd3"
-    Warning (275081): Converted element name(s) from "AddrRd[4]" to "AddrRd4"
-Warning (275043): Pin "RES[7..0]" is missing source
 Info (12128): Elaborating entity "ALU8" for hierarchy "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|ALU8:inst12"
-Info (12128): Elaborating entity "REG8" for hierarchy "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst13"
 Info (12128): Elaborating entity "MEM_16_8" for hierarchy "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|MEM_16_8:inst2"
 Info (12128): Elaborating entity "REG5" for hierarchy "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG5:inst3"
 Info (12128): Elaborating entity "AddrMod" for hierarchy "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|AddrMod:inst1"
 Info (12128): Elaborating entity "MeanGain_upravljacka_jedinica" for hierarchy "MeanGain:inst5|MeanGain_upravljacka_jedinica:inst1"
-Warning (275043): Pin "ldS" is missing source
-Warning (275043): Pin "clS" is missing source
-Warning (275043): Pin "srS" is missing source
-Warning (275043): Pin "S1" is missing source
-Warning (275043): Pin "S0" is missing source
-Warning (275043): Pin "Cin" is missing source
-Warning (275043): Pin "ldL0" is missing source
-Warning (275043): Pin "clL0" is missing source
-Warning (275043): Pin "ldL1" is missing source
-Warning (275043): Pin "clL1" is missing source
-Warning (275043): Pin "rdALU" is missing source
-Warning (275043): Pin "wr" is missing source
-Warning (275043): Pin "clAddrRd" is missing source
-Warning (275043): Pin "decAddrRd" is missing source
-Warning (275043): Pin "rdS" is missing source
-Warning (275043): Pin "rdMem" is missing source
-Warning (275043): Pin "rdConst" is missing source
-Warning (275043): Pin "rdRes" is missing source
-Warning (275009): Pin "Cout" not connected
-Warning (275009): Pin "AddrRd0" not connected
-Warning (275009): Pin "clk" not connected
-Warning (275009): Pin "rst" not connected
-Warning (275009): Pin "MeanGain" not connected
 Info (12128): Elaborating entity "DC4_16" for hierarchy "MeanGain:inst5|MeanGain_upravljacka_jedinica:inst1|DC4_16:inst"
-Info (12128): Elaborating entity "Number" for hierarchy "Number:inst9"
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[2]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[1]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[0]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[4]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[5]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[6]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[7]" is permanently enabled
+Warning (14026): LATCH primitive "Chips:inst13|SUB8:inst2|varF[3]" is permanently enabled
+Info (276014): Found 1 instances of uninferred RAM logic
+    Info (276004): RAM logic "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|MEM_16_8:inst2|ram" is uninferred due to inappropriate RAM size
+Warning (13027): Removed fan-outs from the following always-disabled I/O buffers
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[0]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[1]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[2]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[3]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[4]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[5]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[6]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+    Warning (13028): Removed fan-out from the always-disabled I/O buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst7[7]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v"
+Warning (13046): Tri-state node(s) do not directly drive top-level pin(s)
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst5[0]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst6[1]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst6[2]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst6[3]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst5[4]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst5[5]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst5[6]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
+    Warning (13047): Converted the fan-out from the tri-state buffer "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|inst5[7]" to the node "MeanGain:inst5|MeanGain_operaciona_jedinica:inst|REG8:inst17|v" into an OR gate
 Warning (13024): Output pins are stuck at VCC or GND
-    Warning (13410): Pin "HEX1_0" is stuck at GND
-    Warning (13410): Pin "HEX1_1" is stuck at GND
-    Warning (13410): Pin "HEX1_2" is stuck at GND
-    Warning (13410): Pin "HEX1_3" is stuck at GND
-    Warning (13410): Pin "HEX1_4" is stuck at GND
-    Warning (13410): Pin "HEX1_5" is stuck at GND
-    Warning (13410): Pin "HEX1_6" is stuck at VCC
     Warning (13410): Pin "HEX1_DP" is stuck at VCC
-    Warning (13410): Pin "HEX0_0" is stuck at GND
-    Warning (13410): Pin "HEX0_1" is stuck at GND
-    Warning (13410): Pin "HEX0_2" is stuck at GND
-    Warning (13410): Pin "HEX0_3" is stuck at GND
-    Warning (13410): Pin "HEX0_4" is stuck at GND
-    Warning (13410): Pin "HEX0_5" is stuck at GND
-    Warning (13410): Pin "HEX0_6" is stuck at VCC
     Warning (13410): Pin "HEX0_DP" is stuck at VCC
-    Warning (13410): Pin "HEX2_0" is stuck at GND
     Warning (13410): Pin "HEX2_1" is stuck at GND
-    Warning (13410): Pin "HEX2_2" is stuck at GND
-    Warning (13410): Pin "HEX2_3" is stuck at GND
-    Warning (13410): Pin "HEX2_4" is stuck at GND
-    Warning (13410): Pin "HEX2_5" is stuck at GND
-    Warning (13410): Pin "HEX2_6" is stuck at VCC
     Warning (13410): Pin "HEX2_DP" is stuck at VCC
-    Warning (13410): Pin "LED0" is stuck at GND
-    Warning (13410): Pin "LED1" is stuck at GND
-    Warning (13410): Pin "LED2" is stuck at GND
-    Warning (13410): Pin "LED3" is stuck at GND
-    Warning (13410): Pin "LED4" is stuck at GND
-    Warning (13410): Pin "LED5" is stuck at GND
-    Warning (13410): Pin "LED6" is stuck at GND
-    Warning (13410): Pin "LED7" is stuck at GND
+Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Warning (21074): Design contains 13 input pin(s) that do not drive logic
-    Warning (15610): No output dependent on input pin "BTN1"
-    Warning (15610): No output dependent on input pin "BTN0"
-    Warning (15610): No output dependent on input pin "CLK"
-    Warning (15610): No output dependent on input pin "BTN2"
-    Warning (15610): No output dependent on input pin "SW7"
-    Warning (15610): No output dependent on input pin "SW3"
-    Warning (15610): No output dependent on input pin "SW4"
-    Warning (15610): No output dependent on input pin "SW5"
-    Warning (15610): No output dependent on input pin "SW6"
-    Warning (15610): No output dependent on input pin "SW8"
-    Warning (15610): No output dependent on input pin "SW9"
-    Warning (15610): No output dependent on input pin "SW0"
-    Warning (15610): No output dependent on input pin "SW1"
-Info (21057): Implemented 45 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 13 input pins
+Info (21057): Implemented 482 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 14 input pins
     Info (21059): Implemented 32 output pins
-Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 130 warnings
-    Info: Peak virtual memory: 4674 megabytes
-    Info: Processing ended: Sat May 16 15:57:14 2020
-    Info: Elapsed time: 00:00:01
-    Info: Total CPU time (on all processors): 00:00:01
+    Info (21061): Implemented 436 logic cells
+Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 32 warnings
+    Info: Peak virtual memory: 630 megabytes
+    Info: Processing ended: Sun May 24 01:56:43 2020
+    Info: Elapsed time: 00:00:04
+    Info: Total CPU time (on all processors): 00:00:04
 
 

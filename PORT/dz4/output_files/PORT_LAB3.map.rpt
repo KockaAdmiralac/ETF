@@ -1,5 +1,5 @@
 Analysis & Synthesis report for PORT_LAB3
-Wed May 13 07:45:34 2020
+Sat May 23 04:06:26 2020
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -43,15 +43,15 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Wed May 13 07:45:34 2020           ;
+; Analysis & Synthesis Status        ; Successful - Sat May 23 04:06:26 2020           ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; PORT_LAB3                                       ;
 ; Top-level Entity Name              ; PORT_LAB4                                       ;
 ; Family                             ; Cyclone III                                     ;
-; Total logic elements               ; 85                                              ;
+; Total logic elements               ; 84                                              ;
 ;     Total combinational functions  ; 79                                              ;
-;     Dedicated logic registers      ; 28                                              ;
-; Total registers                    ; 28                                              ;
+;     Dedicated logic registers      ; 27                                              ;
+; Total registers                    ; 27                                              ;
 ; Total pins                         ; 44                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
@@ -193,7 +193,7 @@ applicable agreement for further details.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 85        ;
+; Estimated Total logic elements              ; 84        ;
 ;                                             ;           ;
 ; Total combinational functions               ; 79        ;
 ; Logic element usage by number of LUT inputs ;           ;
@@ -205,15 +205,15 @@ applicable agreement for further details.
 ;     -- normal mode                          ; 75        ;
 ;     -- arithmetic mode                      ; 4         ;
 ;                                             ;           ;
-; Total registers                             ; 28        ;
-;     -- Dedicated logic registers            ; 28        ;
+; Total registers                             ; 27        ;
+;     -- Dedicated logic registers            ; 27        ;
 ;     -- I/O registers                        ; 0         ;
 ;                                             ;           ;
 ; I/O pins                                    ; 44        ;
 ; Embedded Multiplier 9-bit elements          ; 0         ;
 ; Maximum fan-out node                        ; CLK~input ;
-; Maximum fan-out                             ; 28        ;
-; Total fan-out                               ; 436       ;
+; Maximum fan-out                             ; 27        ;
+; Total fan-out                               ; 434       ;
 ; Average fan-out                             ; 2.24      ;
 +---------------------------------------------+-----------+
 
@@ -223,7 +223,7 @@ applicable agreement for further details.
 +--------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+--------------------------------------------+--------------+
 ; Compilation Hierarchy Node           ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                        ; Library Name ;
 +--------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+--------------------------------------------+--------------+
-; |PORT_LAB4                           ; 79 (2)            ; 28 (2)       ; 0           ; 0            ; 0       ; 0         ; 44   ; 0            ; |PORT_LAB4                                 ; work         ;
+; |PORT_LAB4                           ; 79 (2)            ; 27 (1)       ; 0           ; 0            ; 0       ; 0         ; 44   ; 0            ; |PORT_LAB4                                 ; work         ;
 ;    |Binary2BCD:inst15|               ; 16 (16)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB4|Binary2BCD:inst15               ; work         ;
 ;    |CD4_2:inst20|                    ; 1 (1)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB4|CD4_2:inst20                    ; work         ;
 ;    |Chips:inst13|                    ; 1 (0)             ; 6 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |PORT_LAB4|Chips:inst13                    ; work         ;
@@ -261,7 +261,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 28    ;
+; Total registers                              ; 27    ;
 ; Number of registers using Synchronous Clear  ; 12    ;
 ; Number of registers using Synchronous Load   ; 0     ;
 ; Number of registers using Asynchronous Clear ; 0     ;
@@ -299,7 +299,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-    Info: Processing started: Wed May 13 07:45:30 2020
+    Info: Processing started: Sat May 23 04:06:22 2020
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off PORT_LAB4 -c PORT_LAB3
 Info (11104): Parallel Compilation has detected 4 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 2 of the 2 physical processors detected instead.
 Info (12021): Found 2 design units, including 1 entities, in source file Moduli/Binary2BCD.vhd
@@ -373,14 +373,14 @@ Warning (13024): Output pins are stuck at VCC or GND
 Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 130 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 129 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 12 input pins
     Info (21059): Implemented 32 output pins
-    Info (21061): Implemented 86 logic cells
+    Info (21061): Implemented 85 logic cells
 Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 5 warnings
     Info: Peak virtual memory: 636 megabytes
-    Info: Processing ended: Wed May 13 07:45:34 2020
+    Info: Processing ended: Sat May 23 04:06:26 2020
     Info: Elapsed time: 00:00:04
-    Info: Total CPU time (on all processors): 00:00:03
+    Info: Total CPU time (on all processors): 00:00:04
 
 

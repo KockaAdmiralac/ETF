@@ -1,5 +1,5 @@
 Fitter report for PORT_LAB3
-Sun May 10 21:54:06 2020
+Sun May 24 02:08:46 2020
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -66,7 +66,7 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Fitter Summary                                                                       ;
 +------------------------------------+-------------------------------------------------+
-; Fitter Status                      ; Successful - Sun May 10 21:54:06 2020           ;
+; Fitter Status                      ; Successful - Sun May 24 02:08:46 2020           ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; PORT_LAB3                                       ;
 ; Top-level Entity Name              ; PORT_LAB3                                       ;
@@ -146,15 +146,22 @@ applicable agreement for further details.
 +----------------------------------------------------------------------------+---------------------------------------+---------------------------------------+
 
 
-Parallel compilation was disabled, but you have multiple processors available. Enable parallel compilation to reduce compilation time.
-+-------------------------------------+
-; Parallel Compilation                ;
-+----------------------------+--------+
-; Processors                 ; Number ;
-+----------------------------+--------+
-; Number detected on machine ; 4      ;
-; Maximum allowed            ; 1      ;
-+----------------------------+--------+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 2           ;
+;                            ;             ;
+; Average used               ; 1.29        ;
+; Maximum used               ; 2           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
+;     Processor 2            ;  28.6%      ;
+;     Processors 3-4         ;   0.0%      ;
++----------------------------+-------------+
 
 
 +-------------------------------------------------+
@@ -365,8 +372,8 @@ The pin-out file can be found in /home/perapisar/Projects/ETF/PORT/dz3/output_fi
 ; SW5   ; J7    ; 1        ; 0            ; 22           ; 14           ; 4                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
 ; SW6   ; H7    ; 1        ; 0            ; 25           ; 14           ; 4                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
 ; SW7   ; E3    ; 1        ; 0            ; 26           ; 7            ; 4                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
-; SW8   ; E4    ; 1        ; 0            ; 26           ; 0            ; 8                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
-; SW9   ; D2    ; 1        ; 0            ; 25           ; 0            ; 2                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
+; SW8   ; E4    ; 1        ; 0            ; 26           ; 0            ; 2                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
+; SW9   ; D2    ; 1        ; 0            ; 25           ; 0            ; 8                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
 ; SW[0] ; J6    ; 1        ; 0            ; 24           ; 0            ; 1                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
 ; SW[1] ; H5    ; 1        ; 0            ; 27           ; 0            ; 1                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
 ; SW[2] ; H6    ; 1        ; 0            ; 25           ; 21           ; 3                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 2.5 V        ; --                        ; User                 ;
@@ -1001,15 +1008,15 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; HEX2_DP ; Output   ; --            ; --            ; --                    ; --  ; --   ;
 ; BTN2    ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
 ; SW[0]   ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
-; SW[1]   ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
+; SW[1]   ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
 ; SW7     ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
 ; SW5     ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
-; SW6     ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
+; SW6     ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
 ; SW[2]   ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
 ; SW3     ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
-; SW4     ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
+; SW4     ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
+; SW8     ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
 ; SW9     ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
-; SW8     ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
 ; BTN0    ; Input    ; --            ; (6) 1314 ps   ; --                    ; --  ; --   ;
 ; CLK     ; Input    ; (0) 0 ps      ; --            ; --                    ; --  ; --   ;
 ; BTN1    ; Input    ; (6) 1314 ps   ; --            ; --                    ; --  ; --   ;
@@ -1030,7 +1037,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; SW[0]                                         ;                   ;         ;
 ;      - CMP3:inst5|Equal0~0                    ; 1                 ; 6       ;
 ; SW[1]                                         ;                   ;         ;
-;      - CMP3:inst5|Equal0~0                    ; 1                 ; 6       ;
+;      - CMP3:inst5|Equal0~0                    ; 0                 ; 6       ;
 ; SW7                                           ;                   ;         ;
 ;      - MX2_1:inst8|Y~4                        ; 0                 ; 6       ;
 ;      - MX2_1:inst6|Y~1                        ; 0                 ; 6       ;
@@ -1042,10 +1049,10 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ;      - MX2_1:inst6|Y~3                        ; 1                 ; 6       ;
 ;      - MX4_1:inst4|Y[0]~0                     ; 1                 ; 6       ;
 ; SW6                                           ;                   ;         ;
-;      - MX2_1:inst8|Y~4                        ; 0                 ; 6       ;
-;      - MX2_1:inst6|Y~1                        ; 0                 ; 6       ;
-;      - MX4_1:inst4|Y[0]~0                     ; 0                 ; 6       ;
-;      - MX2_1:inst8|Y~9                        ; 0                 ; 6       ;
+;      - MX2_1:inst8|Y~4                        ; 1                 ; 6       ;
+;      - MX2_1:inst6|Y~1                        ; 1                 ; 6       ;
+;      - MX4_1:inst4|Y[0]~0                     ; 1                 ; 6       ;
+;      - MX2_1:inst8|Y~9                        ; 1                 ; 6       ;
 ; SW[2]                                         ;                   ;         ;
 ;      - MX2_1:inst6|Y~0                        ; 1                 ; 6       ;
 ;      - MX2_1:inst6|Y~2                        ; 1                 ; 6       ;
@@ -1054,12 +1061,12 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ;      - MX2_1:inst8|Y~5                        ; 1                 ; 6       ;
 ;      - MX2_1:inst8|Y~10                       ; 1                 ; 6       ;
 ; SW4                                           ;                   ;         ;
-;      - MX4_1:inst4|Y[0]~0                     ; 0                 ; 6       ;
-;      - MX2_1:inst8|Y~9                        ; 0                 ; 6       ;
-; SW9                                           ;                   ;         ;
-;      - ADD7:inst18|Add1~4                     ; 0                 ; 6       ;
-;      - ADD7:inst18|Add1~0                     ; 0                 ; 6       ;
+;      - MX4_1:inst4|Y[0]~0                     ; 1                 ; 6       ;
+;      - MX2_1:inst8|Y~9                        ; 1                 ; 6       ;
 ; SW8                                           ;                   ;         ;
+;      - ADD7:inst18|Add1~4                     ; 1                 ; 6       ;
+;      - ADD7:inst18|Add1~0                     ; 1                 ; 6       ;
+; SW9                                           ;                   ;         ;
 ;      - ADD7:inst18|Add1~2                     ; 0                 ; 6       ;
 ;      - SevenSegmentInterfaceDEC:inst10|Mux0~0 ; 0                 ; 6       ;
 ;      - SevenSegmentInterfaceDEC:inst10|Mux1~0 ; 0                 ; 6       ;
@@ -1083,7 +1090,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; Name                           ; Location          ; Fan-Out ; Usage        ; Global ; Global Resource Used ; Global Line Name ; Enable Signal Source Name ;
 +--------------------------------+-------------------+---------+--------------+--------+----------------------+------------------+---------------------------+
 ; CLK                            ; PIN_G21           ; 5       ; Clock        ; yes    ; Global Clock         ; GCLK9            ; --                        ;
-; RandomGenerator:inst2|v_next~2 ; LCCOMB_X1_Y24_N30 ; 3       ; Clock enable ; no     ; --                   ; --               ; --                        ;
+; RandomGenerator:inst2|v_next~2 ; LCCOMB_X1_Y24_N28 ; 3       ; Clock enable ; no     ; --                   ; --               ; --                        ;
 +--------------------------------+-------------------+---------+--------------+--------+----------------------+------------------+---------------------------+
 
 
@@ -1102,7 +1109,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; Name                                   ; Fan-Out ;
 +----------------------------------------+---------+
 ; ADD7:inst18|Add1~10                    ; 9       ;
-; SW8~input                              ; 8       ;
+; SW9~input                              ; 8       ;
 ; Binary2BCD:inst15|bcd_units[3]~2       ; 7       ;
 ; Binary2BCD:inst15|bcd_units[2]~1       ; 7       ;
 ; Binary2BCD:inst15|bcd_units[1]~0       ; 7       ;
@@ -1139,7 +1146,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; MX2_1:inst8|Y~5                        ; 3       ;
 ; CMP3:inst5|Equal0~0                    ; 3       ;
 ; BTN0~input                             ; 2       ;
-; SW9~input                              ; 2       ;
+; SW8~input                              ; 2       ;
 ; SW4~input                              ; 2       ;
 ; SW3~input                              ; 2       ;
 ; RisingEdge:inst1|state[0]              ; 2       ;
@@ -1190,14 +1197,14 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------------------+-----------------------+
 ; Other Routing Resource Type ; Usage                 ;
 +-----------------------------+-----------------------+
-; Block interconnects         ; 61 / 47,787 ( < 1 % ) ;
+; Block interconnects         ; 62 / 47,787 ( < 1 % ) ;
 ; C16 interconnects           ; 1 / 1,804 ( < 1 % )   ;
-; C4 interconnects            ; 33 / 31,272 ( < 1 % ) ;
-; Direct links                ; 12 / 47,787 ( < 1 % ) ;
+; C4 interconnects            ; 30 / 31,272 ( < 1 % ) ;
+; Direct links                ; 19 / 47,787 ( < 1 % ) ;
 ; Global clocks               ; 1 / 20 ( 5 % )        ;
 ; Local interconnects         ; 27 / 15,408 ( < 1 % ) ;
-; R24 interconnects           ; 3 / 1,775 ( < 1 % )   ;
-; R4 interconnects            ; 42 / 41,310 ( < 1 % ) ;
+; R24 interconnects           ; 5 / 1,775 ( < 1 % )   ;
+; R4 interconnects            ; 40 / 41,310 ( < 1 % ) ;
 +-----------------------------+-----------------------+
 
 
@@ -1209,17 +1216,17 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; 1                                          ; 2                           ;
 ; 2                                          ; 0                           ;
 ; 3                                          ; 0                           ;
-; 4                                          ; 1                           ;
+; 4                                          ; 0                           ;
 ; 5                                          ; 0                           ;
-; 6                                          ; 0                           ;
-; 7                                          ; 0                           ;
-; 8                                          ; 1                           ;
+; 6                                          ; 1                           ;
+; 7                                          ; 1                           ;
+; 8                                          ; 0                           ;
 ; 9                                          ; 0                           ;
 ; 10                                         ; 0                           ;
 ; 11                                         ; 0                           ;
 ; 12                                         ; 0                           ;
-; 13                                         ; 0                           ;
-; 14                                         ; 1                           ;
+; 13                                         ; 1                           ;
+; 14                                         ; 0                           ;
 ; 15                                         ; 0                           ;
 ; 16                                         ; 2                           ;
 +--------------------------------------------+-----------------------------+
@@ -1243,17 +1250,17 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; 1                                           ; 2                           ;
 ; 2                                           ; 0                           ;
 ; 3                                           ; 0                           ;
-; 4                                           ; 1                           ;
+; 4                                           ; 0                           ;
 ; 5                                           ; 0                           ;
-; 6                                           ; 0                           ;
+; 6                                           ; 1                           ;
 ; 7                                           ; 0                           ;
 ; 8                                           ; 0                           ;
 ; 9                                           ; 0                           ;
 ; 10                                          ; 0                           ;
 ; 11                                          ; 0                           ;
-; 12                                          ; 0                           ;
+; 12                                          ; 1                           ;
 ; 13                                          ; 1                           ;
-; 14                                          ; 1                           ;
+; 14                                          ; 0                           ;
 ; 15                                          ; 0                           ;
 ; 16                                          ; 2                           ;
 +---------------------------------------------+-----------------------------+
@@ -1262,16 +1269,16 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-------------------------------------------------------------------------------+
 ; LAB Signals Sourced Out                                                       ;
 +-------------------------------------------------+-----------------------------+
-; Number of Signals Sourced Out  (Average = 5.29) ; Number of LABs  (Total = 7) ;
+; Number of Signals Sourced Out  (Average = 5.71) ; Number of LABs  (Total = 7) ;
 +-------------------------------------------------+-----------------------------+
 ; 0                                               ; 0                           ;
 ; 1                                               ; 2                           ;
 ; 2                                               ; 0                           ;
 ; 3                                               ; 1                           ;
-; 4                                               ; 1                           ;
+; 4                                               ; 0                           ;
 ; 5                                               ; 0                           ;
 ; 6                                               ; 1                           ;
-; 7                                               ; 0                           ;
+; 7                                               ; 1                           ;
 ; 8                                               ; 0                           ;
 ; 9                                               ; 0                           ;
 ; 10                                              ; 1                           ;
@@ -1283,23 +1290,22 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +---------------------------------------------------------------------------+
 ; LAB Distinct Inputs                                                       ;
 +---------------------------------------------+-----------------------------+
-; Number of Distinct Inputs  (Average = 5.86) ; Number of LABs  (Total = 7) ;
+; Number of Distinct Inputs  (Average = 6.14) ; Number of LABs  (Total = 7) ;
 +---------------------------------------------+-----------------------------+
 ; 0                                           ; 0                           ;
 ; 1                                           ; 1                           ;
 ; 2                                           ; 1                           ;
-; 3                                           ; 0                           ;
-; 4                                           ; 1                           ;
-; 5                                           ; 1                           ;
+; 3                                           ; 1                           ;
+; 4                                           ; 0                           ;
+; 5                                           ; 0                           ;
 ; 6                                           ; 0                           ;
 ; 7                                           ; 1                           ;
 ; 8                                           ; 1                           ;
-; 9                                           ; 0                           ;
+; 9                                           ; 1                           ;
 ; 10                                          ; 0                           ;
 ; 11                                          ; 0                           ;
 ; 12                                          ; 0                           ;
-; 13                                          ; 0                           ;
-; 14                                          ; 1                           ;
+; 13                                          ; 1                           ;
 +---------------------------------------------+-----------------------------+
 
 
@@ -1397,8 +1403,8 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; SW[2]              ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; SW3                ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; SW4                ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; SW9                ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; SW8                ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; SW9                ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; BTN0               ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; CLK                ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; BTN1               ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
@@ -1445,7 +1451,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------+
 ; Fitter Messages ;
 +-----------------+
-Warning (20028): Parallel compilation is not licensed and has been disabled
+Info (11104): Parallel Compilation has detected 4 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 2 of the 2 physical processors detected instead.
 Info (119006): Selected device EP3C16F484C6 for design "PORT_LAB3"
 Info (21077): Core supply voltage is 1.2V
 Info (21077): Low junction temperature is 0 degrees C
@@ -1481,7 +1487,7 @@ Info (170137): Fitter placement was successful
 Info (170192): Fitter placement operations ending: elapsed time is 00:00:00
 Info (170193): Fitter routing operations beginning
 Info (170195): Router estimated average interconnect usage is 0% of the available device resources
-    Info (170196): Router estimated peak interconnect usage is 0% of the available device resources in the region that extends from location X0_Y20 to location X9_Y29
+    Info (170196): Router estimated peak interconnect usage is 0% of the available device resources in the region that extends from location X21_Y20 to location X30_Y29
 Info (170194): Fitter routing operations ending: elapsed time is 00:00:01
 Info (170199): The Fitter performed an Auto Fit compilation.  Optimizations were skipped to reduce compilation time.
     Info (170201): Optimizations that may affect the design's routability were skipped
@@ -1492,10 +1498,10 @@ Info (334003): Started post-fitting delay annotation
 Info (334004): Delay annotation completed successfully
 Info (11218): Fitter post-fit operations ending: elapsed time is 00:00:01
 Info (144001): Generated suppressed messages file /home/perapisar/Projects/ETF/PORT/dz3/output_files/PORT_LAB3.fit.smsg
-Info: Quartus II 64-Bit Fitter was successful. 0 errors, 4 warnings
-    Info: Peak virtual memory: 730 megabytes
-    Info: Processing ended: Sun May 10 21:54:06 2020
-    Info: Elapsed time: 00:00:09
+Info: Quartus II 64-Bit Fitter was successful. 0 errors, 3 warnings
+    Info: Peak virtual memory: 789 megabytes
+    Info: Processing ended: Sun May 24 02:08:46 2020
+    Info: Elapsed time: 00:00:08
     Info: Total CPU time (on all processors): 00:00:09
 
 

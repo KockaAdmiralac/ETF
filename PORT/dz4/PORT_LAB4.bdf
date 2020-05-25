@@ -2291,57 +2291,7 @@ applicable agreement for further details.
 	)
 )
 (symbol
-	(rect 1984 680 2048 760)
-	(text "DFF" (rect 1 0 21 10)(font "Arial" (font_size 6)))
-	(text "inst38" (rect 3 68 33 79)(font "Arial" ))
-	(port
-		(pt 32 80)
-		(input)
-		(text "CLRN" (rect 21 59 48 70)(font "Courier New" (bold)))
-		(text "CLRN" (rect 21 58 48 69)(font "Courier New" (bold)))
-		(line (pt 32 80)(pt 32 76))
-	)
-	(port
-		(pt 0 40)
-		(input)
-		(text "CLK" (rect 3 29 24 40)(font "Courier New" (bold))(invisible))
-		(text "CLK" (rect 3 29 24 40)(font "Courier New" (bold))(invisible))
-		(line (pt 0 40)(pt 12 40))
-	)
-	(port
-		(pt 0 24)
-		(input)
-		(text "D" (rect 14 20 22 31)(font "Courier New" (bold)))
-		(text "D" (rect 14 20 22 31)(font "Courier New" (bold)))
-		(line (pt 0 24)(pt 12 24))
-	)
-	(port
-		(pt 32 0)
-		(input)
-		(text "PRN" (rect 24 13 44 24)(font "Courier New" (bold)))
-		(text "PRN" (rect 24 11 44 22)(font "Courier New" (bold)))
-		(line (pt 32 4)(pt 32 0))
-	)
-	(port
-		(pt 64 24)
-		(output)
-		(text "Q" (rect 45 20 53 31)(font "Courier New" (bold)))
-		(text "Q" (rect 41 20 49 31)(font "Courier New" (bold)))
-		(line (pt 52 24)(pt 64 24))
-	)
-	(drawing
-		(line (pt 12 12)(pt 52 12))
-		(line (pt 12 68)(pt 52 68))
-		(line (pt 52 68)(pt 52 12))
-		(line (pt 12 68)(pt 12 12))
-		(line (pt 19 40)(pt 12 47))
-		(line (pt 12 32)(pt 20 40))
-		(circle (rect 28 4 36 12))
-		(circle (rect 28 68 36 76))
-	)
-)
-(symbol
-	(rect 2080 680 2144 760)
+	(rect 2032 688 2096 768)
 	(text "DFF" (rect 1 0 21 10)(font "Arial" (font_size 6)))
 	(text "inst41" (rect 3 68 33 79)(font "Arial" ))
 	(port
@@ -3014,38 +2964,9 @@ applicable agreement for further details.
 	(pt 456 400)
 )
 (connector
-	(text "delayed_next" (rect 1921 688 1988 699)(font "Arial" ))
-	(pt 1920 704)
-	(pt 1984 704)
-)
-(connector
-	(text "CLK" (rect 1928 704 1952 715)(font "Arial" ))
-	(pt 1984 720)
-	(pt 1920 720)
-)
-(connector
-	(pt 2048 704)
-	(pt 2080 704)
-)
-(connector
-	(text "CLK" (rect 2056 704 2080 715)(font "Arial" ))
-	(pt 2080 720)
-	(pt 2056 720)
-)
-(connector
-	(text "thrice_delayed_next" (rect 2152 688 2252 699)(font "Arial" ))
-	(pt 2200 704)
-	(pt 2144 704)
-)
-(connector
 	(text "ulog_not_zero" (rect 1730 1208 1801 1219)(font "Arial" ))
 	(pt 1808 1224)
 	(pt 1728 1224)
-)
-(connector
-	(text "thrice_delayed_next" (rect 1720 1216 1820 1227)(font "Arial" ))
-	(pt 1808 1232)
-	(pt 1728 1232)
 )
 (connector
 	(text "game_selected" (rect 1732 1224 1808 1235)(font "Arial" ))
@@ -3071,11 +2992,6 @@ applicable agreement for further details.
 	(text "won_spin" (rect 832 368 880 379)(font "Arial" ))
 	(pt 888 384)
 	(pt 824 384)
-)
-(connector
-	(text "thrice_delayed_next" (rect 532 984 632 995)(font "Arial" ))
-	(pt 624 1000)
-	(pt 568 1000)
 )
 (connector
 	(text "1" (rect 137 936 148 944)(font "Arial" )(vertical))
@@ -3207,6 +3123,31 @@ applicable agreement for further details.
 	(text "delayed_next" (rect 200 528 267 539)(font "Arial" ))
 	(pt 336 544)
 	(pt 240 544)
+)
+(connector
+	(text "twice_delayed_next" (rect 532 984 629 995)(font "Arial" ))
+	(pt 624 1000)
+	(pt 568 1000)
+)
+(connector
+	(text "twice_delayed_next" (rect 1720 1216 1817 1227)(font "Arial" ))
+	(pt 1808 1232)
+	(pt 1728 1232)
+)
+(connector
+	(text "CLK" (rect 2008 712 2032 723)(font "Arial" ))
+	(pt 2032 728)
+	(pt 2008 728)
+)
+(connector
+	(text "delayed_next" (rect 1969 696 2036 707)(font "Arial" ))
+	(pt 1984 712)
+	(pt 2032 712)
+)
+(connector
+	(text "twice_delayed_next" (rect 2104 696 2201 707)(font "Arial" ))
+	(pt 2152 712)
+	(pt 2096 712)
 )
 (junction (pt 1184 856))
 (junction (pt 1184 1064))

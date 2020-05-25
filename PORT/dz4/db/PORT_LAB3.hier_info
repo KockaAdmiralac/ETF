@@ -1,7 +1,6 @@
 |PORT_LAB4
 HEX1_0 <= SevenSegmentInterfaceDEC:inst11.a
 CLK => inst41.CLK
-CLK => inst38.CLK
 CLK => RisingEdge:inst1.clk
 CLK => Chips:inst13.clk
 CLK => RandomGenerator:inst2.CLK

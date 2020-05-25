@@ -1402,7 +1402,7 @@ applicable agreement for further details.
 	(pt 696 72)
 )
 (connector
-	(text "clk" (rect 704 352 719 363)(font "Arial" ))
+	(text "clk" (rect 696 352 711 363)(font "Arial" ))
 	(pt 712 368)
 	(pt 696 368)
 )
@@ -1437,7 +1437,7 @@ applicable agreement for further details.
 	(pt 328 408)
 )
 (connector
-	(text "clk" (rect 904 496 919 507)(font "Arial" ))
+	(text "clk" (rect 896 496 911 507)(font "Arial" ))
 	(pt 912 512)
 	(pt 896 512)
 )
@@ -1456,7 +1456,7 @@ applicable agreement for further details.
 	(pt 912 496)
 )
 (connector
-	(text "clk" (rect 808 424 823 435)(font "Arial" ))
+	(text "clk" (rect 800 424 815 435)(font "Arial" ))
 	(pt 816 440)
 	(pt 800 440)
 )
@@ -1795,11 +1795,6 @@ applicable agreement for further details.
 	(pt 208 224)
 )
 (connector
-	(text "_Q3" (rect 195 224 217 235)(font "Arial" ))
-	(pt 176 240)
-	(pt 208 240)
-)
-(connector
 	(text "rst" (rect 197 264 211 275)(font "Arial" ))
 	(pt 176 280)
 	(pt 208 280)
@@ -1973,4 +1968,9 @@ applicable agreement for further details.
 	(text "_next" (rect 318 424 346 435)(font "Arial" ))
 	(pt 312 440)
 	(pt 328 440)
+)
+(connector
+	(text "_Q3" (rect 179 224 201 235)(font "Arial" ))
+	(pt 208 240)
+	(pt 176 240)
 )

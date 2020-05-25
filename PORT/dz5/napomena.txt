@@ -1,0 +1,11 @@
+Ovu napomenu stavljam u peti domaći jer sam siguran da ću njega braniti.
+Uz svaki domaći priloženi su Logisim-evolution v3.3.4 .circ fajlovi nad kojima sam radio simulaciju. Skoro sigurno se ne mogu otvoriti u starom Logisimu,
+ali možete koristiti https://github.com/reds-heig/logisim-evolution/releases kako biste skinuli najnoviju verziju (zahteva Javu 10+) ili stabilnu
+verziju 2.14.6 sa http://reds-data.heig-vd.ch/logisim-evolution/logisim-evolution.jar koja zahteva samo Javu 8. Neke komponente verovatno budu povezane
+na čudan način ukoliko budu otvarane sa 2.14.6, što se sređuje tako što izaberete tu komponentu, uključite novi izgled te komponente u properties i
+prevežete žice koje fale.
+
+Možete ih i ukloniti iz projekta koji je predan ako mislite da je potrebno. Svakako nisu namenjeni za korišćenje na odbrani.
+
+U ovom projektu priloženi su i ETF-copy.circ i RisingEdge-copy.circ, koji bi trebalo da se smeste u direktorijum koji sadrži sve projekte kako bi svi
+projekti mogli njih da učitavaju kao biblioteke, kao ETF.circ i RisingEdge.circ.
