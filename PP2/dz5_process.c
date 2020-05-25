@@ -24,6 +24,10 @@ void freeMemory(Node *list) {
     Node *curr = list, *tmp;
     while (curr != NULL) {
         tmp = curr->next;
+        for (int i = 0; i < CONTACT_FIELDS; ++i) {
+            free(curr->fields->array[i]);
+        }
+        free(curr->fields);
         free(curr);
         curr = tmp;
     }

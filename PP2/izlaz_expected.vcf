@@ -11,7 +11,7 @@ begin:vcard
 fn:Marko Misic
 n:Misic;Marko
 org:Elektrotehnicki fakultet;RTI
-adr;dom:;;Bulevar kralja Aleksandra 73;Beograd;;11000
+adr:;;Bulevar kralja Aleksandra 73;Beograd;;11000
 email;internet:marko.misic@etf.rs
 title:Asistent
 url:http://www.etf.rs
@@ -95,4 +95,3 @@ org:MK Basketball
 email;internet:pera.antic@nba.com
 version:2.1
 end:vcard
-

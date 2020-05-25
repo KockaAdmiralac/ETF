@@ -62,66 +62,78 @@ void writeToFile(char *fileName, Node *list) {
     }
     Node *curr = list;
     while (curr != NULL) {
-        fprintf(
-            file,
-            "begin:vcard\nfn:%s\nn:%s;%s\n",
-            curr->fields.named.displayName,
-            curr->fields.named.lastName,
-            curr->fields.named.firstName
+        if (curr != list) {
+            fprintf(file, "\n");
+        }
+        fprintf(file, "begin:vcard\n");
+        conditionalPrint(file, "fn", curr->fields->named.displayName);
+        int lastSetNameField = lastSetField(
+            2,
+            curr->fields->named.lastName,
+            curr->fields->named.firstName
         );
+        if (lastSetNameField) {
+            concatArgs(
+                file,
+                "n",
+                lastSetNameField,
+                curr->fields->named.lastName,
+                curr->fields->named.firstName
+            );
+        }
         int lastSetOrganizationField = lastSetField(
             2,
-            curr->fields.named.organization,
-            curr->fields.named.department
+            curr->fields->named.organization,
+            curr->fields->named.department
         );
         if (lastSetOrganizationField) {
             concatArgs(
                 file,
                 "org",
                 lastSetOrganizationField,
-                curr->fields.named.organization,
-                curr->fields.named.department
+                curr->fields->named.organization,
+                curr->fields->named.department
             );
         }
         int lastSetWorkAddressField = lastSetField(
             6,
-            curr->fields.named.workAddress,
-            curr->fields.named.workAddress2,
-            curr->fields.named.workCity,
-            curr->fields.named.workState,
-            curr->fields.named.workZipCode,
-            curr->fields.named.workCountry
+            curr->fields->named.workAddress,
+            curr->fields->named.workAddress2,
+            curr->fields->named.workCity,
+            curr->fields->named.workState,
+            curr->fields->named.workZipCode,
+            curr->fields->named.workCountry
         );
         if (lastSetWorkAddressField) {
             concatArgs(
                 file,
-                "adr;dom",
+                "adr",
                 lastSetWorkAddressField + 1,
                 // Testing has proven Work Address 2 comes before Work Address.
-                curr->fields.named.workAddress2,
+                curr->fields->named.workAddress2,
                 // This is always empty.
                 "",
-                curr->fields.named.workAddress,
-                curr->fields.named.workCity,
-                curr->fields.named.workState,
-                curr->fields.named.workZipCode,
-                curr->fields.named.workCountry
+                curr->fields->named.workAddress,
+                curr->fields->named.workCity,
+                curr->fields->named.workState,
+                curr->fields->named.workZipCode,
+                curr->fields->named.workCountry
             );
         }
         conditionalPrint(
             file,
             "email;internet",
-            curr->fields.named.primaryEmail
+            curr->fields->named.primaryEmail
         );
-        conditionalPrint(file, "title", curr->fields.named.jobTitle);
-        conditionalPrint(file, "tel;work", curr->fields.named.workPhone);
-        conditionalPrint(file, "tel;fax", curr->fields.named.faxNumber);
-        conditionalPrint(file, "tel;pager", curr->fields.named.pagerNumber);
-        conditionalPrint(file, "tel;home", curr->fields.named.homePhone);
-        conditionalPrint(file, "tel;cell", curr->fields.named.mobileNumber);
-        conditionalPrint(file, "note", curr->fields.named.notes);
-        conditionalPrint(file, "url", curr->fields.named.webPage1);
-        fprintf(file, "version:2.1\nend:vcard\n\n");
+        conditionalPrint(file, "title", curr->fields->named.jobTitle);
+        conditionalPrint(file, "tel;work", curr->fields->named.workPhone);
+        conditionalPrint(file, "tel;fax", curr->fields->named.faxNumber);
+        conditionalPrint(file, "tel;pager", curr->fields->named.pagerNumber);
+        conditionalPrint(file, "tel;home", curr->fields->named.homePhone);
+        conditionalPrint(file, "tel;cell", curr->fields->named.mobileNumber);
+        conditionalPrint(file, "note", curr->fields->named.notes);
+        conditionalPrint(file, "url", curr->fields->named.webPage1);
+        fprintf(file, "version:2.1\nend:vcard\n");
         curr = curr->next;
     }
     fclose(file);

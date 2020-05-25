@@ -20,10 +20,10 @@ void addCharToValue(char **value, int *valueLength, char newChar) {
 /**
  * Reads a single contact from the specified file.
  * @param {FILE*} file File to read the contact from
- * @returns {Node*} Contact that was read from the file
+ * @returns {FieldsUnion*} Contact information that was read from the file
  */
-Node *readContact(FILE *file) {
-    Node *contact = malloc(sizeof(Node));
+FieldsUnion *readContact(FILE *file) {
+    FieldsUnion *contact = malloc(sizeof(FieldsUnion));
     if (contact == NULL) {
         printf("MEM_GRESKA");
         exit(EXIT_SUCCESS);
@@ -45,7 +45,7 @@ Node *readContact(FILE *file) {
                     return NULL;
                 }
                 addCharToValue(&value, &valueLength, '\0');
-                contact->fields.array[currField++] = value;
+                contact->array[currField++] = value;
                 value = NULL;
                 valueLength = 0;
             }
@@ -72,7 +72,7 @@ Node *readContact(FILE *file) {
                         return NULL;
                     }
                     addCharToValue(&value, &valueLength, '\0');
-                    contact->fields.array[currField++] = value;
+                    contact->array[currField++] = value;
                     value = NULL;
                     valueLength = 0;
                 } else if (c == '"') {
@@ -85,10 +85,8 @@ Node *readContact(FILE *file) {
                     return NULL;
                 }
             } else {
-                // Quotation marks cannot appear in a non-complex field.
-                printf("DAT_GRESKA");
-                exit(EXIT_SUCCESS);
-                return NULL;
+                // Quotation marks can probably appear in a non-complex field.
+                addCharToValue(&value, &valueLength, c);
             }
         } else if (c == '\n') {
             break;
@@ -134,17 +132,28 @@ Node *readContacts(FILE *file) {
         status = fscanf(file, "%c", &c);
     } while (c != '\n' && status == 1);
     Node *prev = NULL, *curr, *list;
-    do {
-        curr = readContact(file);
-        if (curr != NULL) {
-            curr->prev = prev;
+    while (true) {
+        curr = malloc(sizeof(Node));
+        if (curr == NULL) {
+            printf("MEM_GRESKA");
+            exit(0);
+            return NULL;
         }
+        curr->fields = readContact(file);
+        if (curr->fields == NULL) {
+            if (prev != NULL) {
+                prev->next = NULL;
+            }
+            free(curr);
+            break;
+        }
+        curr->prev = prev;
         if (prev == NULL) {
             list = curr;
         } else {
             prev->next = curr;
         }
         prev = curr;
-    } while (curr != NULL);
+    }
     return list;
 }

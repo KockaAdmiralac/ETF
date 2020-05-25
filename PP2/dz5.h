@@ -54,11 +54,11 @@ typedef union {
 } FieldsUnion;
 
 typedef struct node {
-    FieldsUnion fields;
+    FieldsUnion *fields;
     struct node *prev, *next;
 } Node;
 
-Node *readContact(FILE *file);
+FieldsUnion *readContact(FILE *file);
 Node *readContacts(FILE *file);
 Node *reverseList(Node *list);
 void writeToFile(char * fileName, Node *list);
