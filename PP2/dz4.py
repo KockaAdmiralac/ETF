@@ -75,7 +75,7 @@ Isak, skracenje pantalona, 0, 06.05., 3
 
 09.05.
 """
-            testCode = """"""
+    testCode = """"""
     expectedTestResult = """Isak, skracenje pantalona, 0, 06.05., 3
 Dalija, suknja, 0, 10.05., 3
 Vida, bluza, 1, 10.05., 4
