@@ -97,8 +97,8 @@ void writeToFile(char *fileName, Node *list) {
         }
         int lastSetWorkAddressField = lastSetField(
             6,
-            curr->fields->named.workAddress,
             curr->fields->named.workAddress2,
+            curr->fields->named.workAddress,
             curr->fields->named.workCity,
             curr->fields->named.workState,
             curr->fields->named.workZipCode,
@@ -108,7 +108,9 @@ void writeToFile(char *fileName, Node *list) {
             concatArgs(
                 file,
                 "adr",
-                lastSetWorkAddressField + 1,
+                lastSetWorkAddressField < 2 ?
+                    lastSetWorkAddressField :
+                    lastSetWorkAddressField + 1,
                 // Testing has proven Work Address 2 comes before Work Address.
                 curr->fields->named.workAddress2,
                 // This is always empty.

@@ -131,7 +131,7 @@ Node *readContacts(FILE *file) {
     do {
         status = fscanf(file, "%c", &c);
     } while (c != '\n' && status == 1);
-    Node *prev = NULL, *curr, *list;
+    Node *prev = NULL, *curr, *list = NULL;
     while (true) {
         curr = malloc(sizeof(Node));
         if (curr == NULL) {
