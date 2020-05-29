@@ -1,0 +1,9 @@
+/**
+ * Usvojene pretpostavke:
+ * - Promenljiva se ne može deklarisati nakon korišćenja.
+ * - Identifikacioni brojevi instrukcija su uvek u redosledu 1, 2, 3...
+ * - Postoji tačno jedan operator po redu, kao i najmanje jedna a najviše
+ *   dve promenljive.
+ *
+ * Domaći je, barem delimično, proveren Valgrind-om protiv curenja memorije.
+ */
