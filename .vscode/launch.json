@@ -5,9 +5,8 @@
             "name": "gcc build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            //"program": "${workspaceFolder}/a.out",
-            "program": "${workspaceFolder}/ASP1/dz3/dz3",
-            //"program": "${workspaceFolder}/PP2/a.out",
+            "program": "${workspaceFolder}/a.out",
+            //"program": "${workspaceFolder}/ASP1/dz3/dz3",
             //"args": [
             //    "ulaz.txt",
             //    "izlaz2.csv",

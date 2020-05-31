@@ -1,0 +1,6 @@
+a = 5*6
+c=not a
+d  = a^c
+b =not a
+e = b&10
+f = e or a

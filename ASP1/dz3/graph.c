@@ -1,6 +1,27 @@
 #include "graph.h"
 
 /**
+ * Connects two nodes of the graph.
+ * @param {Graph*} graph Graph whose two nodes should be connected
+ * @param {int} startNode Identifier of the path's starting node
+ * @param {int} endNode Identifier of the path's ending node
+ * @returns {Result} Whether the action succeeded
+ */
+Result connectNodes(Graph *graph, int startNode, int endNode) {
+    if (
+        graph == NULL ||
+        startNode < 1 ||
+        startNode > graph->nodeCount ||
+        endNode < 1 ||
+        endNode > graph->nodeCount
+    ) {
+        return OOPS;
+    }
+    graph->connections[startNode-1][endNode-1] = true;
+    return OK;
+}
+
+/**
  * Adds a node to the graph.
  * @param {Graph*} graph Graph to which the node should be added
  * @param {GraphNode} node Graph node data to be added
@@ -36,27 +57,6 @@ Result addGraphNode(Graph *graph, GraphNode node) {
             return nodeConnectionResult;
         }
     }
-    return OK;
-}
-
-/**
- * Connects two nodes of the graph.
- * @param {Graph*} graph Graph whose two nodes should be connected
- * @param {int} startNode Identifier of the path's starting node
- * @param {int} endNode Identifier of the path's ending node
- * @returns {Result} Whether the action succeeded
- */
-Result connectNodes(Graph *graph, int startNode, int endNode) {
-    if (
-        graph == NULL ||
-        startNode < 1 ||
-        startNode > graph->nodeCount ||
-        endNode < 1 ||
-        endNode > graph->nodeCount
-    ) {
-        return OOPS;
-    }
-    graph->connections[startNode-1][endNode-1] = true;
     return OK;
 }
 

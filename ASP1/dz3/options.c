@@ -83,8 +83,7 @@ Result optimalPath(Graph *graph) {
     }
     int EST[MAX_GRAPH_NODES],
         LST[MAX_GRAPH_NODES],
-        criticalPathLength = 0,
-        criticalPathNode = -1;
+        criticalPathLength = 0;
     for (int i = 0; i < graph->nodeCount; ++i) {
         EST[i] = 0;
         for (int j = 0; j < graph->nodeCount; ++j) {
@@ -98,7 +97,6 @@ Result optimalPath(Graph *graph) {
         int outWeight = getWeight(graph, i + 1);
         if (EST[i] + outWeight > criticalPathLength) {
             criticalPathLength = EST[i] + outWeight;
-            criticalPathNode = i;
         }
     }
     for (int i = graph->nodeCount - 1; i >= 0; --i) {
@@ -134,33 +132,71 @@ Result optimalPath(Graph *graph) {
     );
     bool anyPrinted;
     for (int i = 0; i <= criticalPathLength; ++i) {
-        printf("% 4d: ", i);
         anyPrinted = false;
         for (int j = 0; j < graph->nodeCount; ++j) {
             if (EST[j] != LST[j] && EST[j] <= i && LST[j] >= i) {
+                if (!anyPrinted) {
+                    printf("% 4d: ", i);
+                }
                 anyPrinted = true;
                 printf("%c ", graph->nodes[j].label);
             }
         }
-        if (!anyPrinted) {
-            printf("✗");
+        if (anyPrinted) {
+            printf("\n");
         }
-        printf("\n");
     }
-    printf("Kritični put: ");
-    bool anyParent;
-    do {
-        anyParent = false;
-        printf("%c ", graph->nodes[criticalPathNode].label);
-        for (int i = 0; i < graph->nodeCount; ++i) {
-            if (graph->connections[i][criticalPathNode] && EST[i] == LST[i]) {
-                criticalPathNode = i;
-                anyParent = true;
+    printf("Kritični putevi:\n");
+    char currentCriticalPath[27] = "";
+    int currentNodeIdentifier, currentIndex, currentCriticalPathLength;
+    bool hasChild;
+    for (int i = 0; i < 26; ++i) {
+        if (EST[i] != 0 || EST[i] != LST[i]) {
+            continue;
+        }
+        currentCriticalPathLength = 1;
+        currentNodeIdentifier = i;
+        currentIndex = 0;
+        currentCriticalPath[0] = graph->nodes[i].label;
+        while (true) {
+            hasChild = false;
+            for (int j = currentIndex; j < graph->nodeCount; ++j) {
+                if (
+                    graph->connections[currentNodeIdentifier][j] &&
+                    EST[j] == LST[j] &&
+                    getWeight(graph, currentNodeIdentifier + 1) ==
+                    EST[j] - EST[currentNodeIdentifier]
+                ) {
+                    currentCriticalPath[currentCriticalPathLength++] =
+                        graph->nodes[j].label;
+                    currentNodeIdentifier = j;
+                    currentIndex = 0;
+                    hasChild = true;
+                    break;
+                }
+            }
+            if (hasChild) {
+                continue;
+            }
+            if (
+                LST[currentNodeIdentifier] +
+                getWeight(graph, currentNodeIdentifier + 1) ==
+                criticalPathLength
+            ) {
+                currentCriticalPath[currentCriticalPathLength] = '\0';
+                printf("- %s\n", currentCriticalPath);
+            }
+            currentIndex = currentNodeIdentifier + 1;
+            if (currentCriticalPathLength == 1) {
                 break;
             }
+            --currentCriticalPathLength;
+            currentNodeIdentifier =
+                graph->labelToId[
+                    currentCriticalPath[currentCriticalPathLength - 1] - 'a'
+                ] - 1;
         }
-    } while (anyParent);
-    printf("\n");
+    }
     return OK;
 }
 

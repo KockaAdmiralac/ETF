@@ -1,0 +1,8 @@
+a = 5 * 3
+c = a + 7
+d = a + 2
+e = b xor 3
+f = e * c
+g = a + e
+h = 82 / e
+i = h - g

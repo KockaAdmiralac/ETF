@@ -13,7 +13,7 @@
             "args": [
                 "-f",
                 "a.out"
-                //"ASP1/dz2/dz2"
+                //"ASP1/dz3/dz3"
             ]
         },
         {
@@ -25,7 +25,7 @@
                 "-Wextra",
                 "-g"
             ],
-            //"command": "./ASP1/dz2/build.sh",
+            //"command": "./ASP1/dz3/build.sh",
             "dependsOn": [
                 "clean"
             ],
