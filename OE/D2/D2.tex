@@ -1,0 +1,496 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,serbian]{babel}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+    \usetikzlibrary{arrows}
+\usepackage{draftwatermark}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage[a4paper,left=1in,top=1in,right=1in,bottom=1in,nohead]{geometry}
+\setlist[enumerate,1]{% (
+leftmargin=*, itemsep=12pt, label={\textbf{\arabic*.}}}
+\SetWatermarkText{SI WIKI}
+\SetWatermarkColor[gray]{0.9}
+\SetWatermarkScale{4}
+
+\title{Drugi domaći zadatak iz Osnova elektronike}
+\author{Luka Simić, 19/0368}
+\date{(verzija za SI Wiki)}
+
+\begin{document}
+
+    \begin{titlepage}
+        \maketitle
+    \end{titlepage}
+
+    \section{Postavka}
+    \begin{enumerate}[itemsep=\baselineskip]
+        \item U kolu sa slike, operacioni pojačavač je idealan i radi u linearnom režimu. Diode su idealne sa $V_D = 0$, a poznato je i $V_R = 2.5V$ i $R = 10k\Omega$. Odrediti i nacrtati karakteristiku $v_i(v_G)$ za opseg ulaznog napona $-3.5V \leq v_G \leq 3.5V$.
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 3)
+                to [short] (0, 4)
+                to [R, l=$R$] (2, 4)
+                to [short] (4, 4)
+                to [short] (4, 3)
+                to [empty diode, l=$D_1$, invert] (3, 3)
+                to [american voltage source, l=$V_R$] (2, 3)
+                to [R, l=$R$] (0, 3)
+                % R grana
+                (4, 3) to [R, l=$R$] (4, 1)
+                to [american voltage source, l=$V_R$, invert] (4, 0)
+                to node[ground]{} (4, 0)
+                % Opamp
+                (6.2, 2.5) node[op amp](opamp){}
+                % Opamp- sa ostatkom
+                (4, 3) to [short] (5, 3)
+                % Opamp+ sa uzemljenjem
+                (5, 2) to node[ground]{} (5, 1)
+                % 2R grana do opampa
+                (4, 4) to [R, l=$2R$] (7, 4)
+                to [short] (7.4, 4)
+                to [short] (7.4, 2.5)
+                to [short, -*, l=$v_i$] (8, 2.5)
+                % D2 grana do 2R grane
+                (4, 4) to [short] (4, 6)
+                to [empty diode, l=$D_2$] (5, 6)
+                to [american voltage source, l=$2V_R$] (6, 6)
+                to [R, l=$R$] (7.4, 6)
+                to [short] (7.4, 4)
+                % Kraj.
+                ;
+            \end{circuitikz}
+            \caption{Kolo u postavci prvog zadatka}
+            \label{Postavka1}
+        \end{figure}
+
+        \item Operacioni pojačavači u kolu sa slike su idealni i rade u linearnom režimu, dioda $D$ je
+idealna sa $V_D = 0.7V$, a poznato je i $V_{CC} = 5V$ i $R =10k\Omega$. Odrediti i nacrtati karakteristiku $v_i(v_G)$, ako se ulazni napon menja u granicama $0 \leq v_G \leq 4V$.
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw (4, 6) node[op amp, xscale=-1](opamp){};
+                \draw (3.2, 2.5) node[op amp, yscale=-1](opamp){};
+                \draw [-latex] (7, 5.5) -- (7.5, 5.5) node[below] {$V_{CC}$};
+                \draw
+                % Uzemljenje do opampa
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 2)
+                to [short] (0, 3)
+                to [R, l=$R$] (2, 3)
+                to [R, l=$R$] (2, 5)
+                to [empty diode, l=$D$] (2, 6)
+                to [short] (2.8, 6)
+                % Opamp izlaz do vi
+                (2, 6) to [short] (2, 8)
+                to [short] (3, 8)
+                to [R, l=$2R$] (5.2, 8)
+                to [short] (5.2, 6.5)
+                to [R, l=$R$] (8, 6.5)
+                to [short] (8, 2.5)
+                to [short, -*, l=$v_i$] (9, 2.5)
+                % vi do drugi opamp-
+                (8, 2.5) to [short] (4.4, 2.5)
+                to [short] (4.4, 1)
+                to [R, l=$R$] (2, 1)
+                to [short] (2, 2)
+                % Drugi opamp- do uzemljenja
+                (2, 1) to [R, l=$R$] (2, -1)
+                to node[ground]{} (2, -2)
+                % Opamp+ do uzemljenja
+                (7, 5.5) to [R, l=$R$] (5.2, 5.5)
+                to [R, l=$R$] (5.2, 4)
+                to node[ground]{} (5.2, 3)
+                % Kraj
+                ;
+            \end{circuitikz}
+            \caption{Kolo u postavci drugog zadatka}
+            \label{Postavka2}
+        \end{figure}
+    \end{enumerate}
+
+    \newpage
+
+    \section{Rešenje}
+    \begin{enumerate}[itemsep=\baselineskip]
+        \item Prvo krećemo od pretpostavke $D_1-OFF$, $D_2-OFF$ i dobijamo kolo sa slike \ref{OFF-OFF}.
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 3)
+                to [short] (0, 4)
+                to [R, l=$R$] (2, 4)
+                to [short, i=$i_1$] (4, 4)
+                to [short, -*, l_=$A$] (4, 3)
+                % R grana
+                (4, 3) to [R, l=$R$, i_=$i_R$] (4, 1)
+                to [american voltage source, l=$V_R$, invert] (4, 0)
+                to node[ground]{} (4, 0)
+                % Opamp
+                (6.2, 2.5) node[op amp](opamp){}
+                % Opamp- sa ostatkom
+                (4, 3) to [short] (5, 3)
+                % Opamp+ sa uzemljenjem
+                (5, 2) to node[ground]{} (5, 1)
+                % 2R grana do opampa
+                (4, 4) to [R, l=$2R$, i<=$i_2$] (7, 4)
+                to [short] (7.4, 4)
+                to [short] (7.4, 2.5)
+                to [short, -*, l=$v_i$] (8, 2.5)
+                % Kraj.
+                ;
+            \end{circuitikz}
+            \caption{Kolo ekvivalentno kolu sa slike \ref{Postavka1} pri pretpostavci $D_1-OFF, D_2-OFF$}
+            \label{OFF-OFF}
+        \end{figure}
+
+        Pošto imamo da je napon na $+$ strani operacionog pojačavača jednak naponu na $-$ strani operacionog pojačavača dobijamo da je napon u čvoru $A$ jednak nuli. Na osnovu toga možemo izračunati $i_1$, $i_2$ i $i_R$ kroz taj čvor.
+        \begin{equation}
+            \label{1i1}
+            i_1 = \frac{v_G - V_A}{R} = \frac{v_G}{R}
+        \end{equation}
+        \begin{equation}
+            \label{1i2}
+            i_2 = \frac{v_i - V_A}{2R} = \frac{v_i}{2R}
+        \end{equation}
+        \begin{equation}
+            \label{1iR}
+            i_R = \frac{V_A - (-V_R)}{R} = \frac{V_R}{R}
+        \end{equation}
+        Iz Kirhofovog zakona za struje u tom čvoru takođe dobijamo:
+        \begin{equation}
+            \label{1i}
+            i_1 + i_2 = i_R
+        \end{equation}
+        Kombinacijom \eqref{1i1}, \eqref{1i2}, \eqref{1iR} i \eqref{1i} dobijamo:
+        $$\frac{v_G}{R} + \frac{v_i}{2R} = \frac{V_R}{R}$$
+        $$v_G + \frac{v_i}{2} = V_R$$
+        \begin{equation}
+            \label{1vi}
+            \boxed{v_i = 2(V_R - v_G)}
+        \end{equation}
+        Nakon izračunatog $v_i$ proveravamo uslove za našu pretpostavku.
+        \begin{itemize}
+            \item $v_{D_1} < 0 \implies v_G + V_R - V_A < 0 \implies v_G < -V_R \implies v_G < -2.5V$
+            \item $v_{D_2} < 0 \implies V_A - 2V_R - v_i < 0 \implies 2V_R + 2v_G + 2V_R > 0 \implies v_G > -2V_R \implies v_G > -5V$
+        \end{itemize}
+        Iz provere uslova zaključujemo da je opseg $v_G$ za ovu pretpostavku jednak $[-3.5V, -2.5V]$.
+
+        Pošto je pri povećavanju napona prvi uslov koji neće biti ispunjen uslov za $D_1-OFF$, sledeća pretpostavka nam je $D_1-ON, D_2-OFF$ za $v_G > -2.5V$, i za nju se dobija kolo sa slike \ref{ON-OFF}.
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 3)
+                to [short] (0, 4)
+                to [R, l=$R$, i=$i_1$] (2, 4)
+                to [short] (4, 4)
+                to [short, -*, l_=$A$] (4, 3)
+                to [american voltage source, l=$V_R$] (2, 3)
+                to [R, l=$R$, i<_=$i_2$] (0, 3)
+                % R grana
+                (4, 3) to [R, l=$R$, i_=$i_R$] (4, 1)
+                to [american voltage source, l=$V_R$, invert] (4, 0)
+                to node[ground]{} (4, 0)
+                % Opamp
+                (6.2, 2.5) node[op amp](opamp){}
+                % Opamp- sa ostatkom
+                (4, 3) to [short] (5, 3)
+                % Opamp+ sa uzemljenjem
+                (5, 2) to node[ground]{} (5, 1)
+                % 2R grana do opampa
+                (4, 4) to [R, l=$2R$, i<=$i_3$] (7, 4)
+                to [short] (7.4, 4)
+                to [short] (7.4, 2.5)
+                to [short, -*, l=$v_i$] (8, 2.5)
+                % Kraj.
+                ;
+            \end{circuitikz}
+            \caption{Kolo ekvivalentno kolu sa slike \ref{Postavka1} pri pretpostavci $D_1-ON, D_2-OFF$}
+            \label{ON-OFF}
+        \end{figure}
+
+        Slično kao i prilikom prethodne pretpostavke, dobijamo sledeće jednačine:
+        \begin{equation}
+            \label{2i1}
+            i_1 = \frac{v_G}{R}
+        \end{equation}
+        \begin{equation}
+            \label{2i2}
+            i_2 = \frac{v_G - (V_A - V_R)}{R} = \frac{v_G + V_R}{R}
+        \end{equation}
+        \begin{equation}
+            \label{2i3}
+            i_3 = \frac{v_i}{2R}
+        \end{equation}
+        \begin{equation}
+            \label{2iR}
+            i_R = \frac{V_R}{R}
+        \end{equation}
+        \begin{equation}
+            \label{2i}
+            i_1 + i_2 + i_3 = i_R
+        \end{equation}
+        Pa tako kombinacijom \eqref{2i1}, \eqref{2i2}, \eqref{2i3}, \eqref{2iR} i \eqref{2i} dobijamo:
+        $$\frac{v_G}{R} + \frac{v_G + V_R}{R} + \frac{v_i}{2R} = \frac{V_R}{R}$$
+        $$v_G + v_G + V_R + \frac{v_i}{2} = V_R$$
+        \begin{equation}
+            \label{2vi}
+            \boxed{v_i = -4v_G}
+        \end{equation}
+        Uslovi za našu pretpostavku jesu:
+        \begin{itemize}
+            \item $i_{D_1} > 0 \implies i_2 > 0 \implies v_G + V_R > 0 \implies v_G > -V_R \implies v_G > -2.5V$
+            \item $v_{D_2} < 0 \implies V_A - 2V_R - v_i < 0 \implies -2V_R - 4v_G < 0 \implies v_G < \frac{V_R}{2} \implies v_G < 1.25V$
+        \end{itemize}
+        Pošto će uslov za $D_1-ON$ ostati ispunjen, vidimo da je za ovu pretpostavku $v_G \in (-2.5V, 1.25V]$ i da će se u narednom intervalu $D_2$ uključiti. Za pretpostavku $D_1-ON, D_2-ON$, kolo izgleda kao na slici \ref{ON-ON}.
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 3)
+                to [short] (0, 4)
+                to [R, l=$R$, i=$i_1$] (2, 4)
+                to [short] (4, 4)
+                to [short, -*, l_=$A$] (4, 3)
+                to [american voltage source, l=$V_R$] (2, 3)
+                to [R, l=$R$, i<_=$i_2$] (0, 3)
+                % R grana
+                (4, 3) to [R, l=$R$, i_=$i_R$] (4, 1)
+                to [american voltage source, l=$V_R$, invert] (4, 0)
+                to node[ground]{} (4, 0)
+                % Opamp
+                (6.2, 2.5) node[op amp](opamp){}
+                % Opamp- sa ostatkom
+                (4, 3) to [short] (5, 3)
+                % Opamp+ sa uzemljenjem
+                (5, 2) to node[ground]{} (5, 1)
+                % 2R grana do opampa
+                (4, 4) to [R, l=$2R$, i<=$i_3$] (7, 4)
+                to [short] (7.4, 4)
+                to [short] (7.4, 2.5)
+                to [short, -*, l=$v_i$] (8, 2.5)
+                % D2 grana do 2R grane
+                (4, 4) to [short] (4, 6)
+                to [american voltage source, l=$2V_R$] (5, 6)
+                to [R, l=$R$, i=$i_4$] (7.4, 6)
+                to [short] (7.4, 4)
+                % Kraj.
+                ;
+            \end{circuitikz}
+            \caption{Kolo ekvivalentno kolu sa slike \ref{Postavka1} pri pretpostavci $D_1-ON, D_2-ON$}
+            \label{ON-ON}
+        \end{figure}
+
+        Jednačine \eqref{2i1}, \eqref{2i2}, \eqref{2i3} i \eqref{2iR} ispadaju isto kao i u prethodnoj pretpostavci, a vrednost $i_4$ i Kirhofov zakon u čvoru $A$ su:
+        \begin{equation}
+            \label{3i4}
+            i_4 = \frac{V_A - 2V_R - v_i}{R} = -\frac{2V_R + v_i}{R}
+        \end{equation}
+        \begin{equation}
+            \label{3i}
+            i_1 + i_2 + i_3 = i_R + i_4
+        \end{equation}
+        Iz \eqref{2i1}, \eqref{2i2}, \eqref{2i3}, \eqref{2iR}, \eqref{3i4} i \eqref{3i} dobijamo:
+        $$\frac{v_G}{R} + \frac{v_G + V_R}{R} + \frac{v_i}{2R} = \frac{V_R}{R} - \frac{2V_R + v_i}{R}$$
+        $$v_G + v_G + V_R + \frac{v_i}{2} = V_R - 2V_R - v_i$$
+        $$\frac{3v_i}{2} = -2V_R -2v_G$$
+        \begin{equation}
+            \label{3vi}
+            \boxed{v_i = -\frac{4}{3}(v_G + V_R)}
+        \end{equation}
+        Proverom uslova dobijamo:
+        \begin{itemize}
+            \item $i_{D_1} > 0 \implies i_2 > 0 \implies v_G + V_R > 0 \implies v_G > -V_R \implies v_G > -2.5V$
+            \item $i_{D_2} > 0 \implies i_4 > 0 \implies -2V_R - v_i > 0 \implies -2V_R + \frac{4}{3}v_G + \frac{4}{3}V_R > 0 \implies v_G > \frac{V_R}{2} \implies v_G > 1.25V$
+        \end{itemize}
+        Što znači da će uslovi biti ispunjeni za interval $v_G \in (1.25, 3.5V]$.
+
+        Sa jednačinama iz \eqref{1vi} (za $v_G \in [-3.5V, -2.5V]$), \eqref{2vi} (za $v_G \in (-2.5V, 1.25V]$) i \eqref{3vi} (za $v_G \in (1.25V, 3.5V]$) sada možemo nacrtati grafik zavisnosti $v_i$ od $v_G$ kao što je prikazan na slici \ref{Grafik1}.
+
+        \begin{figure}[H]
+            \begin{center}
+                \input{Grafik1.pgf}
+            \end{center}
+            \caption{Grafik zavisnosti $v_i$ od $v_G$.}
+            \label{Grafik1}
+        \end{figure}
+
+        \newpage
+
+        \item Pošto imamo diodu $D$ u kolu, a napon $v_G$ nam počinje od 0V, prva pretpostavka nam je $D-OFF$ i za nju ekvivalentno kolo izgleda kao na slici \ref{OFF}. Otpornici povezani s generatorom $v_G$ se eliminišu iz razloga što tuda ne protiče struja (dioda je isključena a u operacioni pojačavač ne ulazi struja).
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw (4, 6) node[op amp, xscale=-1](opamp){};
+                \draw (3.2, 2.5) node[op amp, yscale=-1](opamp){};
+                \draw [-latex] (7, 5.5) -- (7.5, 5.5) node[below] {$V_{CC}$};
+                \draw
+                % Uzemljenje do opampa
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 2)
+                to [short] (0, 3)
+                to [short, -*] (2, 3)
+                % Opamp izlaz do vi
+                (2.8, 6) to [short, -*, l=$v_{i_1}$] (2, 6)
+                to [short] (2, 8)
+                to [short] (3, 8)
+                to [R, l=$2R$] (5.2, 8)
+                to [short] (5.2, 6.5)
+                to [R, l=$R$] (8, 6.5)
+                to [short] (8, 2.5)
+                to [short, -*, l=$v_i$] (9, 2.5)
+                % vi do drugi opamp-
+                (8, 2.5) to [short] (4.4, 2.5)
+                to [short] (4.4, 1)
+                to [R, l=$R$] (2, 1)
+                to [short] (2, 2)
+                % Drugi opamp- do uzemljenja
+                (2, 1) to [R, l=$R$] (2, -1)
+                to node[ground]{} (2, -2)
+                % Opamp+ do uzemljenja
+                (7, 5.5) to [R, l=$R$] (5.2, 5.5)
+                to [R, l=$R$] (5.2, 4)
+                to node[ground]{} (5.2, 3)
+                % Kraj
+                ;
+            \end{circuitikz}
+            \caption{Kolo ekvivalentno kolu sa slike \ref{Postavka2} pri pretpostavci $D-OFF$}
+            \label{OFF}
+        \end{figure}
+
+        Na osnovu donjeg operacionog pojačavača možemo zaključiti da su naponi na njegovim $+$ i $-$ granama jednaki $v_G$, pa iz naponskog razdelnika ispod njega zaključujemo da je:
+        $$v_G = \frac{v_i}{2}$$
+        \begin{equation}
+            \label{vivG1}
+            \boxed{v_i = 2v_G}
+        \end{equation}
+        Sa druge strane, izlazni napon gornjeg operacionog pojačavača se može izračunati na osnovu duže formule za diferencijalni pojačavač, koja glasi:
+        \begin{equation}
+            \label{DiffOpAmp}
+            v_i = \frac{R_4}{R_3 + R_4}(1 + \frac{R_2}{R_1})v_{u_1} - \frac{R_2}{R_1}v_{u_2}
+        \end{equation}
+        Kada u \eqref{DiffOpAmp} ubacimo vrednosti iz našeg konkretnog kola, dobijemo:
+        $$v_{i_1} = \frac{R}{R + R}(1 + \frac{2R}{R})V_{CC} - \frac{2R}{R}v_i$$
+        \begin{equation}
+            \label{vi1}
+            v_{i_1} = \frac{3}{2}V_{CC} - 2v_i
+        \end{equation}
+        Na osnovu \eqref{vivG1} i \eqref{vi1} dobijamo da je napon na isključenoj diodi $D$ jednak:
+        $$v_D = v_G - v_{i_1} = v_G - \frac{3}{2}V_{CC} + 2v_i$$
+        $$v_D = 5v_G - \frac{3}{2}V_{CC}$$
+        \begin{equation}
+            \label{vD}
+            v_D = 5v_G - 7.5V
+        \end{equation}
+        Kako bi uslov naše pretpostavke bio ispunjen, mora da važi $v_D < V_D$, pa iz \eqref{vD} dobijamo:
+        $$5v_G < 7.5V + 0.7V$$
+        \begin{equation}
+            \label{Uslov1}
+            v_G < 1.64V
+        \end{equation}
+
+        Za našu sledeću pretpostavku uzimamo da je $D-ON$, pa ekvivalentno kolo izgleda kao na slici \ref{ON}.
+
+        \begin{figure}[H]
+            \centering
+            \begin{circuitikz}[american voltages]
+                \draw (4, 6) node[op amp, xscale=-1](opamp){};
+                \draw (3.2, 2.5) node[op amp, yscale=-1](opamp){};
+                \draw [-latex] (7, 5.5) -- (7.5, 5.5) node[below] {$V_{CC}$};
+                \draw
+                % Uzemljenje do opampa
+                (0, 0) to node[ground]{} (0, 1)
+                to [american voltage source, l=$v_G$, invert] (0, 2)
+                to [short, i=$i$] (0, 3)
+                to [R, l=$R$, -*] (2, 3)
+                to [R, l=$R$] (2, 5)
+                to [battery1, l=$V_D$] (2, 6)
+                to [short, *-, l=$v_{i_1}$] (2.8, 6)
+                % Opamp izlaz do vi
+                (2, 6) to [short] (2, 8)
+                to [short] (3, 8)
+                to [R, l=$2R$] (5.2, 8)
+                to [short] (5.2, 6.5)
+                to [R, l=$R$] (8, 6.5)
+                to [short] (8, 2.5)
+                to [short, -*, l=$v_i$] (9, 2.5)
+                % vi do drugi opamp-
+                (8, 2.5) to [short] (4.4, 2.5)
+                to [short] (4.4, 1)
+                to [R, l=$R$] (2, 1)
+                to [short] (2, 2)
+                % Drugi opamp- do uzemljenja
+                (2, 1) to [R, l=$R$] (2, -1)
+                to node[ground]{} (2, -2)
+                % Opamp+ do uzemljenja
+                (7, 5.5) to [R, l=$R$] (5.2, 5.5)
+                to [R, l=$R$] (5.2, 4)
+                to node[ground]{} (5.2, 3)
+                % Kraj
+                ;
+            \end{circuitikz}
+            \caption{Kolo ekvivalentno kolu sa slike \ref{Postavka2} pri pretpostavci $D-ON$}
+            \label{ON}
+        \end{figure}
+
+        Slično kao pri prošloj pretpostavci, naponi na oba kraja donjeg operacionog pojačavača su $\frac{v_i}{2}$ i jednačina \eqref{vi1} važi. Iz pada napona na otpornicima $R$ u grani sa $v_G$ možemo dobiti dve jednačine:
+        \begin{equation}
+            \label{PadNapona1}
+            i = \frac{v_G - \frac{v_i}{2}}{R}
+        \end{equation}
+        \begin{equation}
+            \label{PadNapona2}
+            i = \frac{\frac{v_i}{2} - v_{i_1} - V_D}{R}
+        \end{equation}
+        Izjednačavanjem \eqref{PadNapona1} i \eqref{PadNapona2} i zatim ubacivanjem \eqref{vi1} dobijamo:
+        $$\frac{v_G - \frac{v_i}{2}}{R} = \frac{\frac{v_i}{2} - v_{i_1} - V_D}{R}$$
+        $$v_G - \frac{v_i}{2} = \frac{v_i}{2} - v_{i_1} - V_D$$
+        $$v_G + V_D + \frac{3}{2}V_{CC} - 2v_i = v_i$$
+        $$3v_i = v_G + V_D + \frac{3}{2}V_{CC}$$
+        \begin{equation}
+            \label{vivG2}
+            \boxed{v_i = \frac{v_G}{3} + \frac{V_D}{3} + \frac{V_{CC}}{2}}
+        \end{equation}
+        Kada \eqref{vivG2} ubacimo u \eqref{PadNapona1} dobijamo:
+        $$i = \frac{v_G - \frac{\frac{v_G}{3} + \frac{V_D}{3} + \frac{V_{CC}}{2}}{2}}{R}$$
+        \begin{equation}
+            \label{iD}
+            i = \frac{\frac{5}{6}v_G - \frac{V_D}{6} - \frac{V_{CC}}{4}}{R}
+        \end{equation}
+        Pošto je struja kroz $D$ ista struja kao kroz generator $v_G$ iz \eqref{iD} dobijamo uslov naše pretpostavke:
+        $$\frac{5}{6}v_G - \frac{V_D}{6} - \frac{V_{CC}}{4} > 0$$
+        $$\frac{5}{6}v_G > \frac{V_D}{6} + \frac{V_{CC}}{4}$$
+        $$v_G > \frac{V_D}{5} + \frac{3}{10}V_{CC}$$
+        \begin{equation}
+            \label{Uslov2}
+            v_G > 1.64V
+        \end{equation}
+
+        Na osnovu uslova \eqref{Uslov1} i \eqref{Uslov2}, kao i jednačina zavisnosti $v_i$ od $v_G$ \eqref{vivG1} i \eqref{vivG2}, dobijamo grafik zavisnosti kao na slici \ref{Grafik2}.
+
+        \begin{figure}[H]
+            \begin{center}
+                \input{Grafik2.pgf}
+            \end{center}
+            \caption{Grafik zavisnosti $v_i$ od $v_G$.}
+            \label{Grafik2}
+        \end{figure}
+    \end{enumerate}
+\end{document}
