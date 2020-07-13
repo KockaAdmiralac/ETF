@@ -1,0 +1,316 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[serbian]{babel}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{commath}
+\usepackage[a4paper,left=1in,top=1in,right=1in,bottom=1in,nohead]{geometry}
+
+\title{Matematika 1}
+\author{Marija Rašajski (beleške: Luka Simić)}
+\date{Decembar 2019}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definicija}[section]
+\newtheorem{ginterpretation}{Geometrijska interpretacija}[section]
+\newtheorem{theorem}{Teorema}[section]
+
+\begin{document}
+
+\maketitle
+
+    \section{Diferencijalni račun}
+        \begin{definition}
+            Neka je $f$ definisana u okolini tačke $x_0$ uključujući i samu tačku $x_0$. Ako postoji (konačna ili beskonačna) granična vrednost
+            $$f'(x_0) = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0} = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}$$
+            kažemo da je $f(x_0)$ (prvi) izvod $f$ u tački $x_0$.
+        
+            Ako se posmatra samo levi/desni limes njegova vrednost je levi/desni izvod, i kažemo da funkcija ima izvod u nekoj tački ako i samo ako ima i levi i desni izvod u toj tački i oni su jednaki.
+        \end{definition}
+
+        \begin{ginterpretation}
+            Neka je $f(x)$ neprekidna u $x_0$ i definisana u nekoj njenoj okolini. Neka je $\Delta x$ proizvoljna (obično mala) veličina koju nazivamo priraštaj argumenta $x$. Kada se $x$ promeni od $x$ do $\Delta x$, funkcija $f$ se promeni od $f(x)$ do $f(x + \Delta x)$. Veličinu $\Delta f(x_0) = f(x_0 + \Delta x) - f(x_0)$ nazivamo priraštajem funkcije $f(x)$.
+            $$tg(\alpha) = \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x}$$
+            Kada $\Delta x\to0$, sečica AB postaje tangenta u tački $A(x_0, y_0)$. Dakle, izvod $y = f(x)$ u tački $x_0$ jednak je tangensu ugla koji tangenta u toj tački zaklapa sa pozitivnim smerom $x$-ose.
+        \end{ginterpretation}
+
+        \subsection{Tangenta}
+            \begin{definition}
+                Ako postoji konačan izvod $f'(x_0)$, tada pravu čija je jednačina $y - y_0 = f'(x_0)(x - x_0)$ nazivamo tangentom krive $y = f(x)$ u tački $(x_0, y_0)$.
+                Ako je izvod beskonačan, tada je jednačina tangente $x = x_0$. Ako ne postoji ni konačan ni beskonačan izvod tada u datoj tački kriva nema tangentu.
+            \end{definition}
+
+        \subsection{Normala}
+            \begin{definition}
+                Ako postoji tangenta krive $y = f(x)$ u tački $(x_0, y_0)$, prava koja je normalna na tangentu i sadrži $(x_0, y_0)$ naziva se normalnom krive $y = f(x)$ u tački $(x_0, y_0)$.
+                Ako je izvod konačan i različit od 0, jednačina normale je $y - y_0 = \frac{-1}{f'(x_0)}(x - x_0)$. Ako je beskonačan, jednačina normale je $y = y_0$. Ako je nula, jednačina normale je $x = x_0$.
+            \end{definition}
+
+        \begin{definition}
+            Ugao između krivih $y = f(x)$ i $y = g(x)$ koje se seku u tački čija je apscisa $x_0$ definiše se kao oštar ugao između njihovih tangenti u presečnoj tački (ako obe tangente postoje). Tangens tog ugla je
+            $$tg(\alpha) = \abs{\frac{f'(x_0) - g'(x_0)}{1 + f'(x_0)g'(x_0)}}$$
+        \end{definition}
+
+        \begin{definition}
+            Ako funkcija $f$ u tački $x_0$ ima konačan izvod kažemo da je ona u toj tački diferencijabilna.
+        \end{definition}
+
+        \begin{theorem}
+            Ako je $f$ diferencijabilna u $x_0$ onda je i neprekidna u $x_0$.
+        \end{theorem}
+        \begin{proof}
+            $f$ ima konačan izvod u $x_0 \implies \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}$ je konačan.
+            $\implies \lim_{x \to x_0} f(x) = f(x_0) \implies \lim_{x \to x_0} (f(x) - f(x_0)) = 0$
+            $\lim_{x \to x_0} (f(x) - f(x_0)) = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}(x - x_0) = 0$
+        \end{proof}
+
+        \begin{theorem}
+            Neka su $f$ i $g$ diferencijabilne u $x$ i neka su $\alpha$ i $\beta$ proizvoljni realni brojevi. Tada je funkcija $\alpha f + \beta g$ diferencijabilna u $x$ i važi:
+            $$(\alpha f(x) + \beta g(x))' = \alpha f'(x) + \beta g'(x)$$
+        \end{theorem}
+        \begin{proof}
+            $$u(x) = \alpha f(x) + \beta g(x)$$
+            $$u'(x) = \lim_{h \to 0} \frac{u(x + h) - u(x)}{h} = \lim_{h \to 0} \frac{\alpha f(x + h) + \beta g(x + h) - \alpha f(x) - \beta g(x)}{h} =$$
+            $$= \lim_{h \to 0} \frac{\alpha(f(x + h) - f(x)) + \beta(g(x + h) - g(x))}{h} =$$
+            $$= \alpha\lim_{h \to 0} \frac{f(x + h) - f(x)}{h} + \beta \lim_{h \to 0} \frac{g(x + h) - g(x)}{h} =$$
+            $$= \alpha f'(x) + \beta g'(x)$$
+        \end{proof}
+
+        \begin{theorem}
+            (Izvod proizvoda i količnika) Ako su funkcije $f$ i $g$ diferencijabilne u tački $x$, tada je funkcija $f(x)g(x)$ takođe diferencijabilna u tački $x$. Ako je $g(t) \neq 0$ za svako $t$ u nekoj okolini tačke $x$, onda je i funkcija $\frac{f(x)}{g(x)}$ diferencijabilna u tački $x$ i važi:
+            $$(f(x)g(x))' = f'(x)g(x) + f(x)g'(x)$$
+            $$\left(\frac{f(x)}{g(x)}\right)' = \frac{f'(x)g(x) - f(x)g'(x)}{(g(x))^2}$$
+        \end{theorem}
+        \begin{proof}
+            $$(f(x)g(x))' = \lim_{h \to 0} \frac{f(x + h)g(x + h) - f(x)g(x)}{h} =$$
+            $$= \lim_{h \to 0} \frac{f(x + h)g(x + h) - f(x)g(x + h) + f(x)g(x + h) - f(x)g(x)}{h} =$$
+            $$= \lim_{h \to 0} \frac{(f(x + h) - f(x))g(x + h) + f(x)(g(x + h) - g(x))}{h} =$$
+            $$= f'(x)g(x) + f(x)g'(x)$$
+        \end{proof}
+
+        \begin{theorem}
+            (Izvod složene funkcije) Neka je $g$ diferencijabilna u $x_0$ i $h(x) = f(g(x))$ je definisana u nekoj okolini $x_0$, pri čemu je $f$ diferencijabilna u $t_0 = g(x_0)$. Tada je i $h$ diferencijabilna u $x_0$ i važi:
+            $$h'(x_0) = (f(g(x)))'|_{x = x_0} = f'(t)|_{t = g(x_0)} \cdot g(x_0)$$
+        \end{theorem}
+
+        \begin{theorem}
+            (Izvod inverzne funkcije) Neka je $f$ monotona i neprekidna na intervalu $(a, b)$ i neka u nekoj tački $x \in (a, b)$ ima konačan izvod $f'(x_0) \neq 0$. Tada je inverzna funkcija $f^{-1}$ diferencijabilna u tački $y_0 = f(x_0)$ i važi jednakost:
+            $$(f^{-1}(y_0))' = \frac{1}{f'(x_0)}$$
+        \end{theorem}
+
+        \subsection{Logaritamski izvod}
+            $$f(x) = u(x)^{v(x)}$$
+            $$ln(f(x)) = ln(u(x)^{v(x)})$$
+            $$\frac{f'(x)}{f(x)} = (v(x)ln(u(x)))'$$
+
+    \section{Ekstremumi}
+        \begin{definition}
+            Ako je $f$ definisana u nekoj okolini $(x_0 - \varepsilon, x_0 + \varepsilon)$ tačke $x_0$ i ako za svako $x$ u toj okolini važi da je $f(x) \geq f(x_0)$ kažemo da funkcija $f$ ima lokalni minimum u tački $x_0$ (analogno za lokalni maksimum). Lokalni maksimum i minimum nazivaju se i lokalni ekstremumi.
+    
+            Postoje i strogi lokalni ekstremumi kada se koriste strogi znaci nejednakosti; u suprotnom konstantna funkcija može imati ekstremume u svakoj tački. Najveći i najmanji ekstremum funkcije na datom skupu su takođe globalni.
+        \end{definition}
+
+        \begin{definition}
+            Tačka $x_0$ u kojoj je $f'(x_0) = 0$ naziva se stacionarna tačka funkcije $f$.
+        \end{definition}
+
+        \begin{theorem}
+            (Fermaova teorema) Ako funkcija $f$ u tački $x_0$ ima lokalni ekstremum i ako u $f(x_0)$ ima izvod tada je $f'(x_0) = 0$.
+        \end{theorem}
+        \begin{proof}
+            $$f(x_0) = y$$
+            $$f'(x_0) = \lim_{h \to 0^{+}} \frac{f(x_0 + h) - f(x_0)}{h} \leq 0$$
+            $$f'(x_0) = \lim_{h \to 0^{-}} \frac{f(x_0) - f(x_0 - h)}{h} \geq 0$$
+            $f$ ima izvod u $x_0$ pa su levi i desni izvod u toj tački jednaki, a to je moguće samo ako su jednaki nuli $\implies f'(x_0) = 0$.
+            Analogno za lokalni minimum.
+        \end{proof}
+
+        \begin{theorem}
+            (Rolova teorema) Neka je funkcija $f$ definisana na segmentu $[a, b]$ i neka važi:
+            \begin{itemize}
+                \item $f$ je neprekidna na $[a, b]$
+                \item $f$ je diferencijabilna na $(a, b)$
+                \item $f(a) = f(b)$
+            \end{itemize}
+            Tada postoji $c \in (a, b)$ tako da važi $f'(c) = 0$.
+        \end{theorem}
+        \begin{ginterpretation}
+            Ako je kriva $y = f(x)$ neprekidna na zatvorenom intervalu $[a, b]$ i u svakoj tački $(a, b)$ ima tangentu, a važi $f(a) = f(b)$, onda postoji bar jedna tačka $c \in (a, b)$ u kojoj je tangenta na krivu paralelna sa $x$-osom.
+        \end{ginterpretation}
+
+        \begin{theorem}
+            (Košijeva teorema) Neka su $f$ i $g$ funkcije definisane na $[a, b]$ za koje važi:
+            \begin{itemize}
+                \item $f$ i $g$ su neprekidne na $[a, b]$
+                \item $f$ i $g$ su diferencijabilne na $(a, b)$
+                \item $g'(x) \neq 0$ za svako $x \in (a, b)$
+            \end{itemize}
+            Tada postoji $c \in (a, b)$ tako da je $\frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(c)}{g'(c)}$.
+        \end{theorem}
+        \begin{proof}
+            $$g(b) - g(a) \neq 0$$
+            $$\varphi(x) = f(x) - \frac{f(b) - f(a)}{g(b) - g(a)} \cdot g(x)$$
+            Dovoljan dokaz: $\varphi'(x) = 0$. $\varphi$ je definisana na $[a, b]$.
+            \begin{itemize}
+                \item $\varphi$ je neprekidna na $[a, b]$ jer su to isto $f$ i $g$
+                \item $\varphi$ je diferencijabilna na $[a, b]$ jer su to isto $f$ i $g$
+                \item $\varphi(a) = \varphi(b)$?
+            \end{itemize}
+            $$\varphi(a) = f(a) - \frac{f(b) - f(a)}{g(b) - g(a)} \cdot g(a) = \frac{f(a)g(b) - f(a)g(a) - f(b)g(a) + f(a)g(a)}{g(b) - g(a)}$$
+            $$\varphi(b) = \frac{f(b)g(b) - f(b)g(a) - f(b)g(b) + f(a)g(b)}{g(b) - g(a)} \implies \varphi(a) = \varphi(b)$$
+            $$\implies (\exists c \in (a, b))(\varphi'(c) = 0) \implies f'(c) - \frac{f(b) - f(a)}{g(b) - g(a)} \cdot g'(c) = 0$$
+            $$\implies (\exists c \in (a, b)) \frac{f(b) - f(a)}{g(b) - b(a)} = \frac{f'(c)}{g'(c)}$$
+        \end{proof}
+        \begin{ginterpretation}
+            Ako je kriva zadata parametrom $x = g(t)$, $y = f(t)$, $t \in [a, b]$, kriva spaja tačke $A(g(a), f(a))$ i $B(g(b), f(b))$. Koeficijent pravca prave kroz tačke $a$ i $b$ je $\frac{f(b) - f(a)}{g(b) - g(a)}$ a koeficijent prava tangente za $c \in (a, b)$ je $\frac{f'(c)}{g'(c)}$. Košijeva teorema tvrdi da postoji $c \in (a, b)$ takva da je tangenta na krivu u $C(g(c), f(c))$ paralelna sečici na krivu kroz $A$ i $B$.
+        \end{ginterpretation}
+
+        \begin{theorem}
+            (Lagranžova teorema) Neka je $f$ definisana na $[a, b]$ i neka važe (1) i (2). Tada postoji $c \in (a, b)$ tako da važi $\frac{f(b) - f(a)}{b - a} = f'(c)$
+        \end{theorem}
+        \begin{proof}
+            Košijeva teorema za $g(x) = x$.
+        \end{proof}
+        \begin{ginterpretation}
+            Ako je kriva $y = f(x)$ neprekidna na $[a, b]$ i u svakoj tački $(a, b)$ ima tangentu, onda postoji tačka $c \in (a, b)$ takva da je tangenta u $C(c, f(c))$ paralelna sečici kroz tačke $A(a, f(a))$ i $B(b, f(b))$.
+        \end{ginterpretation}
+
+        \subsection{Izvodi višeg reda}
+            \begin{definition}
+                Izvod $f$ nazivamo prvim izvodom sa oznakom $f'$. Ako je definisan izvod reda $n - 1$, u oznaci $f^{(n-1)}$, tada se izvod reda $n$ definiše sa $f^{(n)}(x) = (f^{(n-1)}(x))'$. Za funkciju koja u tački $x$ ima konačan izvod reda $n$ kažemo da je u toj tački $n$ puta diferencijabilna.
+            \end{definition}
+
+            \begin{theorem}
+                (Lajbnicova teorema) Neka je $f(x) = u(x)v(x)$ i neka su $u$ i $v$ $n$ puta diferencijabilne u $x$. Tada je $f$ $n$ puta diferencijabilna u $x$ i važi:
+                $$(u \cdot v)^{(n)} = \sum_{k = 0}^{n} \binom{n}{k}u^{(k)} \cdot v^{(n-k)}$$
+            \end{theorem}
+            \begin{proof}
+                Indukcijom, polazeći od definicije i izraza za prvi izvod proizvoda (slično dokazu binomne formule). Koristi se $\binom{n}{k - 1} + \binom{n}{k} = \binom{n + 1}{k}$.
+            \end{proof}
+
+        \subsection{Lopitalovo pravilo}
+            \begin{theorem}
+                (Lopitalovo pravilo) Neka su $f$ i $g$ diferencijabilne u nekoj okolini tačke $a \in \overline{\mathbb{R}}$ (osim možda u $a$) i neka je:
+                \begin{itemize}
+                    \item $\lim_{x \to a} \frac{f(x)}{g(x)}$ tipa $\frac{0}{0}$ ili $\frac{\infty}{\infty}$
+                    \item $g'(x) \neq 0$ u nekoj okolini tačke $a$
+                    \item Postoji $\lim_{x \to a} \frac{f'(x)}{g'(x)}$
+                \end{itemize}
+                Tada postoji i $\lim_{x \to a} \frac{f(x)}{g(x)}$ i važi
+                $$\lim_{x \to a} \frac{f(x)}{g(x)} = \lim_{x \to a} \frac{f'(x)}{g'(x)}$$
+            \end{theorem}
+            
+            Direktnom primenom Lopitalovog pravila nalaze se granične vrednosti tipa $\frac{0}{0}$ ili $\frac{\infty}{\infty}$ svođenjem na granične vrednosti količnika izvoda. U slučaju neodređenosti tipa $0 - \infty$ ili $\infty - \infty$ treba prvo algebarskim transformacijama dovesti funkciju u odgovarajući oblik. U slučaju neodređenosti tipa $0^0$, $\infty^0$ ili $1^{\infty}$ datu funkciju treba logaritmovati pa dobijamo jedan od navedenih slučajeva.
+    
+    \section{Monotonost}
+        \begin{theorem}
+            Neka je $f$ definisana i neprekidna na intervalu $(a, b)$ ($a, b \in \overline{\mathbb{R}}$) i neka funkcija $f$ ima izvod za svako $x \in (a, b)$.
+            \begin{itemize}
+                \item Ako je $(\forall x \in (a, b)) f'(x) > 0$, $f$ je monotono rastuća na $(a, b)$
+                \item Ako je $(\forall x \in (a, b)) f'(x) < 0$, $f$ je monotono opadajuća na $(a, b)$
+                \item Ako je $(\forall x \in (a, b)) f'(x) = 0$, $f$ je konstantna na $(a, b)$
+            \end{itemize}
+        \end{theorem}
+        \begin{proof}
+            Pomoću Lagranžove teoreme.
+        \end{proof}
+
+        \begin{theorem}
+            Neka je $x_0$ stacionarna tačka funkcije $f$. Ako je $f''(x_0) > 0$, tada funkcija u tački $x_0$ ima lokalni minimum. Analogno za lokalni maksimum.
+
+            Ako je $f''(x_0) = 0$, neka je $k$ red prvog sledećeg izvoda u $x_0$ koji je različit od nule, tj. neka je:
+            $$f'(x_0) = f''(x_0) = ... = f^{(k-1)}(x_0) = 0, f^{(k)}(x_0) \neq 0 (\neq \pm \infty)$$
+            Ako je k neparan broj tada funkcija u tački $x_0$ nema lokalni ekstremum. Ako je $k$ paran u $f^{(k)}(x_0) > 0$, $f$ ima lokalni minimum, u suprotnom maksimum.
+        \end{theorem}
+
+    \section{Konveksnost i konkavnost}
+        \begin{definition}
+            Ako svako $\lambda \in [0, 1]$ i za svako $x_1, x_2 \in (a, b)$ važi da je
+            $$f(\lambda x_1 + (1 - \lambda x_2)) \leq \lambda f(x_1) + (1 - \lambda) f(x_2)$$
+            tada kažemo da je $f$ konkavna na intervalu $(a, b)$. (Umesto $(a, b)$ može biti proizvoljan otvoren, zatvoren, konačan ili beskonačan interval.)
+        \end{definition}
+
+        \begin{theorem}
+            Neka je $f$ diferencijabilna na intervalu $(a, b)$. Tada je $f$ konveksna na $(a, b)$ ako i samo ako je $f'$ neopadajuća na $(a, b)$.
+        \end{theorem}
+
+        \begin{theorem}
+            Neka je $f$ dva puta diferencijabilna na $(a, b)$. Tada je $f$ konveksna na $(a, b)$ ako i samo ako $f''(x) \geq 0$ u svakoj tački $x \in (a, b)$, a konkavna obrnuto. Tačka u kojoj funkcija menja konveksnost naziva se prevojna tačka.
+        \end{theorem}
+
+        \begin{definition}
+            Neka je $f$ definisana na nekom intervalu $(x_0 - h, x_0 + h)$, pri čemu je na intervalu $(x_0 - h, x_0)$ konkavna, a $(x_0, x_0 + h)$ konveksna. Tada se kaže da je $x_0$ prevojna tačka funkcije $f$. Ako $f$ ima drugi izvod u prevojnoj tački, onda je on jednak nuli. Naime, prvi izvod ima lokalni ekstremum u prevojnoj tački, pa po Fermaovoj teoremi je izvod prvog izvoda u toj tački jednak nuli. U prevojnoj tački ne mora da postoji drugi izvod.
+        \end{definition}
+
+    \section{Asimptote}
+        \begin{definition}
+            Neka je data funkcija $y = f(x)$. Ako je $a$ tačka nagomilavanja domena funkcije $f$ i ako su granične vrednosti $\lim_{x \to a} f(x)$ ili $\lim_{x \to a^{-}} f(x)$ ili $\lim_{x \to a^{+}} f(x)$ jednake $+\infty$ ili $-\infty$, za pravu $x = a$ kažemo da je vertikalna asimptota.
+        \end{definition}
+
+        \begin{definition}
+            Ako je $\lim_{x \to +\infty} f(x)$ jednako $b \in \mathbb{R}$, tada kažemo da je prava $y = b$ desna horizontalna asimptota funkcije $f$. Analogno za levu.
+        \end{definition}
+
+        \begin{definition}
+            Ako je $\lim_{x \to +\infty} (f(x) - ax - b) = 0$, za neko $a \neq 0$, $b \in \mathbb{R}$ tada pravu $y = ax + b$ nazivamo desnom kosom asimptotom funkcije $f$. Analogno za levu.
+        \end{definition}
+
+        $$k = \lim_{x \to \pm \infty} \frac{f(x)}{x}$$
+        $$n = \lim_{x \to \pm \infty} (f(x) - kx)$$
+
+    \section{Tejlorova formula}
+        \begin{definition}
+            Ako funkcija $f$ u okolini tačke $a$ ima konačne izvode do reda $n$, tada se polinom
+            $$T_n(x) = f(a) + f'(a)(x - a) + \frac{f''(a)}{2!}(x - a)^2 + \frac{f'''(a)}{3!}(x - a)^3 + ... + \frac{f^{(n)}(a)}{n!}(x - a)^n$$
+            naziva Tejlorovim polinomog $n$-tog stepena funkcije $f$ u okolini $a$.
+        \end{definition}
+
+        \begin{definition}
+            Ako funkcija u okolini nule ima konačne izvoda do reda $n$ tada se polinom
+            $$M_n(x) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + ... + \frac{f^{(n)}(0)}{n!}x^n$$
+            naziva Maklorenovim polinomom $n$-tog stepena funkcije $f$.
+        \end{definition}
+
+        \begin{theorem}
+            Neka je funkcija $f$ $n$-puta diferencijabilna u $a$ i neka je $T_n$ njen Tejlorov polinom stepena $n$ u okolini tačke $a$. Tada je:
+            $$f(x) = T_n(x) + o((x-a)^n), x \to a$$
+            Ovako predstavljen ostatak naziva se ostatkom u Peanovom obliku. Ova teorema tvrdi da je $R_n(x) = o((x-a)^n), x \to a$, a iz same definicije Tejlorovog polinoma se vidi da je $R_n(a) = 0$.
+        \end{theorem}
+
+        \subsection{Osnovni Maklorenovi razvoji}
+            \begin{itemize}
+                \item
+                $$f(x) = e^x$$
+                $$f^{(n)}(x) = e^x$$
+                $$f^{(n)}(0) = 1, n \in \mathbb{N}$$
+                $$f(x) = \sum^{n}_{k = 0} \frac{x^k}{k!} + o(x^n), x \to 0$$
+                \item
+                $$f(x) = sin(x)$$
+                $$f^{(n)}(x) = sin(x + \frac{n\pi}{2})$$
+                $$f^{(n)}(0) = sin(\frac{n\pi}{2})$$
+                $$sin(x) = 1 - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + ... + (-1)^{n-1} \frac{x^{2n-1}}{(2n-1)!} + o(x^{2n}), x \to 0$$
+                \item $$cos(x) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - ... + (-1)^{n} \frac{x^{2n}}{(2n)!} + o(x^{2n}), x \to 0$$
+                \item
+                $$(1+x)^a = \sum^{n}_{k = 0} \binom{a}{k} x^k + o(x^k), x \to 0$$
+                za $a = -1$
+                $$\frac{1}{1+x} = 1 - x + x^2 - x^3 + ... + (-1)^{n-1} \frac{x^n}{n} + o(x^n), x \to 0$$
+                \item $$ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \frac{x^4}{4} + ... + (-1)^{n-1} \frac{x^n}{n} + o(x^n), x \to 0, x \in (-1, 1]$$
+            \end{itemize}
+
+        \begin{theorem}
+            (Jedinstvenost Tejlorovog polinoma) Ako je $f$ $n$-puta diferencijabilno u $a$ i ako za neki polinom $P_n$ stepena $n$ važi da je $f(x) = P_n(x) + o((x-a)^n), x \to a$, onda je $P_n$ Tejlorov polinom $f$ u okolini tačke $a$.
+
+            Dakle, ako na bilo koji način dobijemo $P_n$ za koji važi $f(x) = P_n(x) + o((x-a)^n), x \to a$ onda je to Tejlorov polinom (pod uslovom da je $f$ $n$-puta diferencijabilno u $a$).
+
+            U praksi se često Maklorenov razvoj neke funkcije nalazi polazeći od poznatih razvoja elementarnih funkcija.
+        \end{theorem}
+
+        \begin{theorem}
+            Neka $f$ ima u okolini $a$ konačne izvode do reda $n + 1$ i neka je $R_n(x) = f(x) - T_n(x)$, gde je $T_n$ Tejlorov polinom $f$ u okolini $a$. Tada se $R_n$ može predstaviti u sledećim oblicima:
+            \begin{itemize}
+                \item Lagranžov oblik ostatka: $R_n(x) = \frac{f^{(n+1)(a + \theta(x-a))}}{(n+1)!}(x-a)^{n+1}, \theta \in (0, 1)$
+                \item Košijev oblik ostatka: $R_n(x) = \frac{f^{(n+1)(a + \theta(x-a))}}{n!} (1-\theta)^n (x-a)^{n+1}, \theta \in (0, 1)$
+            \end{itemize}
+            ($\theta$ je neodređena veličina koja zavisi od $x$)
+        \end{theorem}
+\end{document}
