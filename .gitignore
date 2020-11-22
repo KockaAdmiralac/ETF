@@ -1,12 +1,16 @@
+**/Materijali/**/*.doc
+**/Materijali/**/*.pdf
 __pycache__
 a.out
 ASP1/Materijal
 ASP1/dz2/dz2
 ASP1/dz3/dz3
 OO1/test.cpp
+ORT2/Simulator
 P2/test.c
 PP2/dz5
 Misc/data
 Misc/imena.csv
 Misc/rezultati.csv
+SIS/test.py
 node_modules
