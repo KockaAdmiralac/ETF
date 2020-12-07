@@ -261,6 +261,7 @@ class Tree {
     public:
         Tree() : root(nullptr) {}
         Job *find(int priority) const;
+        std::tuple<Node*, int, Node*, int> find(Job &job) const;
         void insert(Job *job);
         [[nodiscard]] Job *remove();
         [[nodiscard]] Job *remove(int priority, std::string &name);
@@ -298,6 +299,37 @@ Job *Tree::find(int priority) const {
         }
     }
     return nullptr;
+}
+
+std::tuple<Node*, int, Node*, int> Tree::find(Job &job) const {
+    Node *curr = root, *prev = nullptr;
+    bool found = false;
+    int index = -1, prevIndex = -1;
+    while (curr != nullptr && !found) {
+        prevIndex = index;
+        for (index = 0; index < 3; ++index) {
+            Job *currJob = curr->keys.array[index];
+            if (currJob == nullptr) {
+                continue;
+            }
+            if (job == (*currJob)) {
+                found = true;
+                break;
+            } else if (job < (*currJob)) {
+                prev = curr;
+                curr = curr->children.array[index];
+                break;
+            }
+        }
+        if (index == 3 && !found) {
+            if (curr->keys.named.right == nullptr) {
+                index = 2;
+            }
+            prev = curr;
+            curr = curr->children.array[index];
+        }
+    }
+    return {prev, prevIndex, curr, index};
 }
 
 void Tree::insert(Job *job) {
@@ -1050,9 +1082,55 @@ void changePriority(Tree *&tree) {
     std::getline(std::cin, name);
     std::cout << "Unesite novi prioritet: ";
     std::cin >> newPriority;
-    Job *job = tree->remove(oldPriority, name);
-    job->priority = newPriority;
-    tree->insert(job);
+    if (oldPriority == newPriority) {
+        return;
+    }
+    Job oldJob(oldPriority, name);
+    Job newJob(newPriority, name);
+    auto foundData = tree->find(oldJob);
+    Node *parentNode = std::get<0>(foundData);
+    int parentIndex = std::get<1>(foundData);
+    Node *node = std::get<2>(foundData);
+    int index = std::get<3>(foundData);
+    if (node == nullptr) {
+        throw "Čvor nije pronađen.";
+    }
+    if (
+        node->isLeaf() &&
+        (
+            parentNode == nullptr ||
+            (
+                (
+                    parentIndex == 1 ||
+                    parentIndex == 2
+                ) &&
+                parentNode->keys.array[parentIndex] != nullptr &&
+                parentNode->keys.array[parentIndex-1] != nullptr &&
+                newJob < *(parentNode->keys.array[parentIndex]) &&
+                newJob > *(parentNode->keys.array[parentIndex-1])
+            )
+        )
+    ) {
+        Job *removedJob = node->remove(index);
+        int newIndex;
+        for (newIndex = 0; newIndex < 3; ++newIndex) {
+            if (
+                node->keys.array[newIndex] != nullptr &&
+                newJob >= *(node->keys.array[newIndex])
+            ) {
+                break;
+            }
+        }
+        if (node->keys.named.right == nullptr && newIndex == 3) {
+            newIndex = 2;
+        }
+        removedJob->priority = newPriority;
+        node->insert(removedJob, newIndex);
+    } else {
+        Job *job = tree->remove(oldPriority, name);
+        job->priority = newPriority;
+        tree->insert(job);
+    }
 }
 
 void countPriorities(Tree *&tree) {
