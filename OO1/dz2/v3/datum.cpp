@@ -24,6 +24,11 @@ bool Datum::operator<(Datum &datum2) const {
            );
 }
 
+void Datum::pisi(std::ostream &it) const {
+    it << dan << "." << mesec << "." << godina << ".";
+}
+
 std::ostream &operator<<(std::ostream &it, const Datum &datum) {
-    return it << datum.dan << "." << datum.mesec << "." << datum.godina << ".";
+    datum.pisi(it);
+    return it;
 }

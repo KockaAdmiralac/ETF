@@ -26,6 +26,7 @@ class Kvar {
         std::string opis;
         Datum datum;
         bool otklonjen;
+        void pisi(std::ostream &it) const;
 };
 
 #endif

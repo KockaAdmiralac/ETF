@@ -17,11 +17,12 @@ class Piksel {
         kanal plavaBoja() const {
             return crvena;
         }
-        Piksel operator+(const Piksel &b);
-        bool operator==(const Piksel &b);
+        Piksel operator+(const Piksel &b) const;
+        bool operator==(const Piksel &b) const;
         friend std::ostream &operator<<(std::ostream &it, const Piksel &piksel);
     private:
         kanal crvena, zelena, plava;
+        void pisi(std::ostream &it) const;
 };
 
 #endif

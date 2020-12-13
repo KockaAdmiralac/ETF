@@ -1,6 +1,6 @@
 #include "klima.hpp"
 
-std::ostream &operator<<(std::ostream &it, const Klima &klima) {
-    return it << klima.proizvodjac << ":" << klima.id << "#klima#-"
-              << klima.brojKvadrata;
+void Klima::pisi(std::ostream &it) const {
+    Uredjaj::pisi(it);
+    it << "#klima#-" << brojKvadrata;
 }

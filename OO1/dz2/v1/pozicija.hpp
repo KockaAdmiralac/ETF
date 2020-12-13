@@ -3,16 +3,16 @@
 
 class Pozicija {
     public:
-        Pozicija(int vrsta, int kolona) : vrsta(vrsta), kolona(kolona) {}
-        int dohvatiVrstu() const {
+        Pozicija(std::size_t vrsta, std::size_t kolona) : vrsta(vrsta), kolona(kolona) {}
+        std::size_t dohvatiVrstu() const {
             return vrsta;
         }
-        int dohvatiKolonu() const {
+        std::size_t dohvatiKolonu() const {
             return kolona;
         }
-        int operator-(const Pozicija &b);
+        std::size_t operator-(const Pozicija &b) const;
     private:
-        int vrsta, kolona;
+        std::size_t vrsta, kolona;
 };
 
 #endif

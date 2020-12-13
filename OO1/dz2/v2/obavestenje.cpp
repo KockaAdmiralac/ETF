@@ -6,11 +6,14 @@ void Obavestenje::procitaj() {
     procitano = true;
 }
 
-std::ostream &operator<<(std::ostream &it, const Obavestenje &obavestenje) {
-    std::tm *vreme = std::localtime(&obavestenje.vreme);
-    it << obavestenje.id << "|" << obavestenje.korisnik.dohvatiIme() << "-"
-       << vreme->tm_hour << ":" << vreme->tm_min << ":" << vreme->tm_sec
+void Obavestenje::pisi(std::ostream &it) const {
+    std::tm *tren = std::localtime(&vreme);
+    it << id << "|" << korisnik.dohvatiIme() << "-"
+       << tren->tm_hour << ":" << tren->tm_min << ":" << tren->tm_sec
        << std::endl;
-    obavestenje.specificanIspis(it);
+}
+
+std::ostream &operator<<(std::ostream &it, const Obavestenje &obavestenje) {
+    obavestenje.pisi(it);
     return it;
 }

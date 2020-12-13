@@ -6,8 +6,7 @@
 
 int main(void) {
     // Korisnik
-    std::string k1ime = "Pera", k2ime = "Žika";
-    Korisnik k1(k1ime), k2(k2ime);
+    Korisnik k1("Pera"), k2("Žika");
     k1.posalji(k2);
     std::cout << k2.dohvatiIme() << " " << k2 << std::endl;
     // Obaveštenje
@@ -20,8 +19,7 @@ int main(void) {
     std::cout << o1.daLiJeProcitano() << std::endl
               << o1 << std::endl;
     // Objava
-    std::string o2tekst = "Lorem ipsum dolor sit amet.";
-    Objava o2(k2, o2tekst);
+    Objava o2(k2, "Lorem ipsum dolor sit amet.");
     std::cout << o2 << std::endl;
     // Lista obaveštenja
     ListaObavestenja l;
@@ -37,8 +35,8 @@ int main(void) {
     std::cout << l[o3.identifikator()] << std::endl;
     try {
         l[o1.identifikator()];
-    } catch (const char *poruka) {
-        std::cout << poruka << std::endl;
+    } catch (obavestenje_not_found &exc) {
+        std::cout << exc.what() << std::endl;
     }
     return 0;
 }

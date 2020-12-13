@@ -21,7 +21,11 @@ void Garancija::dodajKvar(Kvar &kvar) {
     }
 }
 
+void Garancija::pisi(std::ostream &it) const {
+    it << pocetak << "-" << istek << " - broj kvarova: " << brojKvarova();
+}
+
 std::ostream &operator<<(std::ostream &it, const Garancija &garancija) {
-    return it << garancija.pocetak << "-" << garancija.istek
-              << " - broj kvarova: " << garancija.brojKvarova();
+    garancija.pisi(it);
+    return it;
 }

@@ -20,13 +20,14 @@ class Obavestenje {
         }
         void procitaj();
         friend std::ostream &operator<<(std::ostream &it, const Obavestenje &obavestenje);
+    protected:
+        virtual void pisi(std::ostream &it) const;
     private:
         static int statickiId;
         int id;
         time_t vreme;
         bool procitano;
         Korisnik &korisnik;
-        virtual void specificanIspis(std::ostream &) const {}
 };
 
 #endif

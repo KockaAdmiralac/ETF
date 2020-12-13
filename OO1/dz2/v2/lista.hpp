@@ -4,11 +4,20 @@
 #include <vector>
 #include "obavestenje.hpp"
 
+class obavestenje_not_found : std::exception {
+    public:
+        const char *what() const noexcept override {
+            return "Ne postoji obaveštenje.";
+        }
+};
+
 class ListaObavestenja {
     public:
         ListaObavestenja() = default;
-        ListaObavestenja(ListaObavestenja&) = delete;
-        ListaObavestenja(ListaObavestenja&&) = delete;
+        ListaObavestenja(ListaObavestenja &) = delete;
+        ListaObavestenja &operator=(const ListaObavestenja &) = delete;
+        // Pretpostavlja se da će obaveštenja živeti duže od liste kako bi
+        // mogla da pojedinačno budu označavana kao pročitana
         void operator+=(Obavestenje &obavestenje) {
             lista.push_back(&obavestenje);
         }
@@ -22,6 +31,7 @@ class ListaObavestenja {
         friend std::ostream &operator<<(std::ostream &it, const ListaObavestenja &lista);
     private:
         std::vector<Obavestenje*> lista;
+        void pisi(std::ostream &it) const;
 };
 
 #endif

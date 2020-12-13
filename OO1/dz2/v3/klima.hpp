@@ -5,9 +5,11 @@
 
 class Klima : public Uredjaj {
     public:
-        Klima(std::string proizvodjac, int brojKvadrata) :
+        Klima(std::string &proizvodjac, int brojKvadrata) :
             Uredjaj(proizvodjac), brojKvadrata(brojKvadrata) {}
-        void postaviGaranciju(Datum datumPocetka) override {
+        Klima(std::string &&proizvodjac, int brojKvadrata) :
+            Uredjaj(proizvodjac), brojKvadrata(brojKvadrata) {}
+        void postaviGaranciju(Datum &datumPocetka) override {
             garancija = new Garancija(
                 datumPocetka,
                 Datum(
@@ -22,11 +24,11 @@ class Klima : public Uredjaj {
         }
         bool operator==(const Klima &klima2) {
             return brojKvadrata == klima2.brojKvadrata &&
-                   (Uredjaj&)(*this) == (Uredjaj&)(klima2);
+                   Uredjaj::operator==(klima2);
         }
-        friend std::ostream &operator<<(std::ostream &it, const Klima &klima);
     private:
         int brojKvadrata;
+        void pisi(std::ostream &it) const override;
 };
 
 #endif

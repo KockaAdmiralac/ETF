@@ -6,11 +6,11 @@ class Objava : public Obavestenje {
     public:
         Objava(Korisnik &korisnik, std::string &tekst) :
             Obavestenje(korisnik), tekst(tekst) {}
-            void specificanIspis(std::ostream &it) const override {
-                it << tekst;
-            }
+        Objava(Korisnik &korisnik, std::string &&tekst) :
+            Obavestenje(korisnik), tekst(tekst) {}
+        void pisi(std::ostream &it) const override;
     private:
-        std::string &tekst;
+        std::string tekst;
 };
 
 #endif

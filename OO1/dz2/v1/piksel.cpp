@@ -1,6 +1,6 @@
 #include "piksel.hpp"
 
-Piksel Piksel::operator+(const Piksel &b) {
+Piksel Piksel::operator+(const Piksel &b) const {
     return {
         kanal((crvena + b.crvena) / 2),
         kanal((zelena + b.zelena) / 2),
@@ -8,12 +8,17 @@ Piksel Piksel::operator+(const Piksel &b) {
     };
 }
 
-bool Piksel::operator==(const Piksel &b) {
+bool Piksel::operator==(const Piksel &b) const {
     return crvena == b.crvena && zelena == b.zelena && plava == b.plava;
 }
 
+void Piksel::pisi(std::ostream &it) const {
+    it << "(" << int(crvena) << ", "
+              << int(zelena) << ", "
+              << int(plava)  << ")";
+}
+
 std::ostream &operator<<(std::ostream &it, const Piksel &piksel) {
-    return it << "(" << int(piksel.crvena) << ", "
-                     << int(piksel.zelena) << ", "
-                     << int(piksel.plava)  << ")";
+    piksel.pisi(it);
+    return it;
 }

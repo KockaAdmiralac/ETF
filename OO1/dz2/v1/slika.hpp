@@ -5,27 +5,27 @@
 #include "piksel.hpp"
 #include "pozicija.hpp"
 
-const int BROJ_BITOVA_PO_PIKSELU = 24;
-
 class Slika {
     public:
-        Slika(int sirina, int visina) : sirina(sirina), visina(visina),
+        Slika(std::size_t sirina, std::size_t visina) : sirina(sirina), visina(visina),
             matrica(visina, std::vector<Piksel>(sirina)) {}
-        int dohvatiSirinu() const {
+        std::size_t dohvatiSirinu() const {
             return sirina;
         }
-        int dohvatiVisinu() const {
+        std::size_t dohvatiVisinu() const {
             return visina;
         }
-        int brojBitova() const {
+        std::size_t brojBitova() const {
             return sirina * visina * BROJ_BITOVA_PO_PIKSELU;
         }
         virtual void postavi(const Piksel &piksel, const Pozicija &pozicija);
-        const Piksel &operator[](const Pozicija &pozicija);
+        const Piksel &operator[](const Pozicija &pozicija) const;
         friend std::ostream &operator<<(std::ostream &it, const Slika &slika);
     private:
-        int sirina, visina;
+        static const std::size_t BROJ_BITOVA_PO_PIKSELU = 24;
+        std::size_t sirina, visina;
         std::vector<std::vector<Piksel>> matrica;
+        void pisi(std::ostream &it) const;
 };
 
 #endif
