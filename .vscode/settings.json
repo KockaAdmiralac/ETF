@@ -74,6 +74,9 @@
         "mutex": "cpp",
         "stop_token": "cpp",
         "valarray": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "complex": "cpp",
+        "codecvt": "cpp",
+        "set": "cpp"
     }
 }
