@@ -16,7 +16,7 @@ const Piksel &Slika::operator[](const Pozicija &pozicija) const {
 }
 
 void Slika::pisi(std::ostream &it) const {
-    it << brojBitova();
+    it << vreme << " " << brojBitova();
     for (std::size_t y = 0; y < visina; ++y) {
         it << std::endl;
         for (std::size_t x = 0; x < sirina; ++x) {

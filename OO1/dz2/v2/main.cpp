@@ -18,6 +18,14 @@ int main(void) {
     k2.primi(o1);
     std::cout << o1.daLiJeProcitano() << std::endl
               << o1 << std::endl;
+    Obavestenje kopirano(o1);
+    std::cout << kopirano << std::endl;
+    kopirano = o3;
+    std::cout << kopirano << std::endl;
+    Obavestenje premesteno(std::move(kopirano));
+    std::cout << premesteno << std::endl;
+    o3 = std::move(premesteno);
+    std::cout << o3 << std::endl;
     // Objava
     Objava o2(k2, "Lorem ipsum dolor sit amet.");
     std::cout << o2 << std::endl;
