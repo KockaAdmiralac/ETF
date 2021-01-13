@@ -17,7 +17,7 @@ class PrivilegovaniTim : public Tim {
         PrivilegovaniTim(std::string naziv, int maksimalniBrojIgraca, int minimalnaVrednostIgraca) :
             Tim(naziv, maksimalniBrojIgraca),
             minimalnaVrednostIgraca(minimalnaVrednostIgraca) {}
-        void prikljuci(Igrac &igrac, int pozicija) const override;
+        void prikljuci(Igrac &igrac, int pozicija) override;
         void pisi(std::ostream &it) const override;
     private:
         int minimalnaVrednostIgraca;

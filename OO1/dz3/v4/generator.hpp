@@ -15,7 +15,7 @@ class GeneratorIzrazaUPostfiksnomObliku {
         GeneratorIzrazaUPostfiksnomObliku(GeneratorIzrazaUPostfiksnomObliku &) = delete;
         GeneratorIzrazaUPostfiksnomObliku &operator=(GeneratorIzrazaUPostfiksnomObliku &) = delete;
         static GeneratorIzrazaUPostfiksnomObliku &dohvatiGenerator();
-        Izraz operator()(Izraz &infiks);
+        Izraz operator()(Izraz infiks);
     private:
         GeneratorIzrazaUPostfiksnomObliku() {}
 };

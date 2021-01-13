@@ -2,10 +2,7 @@
 #define PAR_HPP
 #include <iostream>
 
-// KONSULTACIJE@Uroš: Rečeno je da se par može formirati sa dva različita
-// tipa podatka.
-// MEJL@Adrian: ...ali je onda rečeno da se par može formirati samo sa
-// jednim tipom podatka. Pošto je Adrianov zadatak, uzimamo ovaj pristup.
+// KONSULTACIJE: Rečeno je da je i Par<T> i Par<T1, T2> okej.
 template<typename T>
 class Par {
     public:

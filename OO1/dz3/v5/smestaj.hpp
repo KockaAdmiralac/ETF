@@ -32,7 +32,6 @@ class Smestaj {
         }
         friend std::ostream &operator<<(std::ostream &it, const Smestaj &smestaj);
     private:
-        // PRETPOSTAVKA: Videti u Aranžman.
         Destinacija &destinacija;
         Tip tip;
         std::string naziv;

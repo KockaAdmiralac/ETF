@@ -20,7 +20,6 @@ class Destinacija {
         friend std::ostream &operator<<(std::ostream &it, const Destinacija &dest);
     private:
         std::string naziv, opis;
-        // PRETPOSTAVKA: Konstantna destinacija ne može da se oceni.
         double prosecnaOcena = 0;
         unsigned brojOcena = 0;
         void pisi(std::ostream &it) const;

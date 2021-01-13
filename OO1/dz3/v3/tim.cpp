@@ -16,27 +16,12 @@ Tim &Tim::operator=(Tim &&tim) {
     return *this;
 }
 
-int Tim::dohvatiBrojIgraca() const {
-    // PRETPOSTAVKA: Dohvatanje broja igrača je O(n). Ovo je napravljeno ovako
-    // jer nigde nije naglašeno da broj igrača treba da bude polje klase, i
-    // dodavanje u tim ne bi radilo da jeste (osim ako to polje ne označimo kao
-    // mutable, što samo po sebi nije toliko dobro).
-    // U SUPROTNOM: bi trebalo da dodamo mutable int brojIgraca; kao polje
-    // klase i ovde samo vraćamo taj broj. Taj broj bi se povećavao u prikljuci
-    // svaki put kad se priključi igrač na poziciju koja nije nullptr.
-    int brojIgraca = 0;
-    for (int i = 0; i < maksimalniBrojIgraca; ++i) {
-        if (igraci[i] != nullptr) {
-            ++brojIgraca;
-        }
-    }
-    return brojIgraca;
-}
-
-void Tim::prikljuci(Igrac &igrac, int pozicija) const {
+void Tim::prikljuci(Igrac &igrac, int pozicija) {
     if (pozicija < maksimalniBrojIgraca) {
-        // PRETPOSTAVKA: Tim je vlasnik igrača.
-        if (igraci[pozicija] != nullptr) {
+        // MEJL@Adrian: Tim je vlasnik igrača.
+        if (igraci[pozicija] == nullptr) {
+            ++brojIgraca;
+        } else {
             delete igraci[pozicija];
         }
         igraci[pozicija] = new Igrac(igrac);
@@ -44,16 +29,14 @@ void Tim::prikljuci(Igrac &igrac, int pozicija) const {
 }
 
 double Tim::dohvatiVrednostTima() const {
+    if (brojIgraca == 0) {
+        return 0;
+    }
     double suma = 0;
-    int brojIgraca = 0;
     for (int i = 0; i < maksimalniBrojIgraca; ++i) {
         if (igraci[i] != nullptr) {
             suma += igraci[i]->dohvatiVrednost();
-            ++brojIgraca;
         }
-    }
-    if (brojIgraca == 0) {
-        return 0;
     }
     return suma / brojIgraca;
 }
@@ -100,6 +83,7 @@ void Tim::pisi(std::ostream &it) const {
 void Tim::kopiraj(const Tim &tim) {
     naziv = tim.naziv;
     maksimalniBrojIgraca = tim.maksimalniBrojIgraca;
+    brojIgraca = tim.brojIgraca;
     igraci = new Igrac*[maksimalniBrojIgraca]();
     for (int i = 0; i < maksimalniBrojIgraca; ++i) {
         if (tim.igraci[i] != nullptr) {
@@ -111,9 +95,11 @@ void Tim::kopiraj(const Tim &tim) {
 void Tim::premesti(Tim &tim) {
     naziv = tim.naziv;
     maksimalniBrojIgraca = tim.maksimalniBrojIgraca;
+    brojIgraca = tim.brojIgraca;
     igraci = tim.igraci;
     tim.igraci = nullptr;
     tim.maksimalniBrojIgraca = 0;
+    tim.brojIgraca = 0;
 }
 
 void Tim::brisi() {

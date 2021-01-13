@@ -42,13 +42,12 @@ class Aranzman {
         double dohvatiCenu() const;
         friend std::ostream &operator<<(std::ostream &it, const Aranzman &aranz);
     private:
-        // PRETPOSTAVKA: Pošto moraju da se porede dve destinacije, a
-        // destinacija nema operator poređenja, to znači da ne mogu postojati
-        // dve destinacije u memoriji.
+        // MEJL@Marko: Radi poređenja na jednakost, možemo porediti adrese
+        // destinacija i pretpostaviti da postoji samo jedna destinacija u
+        // memoriji.
         Destinacija &destinacija;
         Datum pocetak, kraj;
-        // PRETPOSTAVKA: Aranžman nije vlasnik smeštaja i prevoza.
-        // PRETPOSTAVKA: Konstantan aranžman nema smisla.
+        // MEJL@Marko: Aranžman nije vlasnik smeštaja i prevoza.
         Smestaj *smestaj = nullptr;
         Prevoz *prevoz = nullptr;
         void pisi(std::ostream &it) const;

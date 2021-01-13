@@ -12,7 +12,6 @@ class Prevoz {
             return cenaKarte;
         }
     private:
-        // PRETPOSTAVKA: Videti u Aranžman.
         Destinacija &destinacija;
         double cenaKarte;
 };

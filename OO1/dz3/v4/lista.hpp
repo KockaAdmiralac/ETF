@@ -25,26 +25,18 @@ class Lista {
         }
         Lista &operator=(const Lista &lista);
         Lista &operator=(Lista &&lista);
-        // Na vežbama 12 oko 40:30 se priča o tome kako očekujemo da ovoj
-        // metodi bude prosleđena polimorfna kopija, što znači da mi ne moramo
-        // sami da pozivamo tu metodu ovde.
-        void operator+=(T *podatak);
+        void operator+=(T &podatak);
         int dohvatiBrojPodataka() const {
             return brojPodataka;
         }
-        // PRETPOSTAVKA: Podaci se ne dealociraju prilikom vraćanja. Kada bismo
-        // ih dealocirali, morali bismo da vraćamo njihove kopije iz ove metode
-        // po vrednosti, čime oni gube svoja polimorfna svojstva. Pošto je
-        // baš poenta ove liste da čuva polimorfne kopije podataka, to ne smemo
-        // da dopustimo.
+        // MEJL@Vladimir: Podaci se ne dealociraju pre vraćanja.
         T *operator-();
         T *operator*();
         template<typename T1> friend std::ostream &operator<<(std::ostream &it, const Lista<T1> &lista);
-    protected:
+    private:
         struct Elem {
             T *podatak;
-            // PRETPOSTAVKA: Lista je dvostruko ulančana. Ovo olakšava izbacivanje
-            // sa početka i sa kraja.
+            // MEJL@Vladimir: Poželjno je da lista bude dvostruko ulančana.
             Elem *prethodni, *sledeci;
             Elem(T *podatak, Elem *prethodni) : podatak(podatak),
                 prethodni(prethodni), sledeci(nullptr) {}
@@ -76,12 +68,13 @@ Lista<T> &Lista<T>::operator=(Lista<T> &&lista) {
 }
 
 template<typename T>
-void Lista<T>::operator+=(T *podatak) {
+void Lista<T>::operator+=(T &podatak) {
     ++brojPodataka;
+    T *kopija = podatak.kopija();
     if (prvi == nullptr) {
-        prvi = poslednji = new Elem(podatak, nullptr);
+        prvi = poslednji = new Elem(kopija, nullptr);
     } else {
-        poslednji->sledeci = new Elem(podatak, poslednji);
+        poslednji->sledeci = new Elem(kopija, poslednji);
         poslednji = poslednji->sledeci;
     }
 }
@@ -130,17 +123,12 @@ std::ostream &operator<<(std::ostream &it, const Lista<T> &lista) {
 
 template<typename T>
 void Lista<T>::kopiraj(const Lista<T> &lista) {
-    brojPodataka = lista.brojPodataka;
+    brojPodataka = 0;
     Elem *trenutni = lista.prvi;
     while (trenutni != nullptr) {
-        // PRETPOSTAVKA: Radi se ne-polimorfna kopija podatka. Ovo je jako
-        // čudno, pošto je cela poenta ove klase da čuva polimorfne kopije, ali
-        // se u Izraz klasi koja očigledno nasleđuje ovu klasu pominje da mora
-        // da postoji metod polimorfne kopije, što implicira da se,
-        // podrazumevano, u ovoj klasi ta polimorfna kopija ne radi.
-        // Još jedan moguć razlog jeste to da nam niko ne garantuje naziv
-        // metode za pravljenje polimorfne kopije.
-        (*this) += new T(*trenutni->podatak);
+        // MEJL@Vladimir: Lista će biti korišćena samo za čuvanje podataka sa
+        // kopija() metodom.
+        (*this) += *(trenutni->podatak);
         trenutni = trenutni->sledeci;
     }
 }

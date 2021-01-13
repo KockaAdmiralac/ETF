@@ -6,7 +6,9 @@ GeneratorIzrazaUPostfiksnomObliku &GeneratorIzrazaUPostfiksnomObliku::dohvatiGen
     return generator;
 }
 
-Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
+// Infiksni izraz se prosleđuje po vrednosti kako bi na mestu pozivanja
+// zadržao svoj sadržaj.
+Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz infiks) {
     Izraz stek, postfiks;
     int rang = 0;
     Element *sledeci, *stekSledeci;
@@ -15,11 +17,11 @@ Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
         switch (sledeci->dohvatiOznaku()) {
             case 'D':
                 // Operand
-                postfiks += sledeci;
+                postfiks += *sledeci;
                 ++rang;
                 break;
             case '(':
-                stek += sledeci;
+                stek += *sledeci;
                 break;
             case ')':
                 while (true) {
@@ -32,7 +34,7 @@ Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
                         delete stekSledeci;
                         break;
                     } else {
-                        postfiks += stekSledeci;
+                        postfiks += *stekSledeci;
                         if (--rang < 1) {
                             delete sledeci;
                             delete stekSledeci;
@@ -52,7 +54,7 @@ Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
                 while (stek.dohvatiBrojPodataka() > 0) {
                     stekSledeci = -stek;
                     if (stekSledeci->dohvatiOznaku() != 'O') {
-                        stek += stekSledeci;
+                        stek += *stekSledeci;
                         delete stekSledeci;
                         break;
                     }
@@ -63,11 +65,11 @@ Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
                         throw GPostfiks();
                     }
                     if (op->dohvatiPrioritet() > opss->dohvatiPrioritet()) {
-                        stek += stekSledeci;
+                        stek += *stekSledeci;
                         delete stekSledeci;
                         break;
                     }
-                    postfiks += sledeci;
+                    postfiks += *sledeci;
                     if (--rang < 1) {
                         delete sledeci;
                         delete stekSledeci;
@@ -75,7 +77,7 @@ Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
                     }
                     delete stekSledeci;
                 }
-                stek += sledeci;
+                stek += *sledeci;
                 break;
         }
         delete sledeci;
@@ -86,7 +88,7 @@ Izraz GeneratorIzrazaUPostfiksnomObliku::operator()(Izraz &infiks) {
             delete stekSledeci;
             throw GPostfiks();
         }
-        postfiks += stekSledeci;
+        postfiks += *stekSledeci;
         delete stekSledeci;
         --rang;
     }

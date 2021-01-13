@@ -6,18 +6,9 @@
 class Izraz : public Lista<Element> {
     public:
         Izraz() = default;
-        Izraz(const Izraz &izraz) : Lista<Element>() {
-            kopiraj(izraz);
+        virtual Izraz *kopija() const {
+            return new Izraz(*this);
         }
-        Izraz &operator=(const Izraz &izraz);
-        void operator+=(Element &element) {
-            Lista<Element>::operator+=(element.kopija());
-        }
-        void operator+=(Element *element) {
-            Lista<Element>::operator+=(element->kopija());
-        }
-    protected:
-        void kopiraj(const Izraz &izraz);
 };
 
 #endif

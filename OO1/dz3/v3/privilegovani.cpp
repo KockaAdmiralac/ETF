@@ -1,6 +1,6 @@
 #include "privilegovani.hpp"
 
-void PrivilegovaniTim::prikljuci(Igrac &igrac, int pozicija) const {
+void PrivilegovaniTim::prikljuci(Igrac &igrac, int pozicija) {
     if (igrac.dohvatiVrednost() < minimalnaVrednostIgraca) {
         throw GIgracNijeDovoljnoVredan();
     }

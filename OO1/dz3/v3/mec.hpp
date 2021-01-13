@@ -11,17 +11,12 @@ class GMecNijeOdigran : public std::exception {
         };
 };
 
-// PRETPOSTAVKA: Konstantni mečevi nemaju smisla. Pošto se pri igranju
-// ažuriraju i ishod i sami timovi, u takvim mečevima ništa ne bi bilo
-// zapravo konstantno. S druge strane, kada bi bilo zabranjeno odigrati meč, on
-// ne bi sadržao nikakve dodatne informacije pored timova koji ga igraju, i to
-// je ponašanje koje ćemo ovde da usvojimo.
 class Mec {
     enum Ishod {
         POBEDA_DOMACIN,
         NERESENO,
         POBEDA_GOST,
-        // KONSULTACIJE@Uroš: Dozvoljeno da neodigrano stanje čuvamo ovako.
+        // KONSULTACIJE: Dozvoljeno da neodigrano stanje čuvamo ovako.
         NEODIGRANO
     };
     public:

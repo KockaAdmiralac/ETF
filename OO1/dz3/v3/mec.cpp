@@ -39,14 +39,9 @@ void Mec::odigraj() {
 
 Par<int> Mec::poeni() const {
     switch (ishod) {
-        // PRETPOSTAVKA: Poeni vraćeni odavde se alociraju na hipu. Ovo je loše
-        // jer se dealokacija ove memorije ostavlja korisniku. Bolji način bi
-        // bio da postoji polje klase u kojem se čuvaju bodovi, te se to polje
-        // izračunava pri igranju meča, u ovoj metodi samo vraća, a u
-        // destruktoru dealocira. Ovaj pristup nije uzet jer se nigde u zadatku
-        // ne implicira da poeni treba da budu polje klase. Još bolji način bi
-        // bio da se u Par ne čuvaju samo pokazivači do podataka. Još bolji
-        // način bi bio da koristimo std::pair.
+        // KONSULTACIJE: Rečeno je da Par<T> može da ne bude vlasnik podataka
+        // na koje pokazuje i da možemo da vraćamo poene alocirane na hipu
+        // iako će biti curenje memorije ukoliko ih korisnik ne oslobodi.
         case POBEDA_DOMACIN: return {new int(3), new int(0)};
         case POBEDA_GOST: return {new int(0), new int(3)};
         case NERESENO: return {new int(1), new int(1)};

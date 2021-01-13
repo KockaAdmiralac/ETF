@@ -19,12 +19,18 @@ class Tim {
         }
         Tim &operator=(const Tim &tim);
         Tim &operator=(Tim &&tim);
-        virtual void prikljuci(Igrac &igrac, int pozicija) const;
-        int dohvatiBrojIgraca() const;
-        // PRETPOSTAVKA: Ovde se vraća pokazivač do igrača umesto reference
-        // jer igrač kome se pristupa može da ne postoji, te je lakše
-        // korisniku vratiti nullptr umesto bacati grešku.
-        Igrac *operator[](int pozicija) const {
+        virtual void prikljuci(Igrac &igrac, int pozicija);
+        int dohvatiBrojIgraca() const {
+            return brojIgraca;
+        }
+        // MEJL@Adrian: Dozvoljeno je da odavde vraćamo pokazivač kako bismo
+        // znali da li igrač na toj poziciji postoji.
+        Igrac *operator[](int pozicija) {
+            return igraci[pozicija];
+        }
+        // Ovo je glupo, ali je na konsultacijama rečeno da moramo da imamo dve
+        // varijante ovog operatora.
+        const Igrac *operator[](int pozicija) const {
             return igraci[pozicija];
         }
         double dohvatiVrednostTima() const;
@@ -32,7 +38,8 @@ class Tim {
         friend std::ostream &operator<<(std::ostream &it, const Tim &tim);
     protected:
         std::string naziv;
-        int maksimalniBrojIgraca;
+        // MEJL@Adrian: Dozvoljeno je da broj igrača čuvamo kao polje klase.
+        int maksimalniBrojIgraca, brojIgraca = 0;
         Igrac **igraci;
         virtual void pisi(std::ostream &it) const;
         void kopiraj(const Tim &tim);
