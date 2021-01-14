@@ -55,7 +55,7 @@ std::size_t Datum::brojDanaOdRodjenjaHrista() const {
             brojDanaProslihMeseci += DANI[i-1];
         }
     }
-    std::size_t brojDanaProslihGodina = (3/4 * (godina-1)) * 365 +
+    std::size_t brojDanaProslihGodina = ((godina-1) - (godina-1)/4) * 365 +
                                         (godina-1) / 4 * 366 -
                                         (godina-1) / 100 +
                                         (godina-1) / 400;
