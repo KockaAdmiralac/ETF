@@ -20,8 +20,9 @@ void zatvoriBazu(sqlite3 *baza) {
 void pripremi(sqlite3 *baza, const char *sql, sqlite3_stmt *&stmt) {
     int kod = sqlite3_prepare(baza, sql, -1, &stmt, nullptr);
     if (kod != SQLITE_OK) {
+        std::string greska = std::string("Greška pri pripremanju upita: ") + sqlite3_errmsg(baza);
         sqlite3_finalize(stmt);
-        throw std::string("Greška pri pripremanju upita: ") + sqlite3_errmsg(baza);
+        throw greska;
     }
 }
 
@@ -29,8 +30,9 @@ void izvrsiBezParametara(sqlite3 *baza, const char *sql, int (*callback)(void *,
     char *errmsg = nullptr;
     int kod = sqlite3_exec(baza, sql, callback, nullptr, &errmsg);
     if (kod != SQLITE_OK) {
+        std::string greska = std::string("Greška pri izvršavanju: ") + errmsg;
         sqlite3_free(errmsg);
-        throw std::string("Greška pri izvršavanju: ") + errmsg;
+        throw greska;
     }
 }
 
@@ -77,16 +79,16 @@ void sviRacuniKomitenta(sqlite3 *baza, int idKom) {
         std::cout << std::endl;
     }
     if (kod != SQLITE_DONE) {
-        const char *err = sqlite3_errmsg(baza);
+        std::string greska = std::string("Greška prilikom ispisivanja računa: ") + sqlite3_errmsg(baza);
         sqlite3_finalize(stmt);
-        throw std::string("Greška prilikom ispisivanja računa: ") + err;
+        throw greska;
     }
     sqlite3_finalize(stmt);
 }
 
 void proknjiziStavku(sqlite3 *baza, int iznos, int idFil, int idRac) {
     const char *sql = "INSERT INTO Stavka (RedBroj, Datum, Vreme, Iznos, IdFil, IdRac) "
-                      "SELECT MAX(S.RedBroj), DATE(), TIME(), ?, ?, ? "
+                      "SELECT COALESCE(MAX(S.RedBroj), 0) + 1, DATE(), TIME(), ?, ?, ? "
                       "FROM Stavka S "
                       "WHERE S.IdRac = ?";
     sqlite3_stmt *stmt = nullptr;
@@ -98,35 +100,31 @@ void proknjiziStavku(sqlite3 *baza, int iznos, int idFil, int idRac) {
     sqlite3_bind_int(stmt, 4, idRac);
     kod = sqlite3_step(stmt);
     if (kod != SQLITE_DONE) {
-        const char *err = sqlite3_errmsg(baza);
+        std::string greska = std::string("Greška pri proknjižavanju stavke: ") + sqlite3_errmsg(baza);
         sqlite3_finalize(stmt);
-        throw std::string("Greška pri proknjižavanju stavke: ") + err;
+        throw greska;
     }
     sqlite3_finalize(stmt);
 }
 
-void proknjiziUplatu(sqlite3 *baza, int idFil, int idRac) {
-    const char *sql = "INSERT INTO Uplata (IdSta, Osnov) "
-                      "SELECT MAX(S.IdSta), 'Uplata' "
-                      "FROM Stavka S "
-                      "WHERE S.IdFil = ? AND S.IdRac = ?";
+void proknjiziUplatu(sqlite3 *baza) {
+    const char *sql = "INSERT INTO Uplata (IdSta, Osnov) VALUES (?, 'Uplata')";
     sqlite3_stmt *stmt = nullptr;
     int kod;
     pripremi(baza, sql, stmt);
-    sqlite3_bind_int(stmt, 1, idFil);
-    sqlite3_bind_int(stmt, 2, idRac);
+    sqlite3_bind_int(stmt, 1, sqlite3_last_insert_rowid(baza));
     kod = sqlite3_step(stmt);
     if (kod != SQLITE_DONE) {
-        const char *err = sqlite3_errmsg(baza);
+        std::string greska = std::string("Greška pri proknjižavanju uplate: ") + sqlite3_errmsg(baza);
         sqlite3_finalize(stmt);
-        throw std::string("Greška pri proknjižavanju uplate: ") + err;
+        throw greska;
     }
     sqlite3_finalize(stmt);
 }
 
 void azurirajRacun(sqlite3 *baza, int idRac) {
     const char *sql = "UPDATE Racun "
-                      "SET Status = (CASE "
+                      "SET Status = (CASE Status "
                                        "WHEN 'B' THEN 'A' "
                                        "ELSE Status "
                                     "END),"
@@ -140,9 +138,9 @@ void azurirajRacun(sqlite3 *baza, int idRac) {
     sqlite3_bind_int(stmt, 2, idRac);
     kod = sqlite3_step(stmt);
     if (kod != SQLITE_DONE) {
-        const char *err = sqlite3_errmsg(baza);
+        std::string greska = std::string("Greška pri ažuriranju računa: ") + sqlite3_errmsg(baza);
         sqlite3_finalize(stmt);
-        throw std::string("Greška pri ažuriranju računa: ") + err;
+        throw greska;
     }
     sqlite3_finalize(stmt);
 }
@@ -161,7 +159,7 @@ void resi(int idKom, int idFil, sqlite3 *baza) {
             int idRac = sqlite3_column_int(stmt, 0);
             int stanje = sqlite3_column_int(stmt, 1);
             proknjiziStavku(baza, -stanje, idFil, idRac);
-            proknjiziUplatu(baza, idFil, idRac);
+            proknjiziUplatu(baza);
             azurirajRacun(baza, idRac);
             izvrsiBezParametara(baza, "COMMIT");
         } catch (std::string &greska) {
@@ -171,9 +169,9 @@ void resi(int idKom, int idFil, sqlite3 *baza) {
         }
     }
     if (kod != SQLITE_DONE) {
-        const char *err = sqlite3_errmsg(baza);
+        std::string greska = std::string("Greška pri dohvatanju računa komitenta: ") + sqlite3_errmsg(baza);
         sqlite3_finalize(stmt);
-        throw std::string("Greška pri dohvatanju računa komitenta: ") + err;
+        throw greska;
     }
     sqlite3_finalize(stmt);
 }
