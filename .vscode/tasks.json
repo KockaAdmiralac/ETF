@@ -23,7 +23,8 @@
                 "${file}",
                 "-Wall",
                 "-Wextra",
-                "-g"
+                "-g",
+                "-std=c++17"
             ],
             //"command": "./ASP1/dz3/build.sh",
             "dependsOn": [
