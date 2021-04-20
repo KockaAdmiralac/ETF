@@ -38,10 +38,6 @@ void Thread::waitToComplete() {
  */
 Thread::~Thread() {
     if (myPCB != nullptr) {
-        if (myPCB->status == PCB::READY || myPCB->status == PCB::BLOCKED) {
-            // TODO: Maybe not needed?
-            waitToComplete();
-        }
         lockInterrupts
         delete myPCB;
         unlockInterrupts

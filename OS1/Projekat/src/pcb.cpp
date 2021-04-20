@@ -127,6 +127,10 @@ void PCB::waitToComplete() {
     if (assert(running != this, "You cannot wait for yourself to complete!")) {
         return;
     }
+    if (status != READY) {
+        // The thread has finished or hasn't started.
+        return;
+    }
     running->status = BLOCKED;
     assert(blocked.insert((void*) running), "Failed to wait for the thread to complete! The running thread will remain blocked forever.");
     dispatch();
@@ -156,7 +160,7 @@ void PCB::execute() {
     PCB::running->myThread->run();
     PCB* unblocked = (PCB*) PCB::running->blocked.remove();
     while (unblocked != nullptr) {
-        if (!assert(unblocked != nullptr, "A PCB from the blocked list turned out to be null!")) {
+        if (assert(unblocked != nullptr, "A PCB from the blocked list turned out to be null!")) {
             continue;
         }
         unblocked->status = READY;
