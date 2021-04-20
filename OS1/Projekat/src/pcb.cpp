@@ -83,7 +83,7 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
  * thread's PCB.
  */
 PCB::PCB() {
-    assert(true, "The default PCB constructor is only to be used by the main thread!");
+    assert(allPCBs.getSize() == 0, "The default PCB constructor is only to be used by the main thread!");
 }
 
 /**

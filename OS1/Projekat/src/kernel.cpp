@@ -51,7 +51,7 @@ MainPCB::MainPCB() {
  * thread's PCB through any Thread.
  */
 void MainPCB::waitToComplete() {
-    assert(true, "The main thread's completion must not be awaited!");
+    assert(false, "The main thread's completion must not be awaited!");
 }
 
 /**
