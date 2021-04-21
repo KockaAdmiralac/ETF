@@ -4,6 +4,8 @@
  * Naiive implementation of STL <vector>, with pointers as data type and thread
  * safety (as far as this kernel goes) in mind.
  */
+#ifndef _VECTOR_H_
+#define _VECTOR_H_
 
 /**
  * Simple vector of pointers implementation.
@@ -29,3 +31,5 @@ class PtrVector {
         volatile unsigned capacity;
         volatile unsigned size;
 };
+
+#endif

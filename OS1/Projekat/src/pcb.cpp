@@ -59,8 +59,8 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
     // PSW, I = 1
     stack[uStackSize - 1] = 0x200;
     // PC
-    stack[uStackSize - 2] = FP_SEG(PCB::execute);
-    stack[uStackSize - 3] = FP_OFF(PCB::execute);
+    stack[uStackSize - 2] = FP_SEG(execute);
+    stack[uStackSize - 3] = FP_OFF(execute);
     // Leaving enough place for saved registers.
     sp = FP_OFF(stack + uStackSize - 12);
     ss = FP_SEG(stack + uStackSize - 12);
@@ -71,8 +71,8 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
         status = TERMINATING;
         lockInterrupts
         delete stack;
-        unlockInterrupts
         stack = nullptr;
+        unlockInterrupts
         return;
     }
     status = INITIALIZING;
@@ -127,7 +127,7 @@ void PCB::waitToComplete() {
     if (assert(running != this, "You cannot wait for yourself to complete!")) {
         return;
     }
-    if (status != READY) {
+    if (status != READY && status != BLOCKED) {
         // The thread has finished or hasn't started.
         return;
     }
@@ -151,23 +151,23 @@ PCB* PCB::getPCBById(ID id) {
  * This is a wrapper function that will be executed upon starting a thread.
  */
 void PCB::execute() {
-    if (assert(PCB::running != nullptr, "PCB::execute called with no running thread!")) {
+    if (assert(running != nullptr, "PCB::execute called with no running thread!")) {
         return;
     }
-    if (assert(PCB::running->myThread != nullptr, "Associated thread is null! Are you calling this from the main thread?")) {
+    if (assert(running->myThread != nullptr, "Associated thread is null! Are you calling this from the main thread?")) {
         return;
     }
-    PCB::running->myThread->run();
-    PCB* unblocked = (PCB*) PCB::running->blocked.remove();
+    running->myThread->run();
+    PCB* unblocked = (PCB*) running->blocked.remove();
     while (unblocked != nullptr) {
         if (assert(unblocked != nullptr, "A PCB from the blocked list turned out to be null!")) {
             continue;
         }
         unblocked->status = READY;
         Scheduler::put(unblocked);
-        unblocked = (PCB*) PCB::running->blocked.remove();
+        unblocked = (PCB*) running->blocked.remove();
     }
-    PCB::running->status = TERMINATING;
+    running->status = TERMINATING;
     // One does not simply finish a thread.
     dispatch();
 }
