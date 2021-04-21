@@ -6,6 +6,7 @@
 #include <dos.h>
 #include <kernel.h>
 #include <list.h>
+#include <sem.h>
 #include <stdlib.h>
 #include <test.h>
 #include <thread.h>
@@ -151,14 +152,69 @@ void testListThreads() {
     }
 }
 
+Semaphore sem;
+
+class Producer : public Thread {
+    public:
+        Producer() : Thread(1, 10) {}
+        virtual void run();
+        ~Producer() {
+            waitToComplete();
+        }
+};
+
+void Producer::run() {
+    while (true) {
+        lockInterrupts
+        cout << "Prodooc" << endl;
+        unlockInterrupts
+        sem.signal();
+        delay(rand() % 1000);
+    }
+}
+
+class Consumer : public Thread {
+    public:
+        Consumer() : Thread(1, 10) {}
+        virtual void run();
+        ~Consumer() {
+            waitToComplete();
+        }
+};
+
+void Consumer::run() {
+    while (true) {
+        int waitResult = sem.wait(10000);
+        lockInterrupts
+        if (waitResult) {
+            cout << "Consoomed " << getId() << endl;
+        } else {
+            cout << "Consom failed :( " << getId() << endl;
+        }
+        unlockInterrupts
+        delay(rand() % 1000);
+    }
+}
+
+void testProducerConsumer() {
+    Producer p;
+    Consumer c[10];
+    p.start();
+    for (unsigned i = 0; i < 10; ++i) {
+        c[i].start();
+    }
+}
+
 #ifdef KERNEL_DEBUG
+void tick() {}
+
 int userMain(int argc, char* argv[]) {
     (void) argc;
     (void) argv;
     lockInterrupts
     cout << "userMain" << endl;
     unlockInterrupts
-    testListThreads();
+    testProducerConsumer();
     return 0;
 }
 #endif
