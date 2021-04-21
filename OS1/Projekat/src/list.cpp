@@ -92,8 +92,11 @@ PtrWaitingList::TickResult::TickResult(void* data, int more) :
 /**
  * Constructs a new waiting list.
  */
-PtrWaitingList::PtrWaitingList() : front(nullptr) {}
+PtrWaitingList::PtrWaitingList() :
+    frontOrder(nullptr), backOrder(nullptr), frontTime(nullptr) {}
 
+
+#include <stdlib.h>
 /**
  * Inserts a new element into the waiting list.
  * @param ptr Data to insert into the list
@@ -106,38 +109,61 @@ int PtrWaitingList::insert(void* ptr, unsigned time) {
         return false;
     }
     lockInterrupts
+    if (assert(frontOrder == nullptr || frontOrder->prevOrder == nullptr, "frontOrder is not the first in order!")) {
+        exit(1);
+    }
+    if (assert(frontTime == nullptr || frontTime->prevTime == nullptr, "frontOrder is not the first in order!")) {
+        exit(1);
+    }
+    if (assert(backOrder == nullptr || backOrder->nextOrder == nullptr, "backOrder is not the last in order!")) {
+        exit(1);
+    }
     Element* element = new Element(ptr, time);
     if (element == nullptr) {
         unlockInterrupts
         return false;
     }
-    if (front == nullptr) {
-        front = element;
+    // Inserting by order.
+    if (frontOrder == nullptr) {
+        frontOrder = element;
+        backOrder = element;
     } else {
-        Element* curr = (Element*) front;
+        backOrder->nextOrder = element;
+        element->prevOrder = (Element*) backOrder;
+        backOrder = element;
+    }
+    // Inserting by time.
+    if (frontTime == nullptr) {
+        frontTime = element;
+    } else {
+        Element* curr = (Element*) frontTime;
         Element* prev = nullptr;
         do {
             // TODO: >= is perhaps unfair?
             if (curr->time >= element->time) {
-                element->next = (Element*) curr;
+                element->nextTime = (Element*) curr;
+                curr->prevTime = element;
                 curr->time -= element->time;
                 if (prev == nullptr) {
                     // We're inserting in front of the first element.
-                    front = element;
+                    frontTime = element;
                 } else {
-                    prev->next = element;
+                    prev->nextTime = element;
+                    element->prevTime = prev;
                 }
                 break;
             } else {
                 element->time -= curr->time;
             }
             prev = curr;
-            curr = curr->next;
+            curr = curr->nextTime;
         } while (curr != nullptr);
         if (curr == nullptr) {
-            prev->next = element;
+            prev->nextTime = element;
+            element->prevTime = prev;
         }
     }
+    // Finished inserting.
     unlockInterrupts
     return true;
 }
@@ -149,22 +175,86 @@ int PtrWaitingList::insert(void* ptr, unsigned time) {
  *          results
  */
 PtrWaitingList::TickResult PtrWaitingList::tick() {
-    if (front == nullptr) {
+    if (frontTime == nullptr) {
         // Empty list.
         return TickResult();
     }
     lockInterrupts
-    if (front->time != 0 && --front->time != 0) {
+    if (assert(frontOrder == nullptr || frontOrder->prevOrder == nullptr, "frontOrder is not the first in order!")) {
+        exit(1);
+    }
+    if (assert(frontTime == nullptr || frontTime->prevTime == nullptr, "frontOrder is not the first in order!")) {
+        exit(1);
+    }
+    if (assert(backOrder == nullptr || backOrder->nextOrder == nullptr, "backOrder is not the last in order!")) {
+        exit(1);
+    }
+    if (frontTime->time != 0 && --frontTime->time != 0) {
         // Time hasn't expired.
         unlockInterrupts
         return TickResult();
     }
-    void* data = front->data;
-    Element* oldFront = (Element*) front;
-    front = front->next;
+    void* data = frontTime->data;
+    Element* oldFront = (Element*) frontTime;
+    frontTime = frontTime->nextTime;
+    frontTime->prevTime = nullptr;
+    if (frontOrder == backOrder) {
+        frontOrder = nullptr;
+        backOrder = nullptr;
+    } else if (frontOrder == oldFront) {
+        frontOrder = frontOrder->nextOrder;
+    } else if (backOrder == oldFront) {
+        backOrder = backOrder->prevOrder;
+    }
+    if (oldFront->nextOrder != nullptr) {
+        oldFront->nextOrder->prevOrder = oldFront->prevOrder;
+    }
+    if (oldFront->prevOrder != nullptr) {
+        oldFront->prevOrder->nextOrder = oldFront->nextOrder;
+    }
     delete oldFront;
     unlockInterrupts
-    return TickResult(data, front != nullptr && front->time == 0);
+    return TickResult(data, frontTime != nullptr && frontTime->time == 0);
+}
+
+/**
+ * Removes an element from the waiting list in order that it was inserted in.
+ * @returns The removed element, or null if empty
+ */
+void* PtrWaitingList::remove() {
+    if (frontOrder == nullptr) {
+        return nullptr;
+    }
+    void* data = frontOrder->data;
+    Element* oldFront = (Element*) frontOrder;
+    lockInterrupts
+    if (assert(frontOrder == nullptr || frontOrder->prevOrder == nullptr, "frontOrder is not the first in order!")) {
+        exit(1);
+    }
+    if (assert(frontTime == nullptr || frontTime->prevTime == nullptr, "frontOrder is not the first in order!")) {
+        exit(1);
+    }
+    if (assert(backOrder == nullptr || backOrder->nextOrder == nullptr, "backOrder is not the last in order!")) {
+        exit(1);
+    }
+    frontOrder = frontOrder->nextOrder;
+    frontOrder->prevOrder = nullptr;
+    if (frontTime == oldFront) {
+        frontTime = frontTime->nextTime;
+        frontTime->prevTime = nullptr;
+    }
+    if (oldFront->nextTime != nullptr) {
+        oldFront->nextTime->prevTime = oldFront->prevTime;
+    }
+    if (oldFront->prevTime != nullptr) {
+        oldFront->prevTime->nextTime = oldFront->nextTime;
+    }
+    delete oldFront;
+    if (frontOrder == nullptr) {
+        backOrder = nullptr;
+    }
+    unlockInterrupts
+    return data;
 }
 
 /**
@@ -174,10 +264,10 @@ PtrWaitingList::TickResult PtrWaitingList::tick() {
  */
 PtrWaitingList::~PtrWaitingList() {
     lockInterrupts
-    Element* curr = (Element*) front;
+    Element* curr = (Element*) frontOrder;
     while (curr != nullptr) {
         Element* old = curr;
-        curr = curr->next;
+        curr = curr->nextOrder;
         delete old;
     }
     unlockInterrupts
@@ -189,4 +279,6 @@ PtrWaitingList::~PtrWaitingList() {
  * @param time Time to initialize the element with
  */
 PtrWaitingList::Element::Element(void* data, unsigned time) :
-    next(nullptr), data(data), time(time) {}
+    nextOrder(nullptr), prevOrder(nullptr),
+    nextTime(nullptr), prevTime(nullptr),
+    data(data), time(time) {}

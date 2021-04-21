@@ -4,6 +4,8 @@
  * Naiive implementation of linked lists, with pointers as data type and thread
  * safety (as far as this kernel goes) in mind.
  */
+#ifndef _LIST_H_
+#define _LIST_H_
 
 /**
  * Simple linked list implementation.
@@ -41,10 +43,14 @@ class PtrWaitingList {
         PtrWaitingList();
         int insert(void* ptr, unsigned time);
         TickResult tick();
+        void* remove();
         ~PtrWaitingList();
     private:
         struct Element {
-            Element* next;
+            Element* nextOrder;
+            Element* prevOrder;
+            Element* nextTime;
+            Element* prevTime;
             void* data;
             unsigned time;
             Element(void* data, unsigned time);
@@ -52,5 +58,9 @@ class PtrWaitingList {
         // Cannot be copied. BC31 does not support deleting constructors.
         PtrWaitingList(PtrWaitingList&);
         PtrWaitingList& operator=(PtrWaitingList&);
-        volatile Element* front;
+        volatile Element* frontOrder;
+        volatile Element* backOrder;
+        volatile Element* frontTime;
 };
+
+#endif
