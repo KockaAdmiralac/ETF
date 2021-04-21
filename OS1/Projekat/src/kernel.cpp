@@ -6,8 +6,10 @@
 #include <dos.h>
 #include <iostream.h>
 #include <kernel.h>
+#include <list.h>
 #include <pcb.h>
 #include <schedule.h>
+#include <kern_sem.h>
 #include <util.h>
 
 /**
@@ -74,7 +76,15 @@ LoopThread::LoopThread() : Thread(PCB::minimumStackSize, 1) {}
  * needed.
  */
 void LoopThread::run() {
-    while (true);
+    lockInterrupts
+    cout << "Starting loop" << endl;
+    unlockInterrupts
+    while (true) {
+        lockInterrupts
+        cout << "Loopin'" << endl;
+        unlockInterrupts
+        sleep(1);
+    }
 }
 
 /**
@@ -93,6 +103,11 @@ volatile int Kernel::contextSwitchOnDemand = false;
 volatile Time Kernel::counter = 0;
 
 /**
+ * Whether the context switch was forced.
+ */
+volatile int Kernel::semaphoreSignalCounter = 0;
+
+/**
  * Pointer to the loop thread. This thread must not end up in the scheduler!
  */
 volatile Thread* Kernel::loop = nullptr;
@@ -106,16 +121,44 @@ unsigned tbp;
  * Timer interrupt routine.
  */
 void interrupt Kernel::timer(...) {
-    // Don't forget to tick()!
-    // The context isn't forcibly switched and the current thread does not have
-    // infinite time available for use.
-    if (!contextSwitchOnDemand && PCB::running->timeSlice != 0) {
-        --counter;
+    // The context isn't forcibly switched.
+    if (!contextSwitchOnDemand) {
+        if (PCB::running->timeSlice != 0) {
+            --counter;
+        }
+        ++semaphoreSignalCounter;
+        if (canInterrupt) {
+            for (unsigned i = 0; i < KernelSem::allSemaphores.getSize(); ++i) {
+                KernelSem* sem = (KernelSem*) KernelSem::allSemaphores.get(i);
+                if (sem == nullptr) {
+                    continue;
+                }
+                //cout << "Ticking list" << endl;
+                //lock
+                PtrWaitingList::TickResult tr;
+                for (unsigned j = 0; j < semaphoreSignalCounter; ++j) {
+                    tr = sem->blocked.tick();
+                    while (tr.more) {
+                        PCB* unblocked = (PCB*) tr.data;
+                        unblocked->status = PCB::READY;
+                        unblocked->semaphoreResult = false;
+                        ++sem->value;
+                        cout << "Unblocking thread " << unblocked->id << endl;
+                        lock
+                        Scheduler::put(unblocked);
+                        tr = sem->blocked.tick();
+                    }
+                }
+            }
+            semaphoreSignalCounter = 0;
+        }
     }
     int delayedContextSwitch = false;
     // The time is up or a synchronous context switch occurred.
     if ((counter == 0 && PCB::running->timeSlice != 0) || contextSwitchOnDemand) {
-        if (Kernel::canInterrupt) {
+        if (canInterrupt) {
+            cout << "Kernel can interrupt" << endl;
+            lock
             contextSwitchOnDemand = false;
             // Saving thread context.
             asm {
@@ -132,6 +175,8 @@ void interrupt Kernel::timer(...) {
             }
             PCB::running = Scheduler::get();
             if (PCB::running == nullptr) {
+                cout << "Getting loop" << loop->getId() << endl;
+                lock
                 PCB::running = PCB::getPCBById(loop->getId());
             } else {
                 PCB::running->status = PCB::RUNNING;
@@ -149,12 +194,15 @@ void interrupt Kernel::timer(...) {
                 mov bp, tbp
             }
         } else {
+            cout << "Kernel cannot interrupt" << endl;
+            lock
             delayedContextSwitch = true;
             contextSwitchOnDemand = true;
         }
     }
     // If the context switch wasn't forced, this was a natural timer interrupt.
     if (!contextSwitchOnDemand || delayedContextSwitch) {
+        tick();
         // TODO: Replace with regular function call?
         asm int 60h;
     }

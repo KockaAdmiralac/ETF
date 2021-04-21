@@ -4,6 +4,7 @@
  * Implementation of semaphores.
  */
 #include <kern_sem.h>
+#include <kernel.h>
 #include <sem.h>
 #include <util.h>
 
@@ -12,7 +13,18 @@
  * @param init Initial semaphore value
  */
 Semaphore::Semaphore(int init) {
-    //
+    lockInterrupts
+    myImpl = new KernelSem(init);
+    unlockInterrupts
+    if (assert(myImpl != nullptr, "Kernel semaphore failed to allocate!")) {
+        return;
+    }
+    if (myImpl->id < 0) {
+        lockInterrupts
+        delete myImpl;
+        myImpl = nullptr;
+        unlockInterrupts
+    }
 }
 
 /**
@@ -32,7 +44,10 @@ Semaphore::~Semaphore() {
  * @returns Whether the wait was successful
  */
 int Semaphore::wait(Time maxTimeToWait = 0) {
-    return false;
+    if (myImpl == nullptr) {
+        return false;
+    }
+    return myImpl->wait(maxTimeToWait);
 }
 
 /**
@@ -40,12 +55,17 @@ int Semaphore::wait(Time maxTimeToWait = 0) {
  * blocked by the semaphore.
  */
 void Semaphore::signal() {
-    //
+    if (myImpl != nullptr) {
+        myImpl->signal();
+    }
 }
 
 /**
  * Returns the semaphore value.
  */
 int Semaphore::val() const {
-    return myImpl->value;
+    if (myImpl == nullptr) {
+        return 0;
+    }
+    return (int) myImpl->value;
 }

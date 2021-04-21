@@ -15,6 +15,7 @@
         dispatch(); \
     }
 
+void tick();
 int userMain(int argc, char* argv[]);
 
 /**
@@ -26,6 +27,7 @@ class Kernel {
         static void interrupt timer(...);
         static volatile int canInterrupt;
         static volatile int contextSwitchOnDemand;
+        static volatile int semaphoreSignalCounter;
         static volatile Thread* loop;
     private:
         static volatile Time counter;
