@@ -7,10 +7,4 @@
 - Ne zaboravi da cout može da postavi I na 1
 
 ## Pitanja
-- Da li nam se garantuje da će waitToComplete biti pozvan iz destruktora niti u kojima se takvo ponašanje očekuje
-- Šta se desi ako se pozove waitToComplete nad niti nad kojom nije pozvan start
-- Da li su zaboravili da pozovu `asm int 60h` kad se prekid tajmera ne izvrši zbog kritične sekcije
-- Zašto se koristi prekid 08h kad on nije namenjen za to
-- Da li `semaphor.h` može da nam se zove samo `sem.h`
-- Da li svejedno koliki kvant vremena dodeljujemo glavnoj niti
-- Kada dobijamo javni test
+- Šta raditi ako semafor, nit ili događaj ne uspeju da alociraju svoju implementaciju
