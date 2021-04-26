@@ -6,6 +6,7 @@
 #ifndef _PCB_H_
 #define _PCB_H_
 #include <list.h>
+#include <kern_evt.h>
 #include <kern_sem.h>
 #include <thread.h>
 #include <vector.h>
@@ -29,6 +30,7 @@ class PCB {
         friend class Thread;
         friend class Kernel;
         friend class KernelSem;
+        friend class KernelEv;
         #ifdef KERNEL_DEBUG
         friend void testThreadPrivates();
         #endif
