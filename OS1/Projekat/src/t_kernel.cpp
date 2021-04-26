@@ -184,12 +184,12 @@ class Consumer : public Thread {
 
 void Consumer::run() {
     while (true) {
-        int waitResult = sem.wait(10000);
+        int waitResult = sem.wait(0);
         lockInterrupts
         if (waitResult) {
             cout << "Consoomed " << getId() << endl;
         } else {
-            cout << "Consom failed :( " << getId() << endl;
+            cout << "CONSOOM FAILED " << getId() << endl;
         }
         unlockInterrupts
         delay(rand() % 1000);

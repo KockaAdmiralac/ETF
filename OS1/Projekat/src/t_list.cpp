@@ -36,15 +36,12 @@ void testWaitingListDestructor() {
     // insert() + tick()
     testCase("Ticking from empty waiting list returns null", tr.data == nullptr && !tr.more);
     testCase("Inserting into empty waiting list", l.insert(&data1, 3));
-    testCase("Inserting element with zero time does not work", !l.insert(&data1, 0));
     testCase("Inserting element after first", l.insert(&data1, 5));
     testCase("Inserting element in the middle of these two", l.insert(&data2, 4));
     tr = l.tick();
     testCase("Ticking first time slice returns nothing", tr.data == nullptr && !tr.more);
     testCase("Inserting element in front of the first", l.insert(&data2, 1));
-    // [1/2 1/4 2/3 2/1]
     tr = l.tick();
-    // [1/1 1/3 2/2 2/0]
     testCase("Ticking second time slice returns the just inserted element", tr.data == &data2 && !tr.more);
     testCase("Inserting element with same waiting time", l.insert(&data2, 2));
     tr = l.tick();
@@ -78,6 +75,7 @@ void testWaitingListDestructor() {
     testCase("Ticking from empty list should still return nothing", tr.data == nullptr && !tr.more);
     testCase("Reinserting after empty tick", l.insert(&data2, 3));
     testCase("Inserting to the beginning of time list but end of order list", l.insert(&data1, 2));
+    testCase("Inserting element with infinite waiting time", l.insert(&data1, 0));
     testCase("Inserting to the end of both lists", l.insert(&data3, 4));
     testCase("Inserting element with same waiting time", l.insert(&data3, 3));
     tr = l.tick();
@@ -86,8 +84,10 @@ void testWaitingListDestructor() {
     testCase("Second tick should return the second element by order", tr.data == &data1 && !tr.more);
     testCase("Removing should remove the first element by order", l.remove() == &data2);
     tr = l.tick();
-    testCase("Third tick should return the fourth element by order", tr.data == &data3 && !tr.more);
-    testCase("Removing should remove the third element by order", l.remove() == &data3);
+    testCase("Third tick should return the fifth element by order", tr.data == &data3 && !tr.more);
+    testCase("Removing should remove the third element by order", l.remove() == &data1);
+    tr = l.tick();
+    testCase("Fourth tick should remove the fourth element by order", tr.data == &data3 && !tr.more);
     tr = l.tick();
     testCase("Both ticking and removing should return nothing", l.remove() == nullptr && tr.data == nullptr && !tr.more);
     // Destructor
@@ -190,9 +190,6 @@ void testWaitingListRandom() {
             case 6:
             case 7:
                 // cout << "\r" << i << " insertion";
-                if (ticks == 0) {
-                    ticks = 1;
-                }
                 if (l.insert(&data, ticks)) {
                     ++elements;
                 } else {

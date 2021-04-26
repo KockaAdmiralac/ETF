@@ -3,8 +3,10 @@
  *
  * Implementation of a simple linked list.
  */
+#include <iostream.h>
 #include <kernel.h>
 #include <list.h>
+#include <stdlib.h>
 #include <util.h>
 
 /**
@@ -66,6 +68,8 @@ PtrList::~PtrList() {
         curr = curr->next;
         delete old;
     }
+    front = nullptr;
+    back = nullptr;
     unlockInterrupts
 }
 
@@ -93,31 +97,18 @@ PtrWaitingList::TickResult::TickResult(void* data, int more) :
  * Constructs a new waiting list.
  */
 PtrWaitingList::PtrWaitingList() :
-    frontOrder(nullptr), backOrder(nullptr), frontTime(nullptr) {}
+    frontOrder(nullptr), backOrder(nullptr), frontTime(nullptr), size(0) {}
 
-
-#include <stdlib.h>
 /**
  * Inserts a new element into the waiting list.
  * @param ptr Data to insert into the list
- * @param time Non-zero wait time of the element
+ * @param time Expiration time of the element, if set to zero the element does
+ *             not expire
  * @returns Whether the insertion succeeded
  */
 int PtrWaitingList::insert(void* ptr, unsigned time) {
-    if (time == 0) {
-        // There's nothing to wait for here.
-        return false;
-    }
     lockInterrupts
-    if (assert(frontOrder == nullptr || frontOrder->prevOrder == nullptr, "frontOrder is not the first in order!")) {
-        exit(1);
-    }
-    if (assert(frontTime == nullptr || frontTime->prevTime == nullptr, "frontOrder is not the first in order!")) {
-        exit(1);
-    }
-    if (assert(backOrder == nullptr || backOrder->nextOrder == nullptr, "backOrder is not the last in order!")) {
-        exit(1);
-    }
+    checkListConsistency();
     Element* element = new Element(ptr, time);
     if (element == nullptr) {
         unlockInterrupts
@@ -133,37 +124,40 @@ int PtrWaitingList::insert(void* ptr, unsigned time) {
         backOrder = element;
     }
     // Inserting by time.
-    if (frontTime == nullptr) {
-        frontTime = element;
-    } else {
-        Element* curr = (Element*) frontTime;
-        Element* prev = nullptr;
-        do {
-            // TODO: >= is perhaps unfair?
-            if (curr->time >= element->time) {
-                element->nextTime = (Element*) curr;
-                curr->prevTime = element;
-                curr->time -= element->time;
-                if (prev == nullptr) {
-                    // We're inserting in front of the first element.
-                    frontTime = element;
+    if (time != 0) {
+        if (frontTime == nullptr) {
+            frontTime = element;
+        } else {
+            Element* curr = (Element*) frontTime;
+            Element* prev = nullptr;
+            do {
+                // TODO: >= is perhaps unfair?
+                if (curr->time >= element->time) {
+                    element->nextTime = (Element*) curr;
+                    curr->prevTime = element;
+                    curr->time -= element->time;
+                    if (prev == nullptr) {
+                        // We're inserting in front of the first element.
+                        frontTime = element;
+                    } else {
+                        prev->nextTime = element;
+                        element->prevTime = prev;
+                    }
+                    break;
                 } else {
-                    prev->nextTime = element;
-                    element->prevTime = prev;
+                    element->time -= curr->time;
                 }
-                break;
-            } else {
-                element->time -= curr->time;
+                prev = curr;
+                curr = curr->nextTime;
+            } while (curr != nullptr);
+            if (curr == nullptr) {
+                prev->nextTime = element;
+                element->prevTime = prev;
             }
-            prev = curr;
-            curr = curr->nextTime;
-        } while (curr != nullptr);
-        if (curr == nullptr) {
-            prev->nextTime = element;
-            element->prevTime = prev;
         }
     }
     // Finished inserting.
+    ++size;
     unlockInterrupts
     return true;
 }
@@ -180,15 +174,7 @@ PtrWaitingList::TickResult PtrWaitingList::tick() {
         return TickResult();
     }
     lockInterrupts
-    if (assert(frontOrder == nullptr || frontOrder->prevOrder == nullptr, "frontOrder is not the first in order!")) {
-        exit(1);
-    }
-    if (assert(frontTime == nullptr || frontTime->prevTime == nullptr, "frontOrder is not the first in order!")) {
-        exit(1);
-    }
-    if (assert(backOrder == nullptr || backOrder->nextOrder == nullptr, "backOrder is not the last in order!")) {
-        exit(1);
-    }
+    checkListConsistency();
     if (frontTime->time != 0 && --frontTime->time != 0) {
         // Time hasn't expired.
         unlockInterrupts
@@ -213,8 +199,9 @@ PtrWaitingList::TickResult PtrWaitingList::tick() {
         oldFront->prevOrder->nextOrder = oldFront->nextOrder;
     }
     delete oldFront;
+    --size;
     unlockInterrupts
-    return TickResult(data, frontTime != nullptr && frontTime->time == 0);
+    return TickResult(data, frontTime != nullptr && frontTime->time <= 0);
 }
 
 /**
@@ -228,15 +215,7 @@ void* PtrWaitingList::remove() {
     void* data = frontOrder->data;
     Element* oldFront = (Element*) frontOrder;
     lockInterrupts
-    if (assert(frontOrder == nullptr || frontOrder->prevOrder == nullptr, "frontOrder is not the first in order!")) {
-        exit(1);
-    }
-    if (assert(frontTime == nullptr || frontTime->prevTime == nullptr, "frontOrder is not the first in order!")) {
-        exit(1);
-    }
-    if (assert(backOrder == nullptr || backOrder->nextOrder == nullptr, "backOrder is not the last in order!")) {
-        exit(1);
-    }
+    checkListConsistency();
     frontOrder = frontOrder->nextOrder;
     frontOrder->prevOrder = nullptr;
     if (frontTime == oldFront) {
@@ -253,14 +232,21 @@ void* PtrWaitingList::remove() {
     if (frontOrder == nullptr) {
         backOrder = nullptr;
     }
+    --size;
     unlockInterrupts
     return data;
 }
 
 /**
+ * Gets the amount of elements in the list. Useful for debugging.
+ * @returns The amount of elements in the list
+ */
+unsigned PtrWaitingList::getSize() const {
+    return size;
+}
+
+/**
  * Deallocates all elements allocated by the list, but not the data associated.
- *
- * Same code as PtrList::~PtrList().
  */
 PtrWaitingList::~PtrWaitingList() {
     lockInterrupts
@@ -270,6 +256,9 @@ PtrWaitingList::~PtrWaitingList() {
         curr = curr->nextOrder;
         delete old;
     }
+    frontOrder = nullptr;
+    backOrder = nullptr;
+    frontTime = nullptr;
     unlockInterrupts
 }
 
@@ -282,3 +271,26 @@ PtrWaitingList::Element::Element(void* data, unsigned time) :
     nextOrder(nullptr), prevOrder(nullptr),
     nextTime(nullptr), prevTime(nullptr),
     data(data), time(time) {}
+
+/**
+ * Checks whether the list is consistent and exits the program if not.
+ *
+ * Only available during the debug mode! Assumes that interrupts have been
+ * previously locked.
+ */
+void PtrWaitingList::checkListConsistency() {
+    #if KERNEL_DEBUG
+    if (frontOrder != nullptr && frontOrder->prevOrder != nullptr) {
+        cout << "frontOrder is not the first in order!" << endl;
+        exit(1);
+    }
+    if (frontTime != nullptr && frontTime->prevTime != nullptr) {
+        cout << "frontOrder is not the first in order!" << endl;
+        exit(1);
+    }
+    if (backOrder != nullptr && backOrder->nextOrder != nullptr) {
+        cout << "backOrder is not the last in order!" << endl;
+        exit(1);
+    }
+    #endif
+}
