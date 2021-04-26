@@ -3,7 +3,6 @@
  *
  * Entry point for test suite.
  */
-#ifdef KERNEL_DEBUG
 #include <kernel.h>
 #include <test.h>
 #include <util.h>
@@ -43,6 +42,7 @@ void testCase(const char* message, unsigned condition) {
     testResult(condition);
 }
 
+#ifdef KERNEL_DEBUG
 int main() {
     testCase("Kernel can interrupt at the beginning of tests", Kernel::canInterrupt);
     testUtil();
