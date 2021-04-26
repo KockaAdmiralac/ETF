@@ -54,7 +54,6 @@ int KernelSem::wait(Time maxTimeToWait) {
     return PCB::running->semaphoreResult;
 }
 
-#include <iostream.h>
 /**
  * Increases the semaphore value and unblocks threads that were previously
  * blocked by the semaphore.
@@ -69,7 +68,6 @@ void KernelSem::signal() {
         }
         unblocked->status = PCB::READY;
         unblocked->semaphoreResult = true;
-        cout << "Unblocking " << unblocked->id << " in signal()" << endl;
         Scheduler::put(unblocked);
     }
     unlockInterrupts

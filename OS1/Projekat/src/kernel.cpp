@@ -112,6 +112,12 @@ volatile int Kernel::semaphoreSignalCounter = 0;
  */
 volatile Thread* Kernel::loop = nullptr;
 
+/**
+ * The interrupt routine on 08h (timer interrupt routine) before the kernel
+ * replaced it.
+ */
+InterruptRoutine Kernel::oldTimerRoutine = nullptr;
+
 // Temporary variables for timer interrupt.
 unsigned tsp;
 unsigned tss;
@@ -137,17 +143,19 @@ void interrupt Kernel::timer(...) {
                 //lock
                 PtrWaitingList::TickResult tr;
                 for (unsigned j = 0; j < semaphoreSignalCounter; ++j) {
-                    tr = sem->blocked.tick();
-                    while (tr.more) {
+                    do {
+                        tr = sem->blocked.tick();
+                        if (tr.data == nullptr) {
+                            break;
+                        }
                         PCB* unblocked = (PCB*) tr.data;
                         unblocked->status = PCB::READY;
                         unblocked->semaphoreResult = false;
                         ++sem->value;
-                        cout << "Unblocking thread " << unblocked->id << endl;
-                        lock
+                        //cout << "Unblocking thread " << unblocked->id << endl;
+                        //lock
                         Scheduler::put(unblocked);
-                        tr = sem->blocked.tick();
-                    }
+                    } while (tr.more);
                 }
             }
             semaphoreSignalCounter = 0;
@@ -204,7 +212,7 @@ void interrupt Kernel::timer(...) {
     if (!contextSwitchOnDemand || delayedContextSwitch) {
         tick();
         // TODO: Replace with regular function call?
-        asm int 60h;
+        oldTimerRoutine();
     }
 }
 
@@ -227,14 +235,14 @@ int Kernel::run(int argc, char* argv[]) {
     }
     // Set timer interrupt.
     lock
-    setvect(0x60, getvect(0x08));
+    oldTimerRoutine = getvect(0x08);
     setvect(0x08, timer);
     unlock
     // Execute user code.
     int retval = userMain(argc, argv);
     // Reset timer interrupt.
     lock
-    setvect(0x08, getvect(0x60));
+    setvect(0x08, oldTimerRoutine);
     unlock
     delete loop;
     loop = nullptr;

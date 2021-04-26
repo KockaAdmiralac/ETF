@@ -15,6 +15,8 @@
         dispatch(); \
     }
 
+typedef void interrupt (*InterruptRoutine)(...);
+
 void tick();
 int userMain(int argc, char* argv[]);
 
@@ -31,6 +33,7 @@ class Kernel {
         static volatile Thread* loop;
     private:
         static volatile Time counter;
+        static InterruptRoutine oldTimerRoutine;
 };
 
 #endif

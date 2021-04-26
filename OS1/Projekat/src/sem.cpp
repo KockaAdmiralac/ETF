@@ -31,7 +31,12 @@ Semaphore::Semaphore(int init) {
  * Frees resources used by the semaphore.
  */
 Semaphore::~Semaphore() {
-    delete myImpl;
+    if (myImpl != nullptr) {
+        lockInterrupts
+        delete myImpl;
+        unlockInterrupts
+        myImpl = nullptr;
+    }
 }
 
 /**
