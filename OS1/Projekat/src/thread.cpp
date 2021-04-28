@@ -40,8 +40,8 @@ Thread::~Thread() {
     if (myPCB != nullptr) {
         lockInterrupts
         delete myPCB;
-        unlockInterrupts
         myPCB = nullptr;
+        unlockInterrupts
     }
 }
 
@@ -98,6 +98,7 @@ Thread::Thread(StackSize stackSize, Time timeSlice) {
     if (assert(myPCB->status == PCB::INITIALIZING, "PCB failed to initialize!")) {
         lockInterrupts
         delete myPCB;
+        myPCB = nullptr;
         unlockInterrupts
         return;
     }
