@@ -27,10 +27,6 @@ class Thread {
         static Thread* getThreadById(ID id);
     protected:
         friend class PCB;
-        // TODO: Remove this.
-        #ifdef KERNEL_DEBUG
-        friend void testThreadPrivates();
-        #endif
         Thread(StackSize stackSize = defaultStackSize, Time timeSlice = defaultTimeSlice);
         /**
          * Executes subclass-specific thread operations.

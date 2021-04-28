@@ -48,11 +48,7 @@ int main() {
     testUtil();
     //testVector();
     //testList();
-    testThread();
     testKernel();
-    testSemaphore();
-    testIVT();
-    testEvent();
     return 0;
 }
 #endif

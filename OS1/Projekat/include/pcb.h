@@ -31,9 +31,6 @@ class PCB {
         friend class Kernel;
         friend class KernelSem;
         friend class KernelEv;
-        #ifdef KERNEL_DEBUG
-        friend void testThreadPrivates();
-        #endif
 
         PCB(Thread& myThread, StackSize stackSize, Time timeSlice);
         // This should be overwritten by subclasses.
