@@ -5,7 +5,7 @@
  */
 #ifndef _KERN_EVT_H_
 #define _KERN_EVT_H_
-#include <evt.h>
+#include <event.h>
 #include <ivt.h>
 #include <kernel.h>
 #include <pcb.h>

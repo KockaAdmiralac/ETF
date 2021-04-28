@@ -7,7 +7,7 @@
 #define _KERN_SEM_H_
 #include <kernel.h>
 #include <list.h>
-#include <sem.h>
+#include <semaphor.h>
 #include <vector.h>
 
 /**

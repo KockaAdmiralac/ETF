@@ -5,7 +5,7 @@
  */
 #include <kern_sem.h>
 #include <kernel.h>
-#include <sem.h>
+#include <semaphor.h>
 #include <util.h>
 
 /**

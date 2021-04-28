@@ -3,7 +3,7 @@
  *
  * Implementation of event listeners.
  */
-#include <evt.h>
+#include <event.h>
 #include <kern_evt.h>
 #include <kernel.h>
 #include <util.h>
