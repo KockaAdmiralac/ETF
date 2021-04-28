@@ -26,6 +26,7 @@
 class IVTEntry {
     public:
         IVTEntry(IVTNo entry, InterruptRoutine routine);
+        ~IVTEntry();
         void signal(int chain);
     private:
         friend class KernelEv;

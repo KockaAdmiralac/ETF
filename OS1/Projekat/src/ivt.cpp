@@ -34,6 +34,16 @@ IVTEntry::IVTEntry(IVTNo entry, InterruptRoutine routine) :
 }
 
 /**
+ * Restores the old interrupt routine when the IVT entry is about to
+ * deallocate.
+ */
+IVTEntry::~IVTEntry() {
+    if (oldRoutine != nullptr) {
+        setvect(entry, oldRoutine);
+    }
+}
+
+/**
  * Called when an interrupt on the associated entry occurs.
  * @param chain Whether the interrupt routine that was previously in the entry
  *              should be called
