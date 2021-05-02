@@ -26,7 +26,6 @@ void Thread::waitToComplete() {
         return;
     }
     myPCB->waitToComplete();
-    dispatch();
 }
 
 /**
