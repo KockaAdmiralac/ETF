@@ -25,6 +25,6 @@ class Event {
         KernelEv* myImpl;
 };
 
-// This is the only allowed change.
+// This is the only allowed non-cosmetic change.
 #include <ivt.h>
 #endif

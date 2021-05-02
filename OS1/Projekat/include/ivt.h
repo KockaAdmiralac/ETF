@@ -9,7 +9,7 @@
 #include <kernel.h>
 
 /**
- * Prepares an IVT entry for listening on an event
+ * Prepares an IVT entry for listening on an event.
  * @param entry The entry to listen on
  * @param chain Whether to chain the old routine
  */
@@ -22,6 +22,12 @@
 
 /**
  * Represents an entry in the Interrupt Vector Table.
+ *
+ * THIS OBJECT SHOULD NOT BE CONSTRUCTED ON THE STACK!
+ * The reason for this is that stack destructors are not called when exit() is
+ * called, and so exiting the main thread with Thread::exit() will leave the
+ * system in an inconsistent state, with interrupt vector table having dead
+ * routines in it.
  */
 class IVTEntry {
     public:
