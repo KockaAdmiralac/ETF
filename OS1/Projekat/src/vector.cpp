@@ -18,7 +18,7 @@ const unsigned PtrVector::MAX_CAPACITY = 0xFFFF / sizeof(void*);
  * @param initialCapacity Starting capacity of the vector
  */
 PtrVector::PtrVector(unsigned initialCapacity) : size(0) {
-    lockInterrupts
+    lockInterrupts("PtrVector::PtrVector");
     if (assert(initialCapacity > 0, "Initial capacity cannot be 0!")) {
         initialCapacity = 256;
     }
@@ -28,7 +28,7 @@ PtrVector::PtrVector(unsigned initialCapacity) : size(0) {
         // We shall retry creating the vector on every put().
         capacity = 0;
     }
-    unlockInterrupts
+    unlockInterrupts("PtrVector::PtrVector");
 }
 
 /**
@@ -44,7 +44,7 @@ int PtrVector::put(void* ptr) {
     if (assert(size < MAX_CAPACITY, "We are at maximum capacity!")) {
         return -1;
     }
-    lockInterrupts
+    lockInterrupts("PtrVector::put");
     if (size == capacity) {
         unsigned newCapacity = (capacity == 0) ?
             1 :
@@ -55,16 +55,16 @@ int PtrVector::put(void* ptr) {
         }
         void** newData = new void*[newCapacity];
         if (assert(newData != nullptr, "Failed to allocate new vector data!")) {
-            unlockInterrupts
+            unlockInterrupts("PtrVector::put (1)");
             return -2;
         }
         memcpy(newData, data, size * sizeof(void*));
-        delete data;
+        delete[] data;
         data = newData;
         capacity = newCapacity;
     }
     data[size++] = ptr;
-    unlockInterrupts
+    unlockInterrupts("PtrVector::put (2)");
     return size-1;
 }
 
@@ -90,12 +90,12 @@ void PtrVector::remove(unsigned index) {
     if (index >= size) {
         return;
     }
-    lockInterrupts
+    lockInterrupts("PtrVector::remove");
     data[index] = nullptr;
     while (data[size-1] == nullptr && size > 0) {
         --size;
     }
-    unlockInterrupts
+    unlockInterrupts("PtrVector::remove");
 }
 
 /**
@@ -104,14 +104,14 @@ void PtrVector::remove(unsigned index) {
  * Should be safe to call before actual vector destruction, but why would you?
  */
 PtrVector::~PtrVector() {
-    lockInterrupts
+    lockInterrupts("PtrVector::~PtrVector");
     if (data != nullptr) {
-        delete data;
+        delete[] data;
         data = nullptr;
     }
     size = 0;
     capacity = 0;
-    unlockInterrupts
+    unlockInterrupts("PtrVector::~PtrVector");
 }
 
 /**

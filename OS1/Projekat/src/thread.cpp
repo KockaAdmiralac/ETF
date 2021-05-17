@@ -5,6 +5,8 @@
  */
 #include <kernel.h>
 #include <pcb.h>
+#include <schedule.h>
+#include <stdlib.h>
 #include <thread.h>
 #include <util.h>
 
@@ -22,7 +24,7 @@ void Thread::start() {
  * Blocks the calling thread until this thread has finished.
  */
 void Thread::waitToComplete() {
-    if (assert(myPCB != nullptr, "Cannot await a thread with uninitialized PCB!")) {
+    if (myPCB == nullptr) {
         return;
     }
     myPCB->waitToComplete();
@@ -37,10 +39,10 @@ void Thread::waitToComplete() {
  */
 Thread::~Thread() {
     if (myPCB != nullptr) {
-        lockInterrupts
+        lockInterrupts("Thread::~Thread");
         delete myPCB;
         myPCB = nullptr;
-        unlockInterrupts
+        unlockInterrupts("Thread::~Thread");
     }
 }
 
@@ -81,6 +83,91 @@ Thread* Thread::getThreadById(ID id) {
 }
 
 /**
+ * Forks the current thread.
+ * @returns ID of the newly-created thread, 0 if returning from the child
+ *          thread and -1 if an error occurred
+ */
+ID Thread::fork() {
+    if (assert(PCB::running != nullptr, "Attempted to fork a thread when no thread is running!")) {
+        return -1;
+    }
+    PCB* runningCopy = (PCB*) PCB::running;
+    if (assert(runningCopy->myThread != nullptr, "Cannot fork the main thread!")) {
+        return -1;
+    }
+    Thread* newThread = runningCopy->myThread->clone();
+    if (newThread == nullptr || newThread->myPCB == nullptr) {
+        return -1;
+    }
+    lockInterrupts("Thread::fork");
+    PCB::copyStackFrom = runningCopy;
+    PCB::copyStackTo = newThread->myPCB;
+    PCB::copyStack();
+    // From now on, we are sure there are two threads running through the same
+    // code here.
+    if (PCB::running == runningCopy) {
+        // Run the child thread.
+        newThread->myPCB->parent = runningCopy;
+        int index = runningCopy->children.put(newThread->myPCB);
+        if (index < 0) {
+            delete newThread;
+            unlockInterrupts("Thread::fork (1)");
+            return -1;
+        }
+        newThread->myPCB->parentIndex = index;
+        newThread->start();
+        unlockInterrupts("Thread::fork (2)");
+        return newThread->getId();
+    }
+    // We don't unlock interrupts here because they have already been unlocked
+    // by the parent thread returning from this same method.
+    return 0;
+}
+
+/**
+ * Finishes the current thread.
+ */
+void Thread::exit() {
+    if (assert(PCB::running != nullptr, "Attempted exit when no thread is running!")) {
+        return;
+    }
+    if (assert(PCB::running->myThread != nullptr, "You cannot exit the loop thread!")) {
+        return;
+    }
+    if (PCB::running->myThread == Kernel::mainThread) {
+        // We are exiting the main thread.
+        Kernel::cleanup();
+        ::exit(0);
+    } else {
+        PCB::running->exit();
+    }
+}
+
+/**
+ * Waits until all child threads have finished.
+ */
+void Thread::waitForForkChildren() {
+    if (assert(PCB::running != nullptr, "Attempted waiting for children when no thread is running!")) {
+        return;
+    }
+    PCB::running->waitForChildren();
+}
+
+/**
+ * Creates a new instance of the current thread.
+ *
+ * This does not make the cloned thread a child of the original thread,
+ * because the responsibility of freeing it is not on the kernel but rather
+ * on the user.
+ * Also because the method is marked const, duh.
+ * @returns Pointer to the cloned thread, or null on error
+ */
+Thread* Thread::clone() const {
+    assert(false, "Thread::clone() has not been overriden before calling!");
+    return nullptr;
+}
+
+/**
  * Constructs a thread, but does not run it.
  * @param stackSize Size of the kernel thread's stack in bytes, cannot be under
  *                  minimumStackSize and over maximumStackSize
@@ -88,19 +175,19 @@ Thread* Thread::getThreadById(ID id) {
  *                  context asynchronously switches, 0 = infinite
  */
 Thread::Thread(StackSize stackSize, Time timeSlice) {
-    lockInterrupts
+    lockInterrupts("Thread::Thread");
     myPCB = new PCB(*this, stackSize, timeSlice);
-    unlockInterrupts
     if (assert(myPCB != nullptr, "PCB failed to allocate!")) {
+        unlockInterrupts("Thread::Thread (1)");
         return;
     }
     if (assert(myPCB->status == PCB::INITIALIZING, "PCB failed to initialize!")) {
-        lockInterrupts
         delete myPCB;
         myPCB = nullptr;
-        unlockInterrupts
+        unlockInterrupts("Thread::Thread (2)");
         return;
     }
+    unlockInterrupts("Thread::Thread (3)");
 }
 
 /**
@@ -108,6 +195,7 @@ Thread::Thread(StackSize stackSize, Time timeSlice) {
  */
 void dispatch() {
     lock
+    assert(!Kernel::cannotInterrupt, "Kernel cannot interrupt during dispatch()!");
     Kernel::contextSwitchOnDemand = true;
     Kernel::timer();
     unlock

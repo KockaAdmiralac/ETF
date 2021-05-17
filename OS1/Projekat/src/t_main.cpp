@@ -5,46 +5,64 @@
  */
 #include <kernel.h>
 #include <test.h>
-#include <util.h>
 
 /**
  * Prints out PASS if a test passes or FAIL if a test fails.
- *
- * WARNING: If called from methods where I = 0, a lock is required after this
- * call.
  * @param condition Test result
  */
 void testResult(unsigned condition) {
-    lockInterrupts
     if (condition) {
-        cout << "PASS" << endl;
+        syncPrint("PASS\n");
     } else {
-        cout << "FAIL" << endl;
+        syncPrint("FAIL\n");
     }
-    unlockInterrupts
 }
 
 /**
  * Prints out a message, then tests the condition.
- *
- * WARNING: If called from methods where I = 0, a lock is required after this
- * call.
  * @param message Message to print
  * @param condition Condition to test
  */
 void testCase(const char* message, unsigned condition) {
-    if (!Kernel::canInterrupt) {
-        cout << "WARNING: Kernel cannot interrupt in this call! This test might break (others) unexpectedly." << endl;
+    if (Kernel::cannotInterrupt) {
+        syncPrint("WARNING: Kernel cannot interrupt in this call! This test might break (others) unexpectedly.\n");
     }
-    lockInterrupts
-    cout << message << "... ";
-    unlockInterrupts
+    syncPrint("%s... ", message);
     testResult(condition);
 }
 
+/*
+unsigned tbpm;
+unsigned tssm;
+unsigned tspm;
+void *tptr;
+
+#include <dos.h>
+void testFunc() {
+    asm {
+        mov tbpm, bp
+        mov tssm, ss
+    }
+    cout << "BP value: " << tbpm << endl;
+    while (tbpm != 0) {
+        tptr = MK_FP(tssm, tbpm);
+        tbpm = *((unsigned*) tptr);
+        cout << "BP value: " << tbpm << endl;
+    }
+}
+
+void testFunc2() {
+    testFunc();
+}
+
+void testFunc3() {
+    testFunc2();
+}
+*/
+
 #ifdef KERNEL_DEBUG
 int main() {
-    testCase("Kernel can interrupt at the beginning of tests", Kernel::canInterrupt);
+    testCase("Kernel can interrupt at the beginning of tests", Kernel::cannotInterrupt == 0);
     testUtil();
     //testVector();
     //testList();

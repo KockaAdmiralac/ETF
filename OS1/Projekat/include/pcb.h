@@ -21,7 +21,8 @@ class PCB {
             RUNNING,
             READY,
             BLOCKED,
-            TERMINATING
+            TERMINATING,
+            MATERNITY_LEAVE
         };
         static const StackSize minimumStackSize;
         static const StackSize maximumStackSize;
@@ -45,15 +46,24 @@ class PCB {
         Status status;
         unsigned* stack;
         int timeSlice;
+        unsigned stackSize;
         PtrList blocked;
         int semaphoreResult;
+        PCB* parent;
+        int parentIndex;
+        PtrVector children;
         static volatile PCB* running;
         static PtrVector allPCBs;
+        static PCB* copyStackFrom;
+        static PCB* copyStackTo;
 
         virtual void start();
         virtual void waitToComplete();
+        void exit();
+        void waitForChildren();
         static PCB* getPCBById(ID id);
         static void execute();
+        static void interrupt copyStack(...);
 };
 
 #endif

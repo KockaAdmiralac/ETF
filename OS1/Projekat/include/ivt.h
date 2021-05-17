@@ -26,7 +26,7 @@
  * THIS OBJECT SHOULD NOT BE CONSTRUCTED ON THE STACK!
  * The reason for this is that stack destructors are not called when exit() is
  * called, and so exiting the main thread with Thread::exit() will leave the
- * system in an inconsistent state, with interrupt vector table having dead
+ * system in an inconsistent state, with the interrupt vector table having dead
  * routines in it.
  */
 class IVTEntry {

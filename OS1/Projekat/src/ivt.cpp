@@ -27,10 +27,12 @@ IVTEntry::IVTEntry(IVTNo entry, InterruptRoutine routine) :
     // Locking interrupts should not be needed since the IVTEntry constructor
     // should be called before main(), however, it is here in case somebody
     // decides it's a good idea to call it afterwards.
-    lockInterrupts
+    lockInterrupts("IVTEntry::IVTEntry");
+    lock
     setvect(entry, routine);
+    unlock
     entries[entry] = this;
-    unlockInterrupts
+    unlockInterrupts("IVTEntry::IVTEntry");
 }
 
 /**
@@ -38,9 +40,13 @@ IVTEntry::IVTEntry(IVTNo entry, InterruptRoutine routine) :
  * deallocate.
  */
 IVTEntry::~IVTEntry() {
+    lockInterrupts("IVEntry::~IVTEntry");
     if (oldRoutine != nullptr) {
+        lock
         setvect(entry, oldRoutine);
+        unlock
     }
+    unlockInterrupts("IVTEntry::~IVTEntry");
 }
 
 /**
@@ -49,13 +55,16 @@ IVTEntry::~IVTEntry() {
  *              should be called
  */
 void IVTEntry::signal(int chain) {
+    lockInterrupts("IVTEntry::signal");
     if (event != nullptr) {
         event->signal();
     }
     if (chain) {
         if (assert(oldRoutine != nullptr, "Old interrupt routine does not exist!")) {
+            unlockInterrupts("IVTEntry::signal (1)");
             return;
         }
         oldRoutine();
     }
+    unlockInterrupts("IVTEntry::signal (2)");
 }

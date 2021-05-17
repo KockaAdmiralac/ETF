@@ -3,7 +3,8 @@
  *
  * Implementation of utility functions.
  */
-#include <iostream.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <util.h>
 
 /**
@@ -18,13 +19,7 @@ unsigned assert(unsigned condition, const char* message) {
         return false;
     }
     #ifdef KERNEL_DEBUG
-    // This prevents all interrupts, but that is fine in debug mode.
-    asm {
-        pushf
-        cli
-    }
-    cout << "ASSERTION FAILED: " << message << endl;
-    asm popf
+    syncPrint("ASSERTION FAILED: %s\n", message);
     return true;
     #else
     (void *) message;
@@ -70,4 +65,29 @@ unsigned getBit(unsigned number, unsigned bit) {
         return 0;
     }
     return (number >> bit) & 1;
+}
+
+/**
+ * Wrapper around printf() that is thread-safe.
+ *
+ * Interrupts are disabled in this function because this may be called from
+ * an actual interrupt routine.
+ * @param format Output format string
+ * @param ... Rest of the arguments
+ * @returns The total number of written characters on success, negative on
+ *          error
+ * @see https://cplusplus.com/reference/cstdio/vprintf/
+ */
+int syncPrint(const char *format, ...) {
+    asm {
+        pushf
+        cli
+    }
+    int res;
+    va_list args;
+    va_start(args, format);
+    res = vprintf(format, args);
+    va_end(args);
+    asm popf
+    return res;
 }

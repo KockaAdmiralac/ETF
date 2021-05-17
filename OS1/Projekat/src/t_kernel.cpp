@@ -4,14 +4,21 @@
  * Test module for basic kernel functions.
  */
 #include <dos.h>
+#include <event.h>
+#include <ivt.h>
 #include <kernel.h>
 #include <list.h>
-#include <sem.h>
+#include <semaphor.h>
 #include <stdlib.h>
 #include <test.h>
 #include <thread.h>
 #include <time.h>
-#include <util.h>
+
+void dumbSleep(int delay) {
+    for (int i = 0; i < 1000; ++i) {
+        for (int j = 0; j < delay; ++j);
+    }
+}
 
 class EchoThread : public Thread {
     public:
@@ -28,18 +35,12 @@ class EchoThread : public Thread {
 };
 
 void EchoThread::run() {
-    lockInterrupts
-    cout << "First message from thread " << getId() << endl;
-    unlockInterrupts
+    syncPrint("First message from thread %d\n", getId());
     for (unsigned i = 0; i < times; ++i) {
-        lockInterrupts
-        cout << message << " from thread " << getId() << endl;
-        unlockInterrupts
-        sleep(delay);
+        syncPrint("%s from thread %d\n", message, getId());
+        dumbSleep(delay * 1000);
     }
-    lockInterrupts
-    cout << "Last message from thread " << getId() << endl;
-    unlockInterrupts
+    syncPrint("Last message from thread %d\n", getId());
 }
 
 /**
@@ -47,47 +48,25 @@ void EchoThread::run() {
  * times in specified intervals.
  */
 void testEchoThreads() {
-    lockInterrupts
+    lockInterrupts("testEchoThreads (1)");
     EchoThread** threads = new EchoThread*[256];
-    unlockInterrupts
+    unlockInterrupts("testEchoThreads (1)");
     for (unsigned i = 0; i < 256; ++i) {
-        lockInterrupts
+        lockInterrupts("testEchoThreads (2)");
         threads[i] = new EchoThread("ECHO", i % 4, i % 10);
-        unlockInterrupts
+        unlockInterrupts("testEchoThreads (2)");
         threads[i]->start();
         if (i % 20 == 0) {
-            lockInterrupts
-            cout << "Dispatching main" << endl;
-            unlockInterrupts
+            syncPrint("Dispatching main\n");
             dispatch();
         }
     }
-    lockInterrupts
+    lockInterrupts("testEchoThreads (3)");
     for (unsigned j = 0; j < 256; ++j) {
         delete threads[j];
     }
-    delete threads;
-    unlockInterrupts
-}
-
-class DumbThread : public Thread {
-    public:
-        DumbThread() : Thread(1, 20) {}
-        virtual void run() {
-            getThreadById(1)->waitToComplete();
-            dispatch();
-        }
-        ~DumbThread() {
-            waitToComplete();
-        }
-};
-
-/**
- * Tests a thread which tries to do something dumb.
- */
-void testDumbThreads() {
-    DumbThread thr;
-    thr.start();
+    delete[] threads;
+    unlockInterrupts("testEchoThreads (3)");
 }
 
 PtrList list;
@@ -102,15 +81,14 @@ class ListThread : public Thread {
 
 void ListThread::run() {
     for (unsigned i = 0; i < 4; ++i) {
-        lockInterrupts
+        lockInterrupts("ListThread::run");
         int number = rand();
         int index = listIndex++;
         listNumbers[index] = number;
-        cout << "Thread " << getId() << " generated number "
-                << number << " at index " << index << endl;
-        unlockInterrupts
+        syncPrint("Thread %d generated number %d at index %d\n", getId(), number, index);
+        unlockInterrupts("ListThread::run");
         list.insert((void*) &listNumbers[index]);
-        delay(number % 1000);
+        dumbSleep(number % 1000);
     }
 }
 
@@ -118,7 +96,6 @@ void ListThread::run() {
  * Tests threads that insert random data into a list.
  */
 void testListThreads() {
-    srand(time(nullptr));
     ListThread thrs[64];
     unsigned i;
     for (i = 0; i < 64; ++i) {
@@ -130,11 +107,11 @@ void testListThreads() {
     for (i = 0; i < 64; ++i) {
         thrs[i].waitToComplete();
     }
-    cout << "THERE SHOULD BE NO THREADS INTERRUPTING" << endl;
+    syncPrint("THERE SHOULD BE NO THREADS INTERRUPTING\n");
     for (i = 0; i < 256; ++i) {
         int* data = (int*) list.remove();
         if (data == nullptr) {
-            cout << "Data missing from index " << i << "!" << endl;
+            syncPrint("Data missing from index %d!\n", i);
             return;
         }
         int number = *data;
@@ -144,11 +121,11 @@ void testListThreads() {
             }
         }
         if (j == 256) {
-            cout << "Number " << number << "not found!" << endl;
+            syncPrint("Number %d not found!\n", number);
         }
     }
     if (list.remove() != nullptr) {
-        cout << "More data in list!" << endl;
+        syncPrint("More data in list!\n");
     }
 }
 
@@ -165,11 +142,9 @@ class Producer : public Thread {
 
 void Producer::run() {
     while (true) {
-        lockInterrupts
-        cout << "Prodooc" << endl;
-        unlockInterrupts
+        syncPrint("Prodooc\n");
         sem.signal();
-        delay(rand() % 1000);
+        dumbSleep(rand() % 1000);
     }
 }
 
@@ -185,24 +160,125 @@ class Consumer : public Thread {
 void Consumer::run() {
     while (true) {
         int waitResult = sem.wait(0);
-        lockInterrupts
         if (waitResult) {
-            cout << "Consoomed " << getId() << endl;
+            syncPrint("Consoomed %d\n", getId());
         } else {
-            cout << "CONSOOM FAILED " << getId() << endl;
+            syncPrint("CONSOOM FAILED %d\n", getId());
         }
-        unlockInterrupts
-        delay(rand() % 1000);
+        dumbSleep(rand() % 1000);
     }
 }
 
 void testProducerConsumer() {
     Producer p;
     Consumer c[10];
+    lockInterrupts("testProducerConsumer");
     p.start();
     for (unsigned i = 0; i < 10; ++i) {
         c[i].start();
     }
+    unlockInterrupts("testProducerConsumer");
+}
+
+PREPAREENTRY(0x9, true)
+
+void testEventListener() {
+    Event evt(0x9);
+    for (unsigned i = 0; i < 64; ++i) {
+        syncPrint("Key %d\n", i);
+        evt.wait();
+    }
+}
+
+Thread* threads[500];
+
+void testThreadOveruse() {
+    for (unsigned i = 0; i < 500; ++i) {
+        syncPrint("Creating %d\n", i);
+        lockInterrupts("testThreadOveruse (1)");
+        threads[i] = new EchoThread("This shouldn't be printed");
+        unlockInterrupts("testThreadOveruse (1)");
+        if (threads[i] == nullptr || threads[i]->getId() == -1) {
+            syncPrint("Failed at index %d\n", i);
+            if (threads[i] != nullptr) {
+                lockInterrupts("testThreadOveruse (2)");
+                delete threads[i];
+                unlockInterrupts("testThreadOveruse (2)");
+            }
+            break;
+        }
+    }
+    for (unsigned j = 0; j < i; ++j) {
+        lockInterrupts("testThreadOveruse (3)");
+        delete threads[j];
+        unlockInterrupts("testThreadOveruse (3)");
+    }
+    syncPrint("Done\n");
+}
+
+class ExitThread : public Thread {
+    public:
+        ExitThread() : Thread(1, 1) {}
+        virtual void run();
+        ~ExitThread() {
+            waitToComplete();
+        }
+};
+
+void ExitThread::run() {
+    syncPrint("Thread %d sleeping\n", getId());
+    dumbSleep(rand() % 1000);
+    syncPrint("Thread %d exiting\n", getId());
+    exit();
+}
+
+void testThreadExiting() {
+    ExitThread threads[20];
+    for (unsigned i = 0; i < 20; ++i) {
+        threads[i].start();
+    }
+    dispatch();
+    dispatch();
+    dispatch();
+    dispatch();
+    syncPrint("You've had your chance!\n");
+    Thread::exit();
+}
+
+class ForkThread : public Thread {
+    public:
+        ForkThread() : Thread(1, 0) {}
+        virtual void run();
+        virtual Thread* clone() const {
+            return new ForkThread();
+        }
+        ~ForkThread() {
+            waitToComplete();
+        }
+        static volatile int failedFork;
+};
+
+volatile int ForkThread::failedFork = false;
+
+void ForkThread::run() {
+    while (!failedFork) {
+        ID forked = fork();
+        if (forked < 0) {
+            syncPrint("Failed to fork in thread %d!\n", getRunningId());
+            failedFork = true;
+            break;
+        } else if (forked == 0) {
+            syncPrint("We are in child %d\n", getRunningId());
+        } else {
+            syncPrint("Cloned thread: %d\n", forked);
+        }
+    }
+    waitForForkChildren();
+}
+
+void testThreadClone() {
+    ForkThread t;
+    t.start();
 }
 
 #ifdef KERNEL_DEBUG
@@ -211,16 +287,14 @@ void tick() {}
 int userMain(int argc, char* argv[]) {
     (void) argc;
     (void) argv;
-    lockInterrupts
-    cout << "userMain" << endl;
-    unlockInterrupts
-    testProducerConsumer();
+    syncPrint("userMain\n");
+    testThreadClone();
     return 0;
 }
 #endif
 
 void testKernel() {
-    cout << "==================================== kernel ====================================" << endl;
+    syncPrint("==================================== kernel ====================================\n");
     char* argv[] = {"kernel"};
     Kernel::run(1, argv);
 }

@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <test.h>
 #include <time.h>
-#include <util.h>
 
 void testListDestructor() {
     PtrList l;
@@ -23,7 +22,7 @@ void testListDestructor() {
     testCase("Removing last element returns it", l.remove() == &data1);
     testCase("Removing again after last element returns null", l.remove() == nullptr);
     testCase("Inserting after removal of last element", l.insert(&data1));
-    cout << "List destructor works... ";
+    syncPrint("List destructor works... ");
 }
 
 void testWaitingListDestructor() {
@@ -91,7 +90,7 @@ void testWaitingListDestructor() {
     tr = l.tick();
     testCase("Both ticking and removing should return nothing", l.remove() == nullptr && tr.data == nullptr && !tr.more);
     // Destructor
-    cout << "Waiting list destructor works... ";
+    syncPrint("Waiting list destructor works... ");
 }
 
 unsigned testListMemoryOveruse() {
@@ -141,37 +140,37 @@ unsigned testWaitingListMemoryOveruse() {
 }
 
 void testListMemoryLeak() {
-    cout << "Testing memory leak... ";
+    syncPrint("Testing memory leak... ");
     int data = 7;
     for (unsigned i = 0; i < 16; ++i) {
         PtrList l;
         for (unsigned j = 0; j < 16384; ++j) {
             if (!l.insert(&data)) {
-                cout << "FAIL" << endl;
+                syncPrint("FAIL\n");
                 return;
             }
         }
     }
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
 }
 
 void testWaitingListMemoryLeak() {
-    cout << "Testing waiting list memory leak... ";
+    syncPrint("Testing waiting list memory leak... ");
     int data = 8;
     for (unsigned i = 0; i < 16; ++i) {
         PtrWaitingList l;
         for (unsigned j = 0; j < 16384; ++j) {
             if (!l.insert(&data, 1)) {
-                cout << "FAIL" << endl;
+                syncPrint("FAIL\n");
                 return;
             }
         }
     }
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
 }
 
 void testWaitingListRandom() {
-    cout << "Performing random testing... ";
+    syncPrint("Performing random testing... ");
     srand(time(nullptr));
     PtrWaitingList l;
     PtrWaitingList::TickResult tr;
@@ -189,17 +188,15 @@ void testWaitingListRandom() {
             case 5:
             case 6:
             case 7:
-                // cout << "\r" << i << " insertion";
                 if (l.insert(&data, ticks)) {
                     ++elements;
                 } else {
-                    cout << "Insertion failed at " << elements << " elements" << endl;
+                    syncPrint("Insertion failed at %d elements\n", elements);
                 }
                 break;
             case 8:
             case 9:
             case 10:
-                // cout << "\r" << i << " removal";
                 if (l.remove() != nullptr) {
                     --elements;
                 }
@@ -208,12 +205,11 @@ void testWaitingListRandom() {
             case 12:
             case 13:
             case 14:
-                // cout << "\r" << i << " ticking " << ticks;
                 for (unsigned i = 0; i < ticks; ++i) {
                     tr = l.tick();
                     while (tr.more) {
                         if (tr.data == nullptr) {
-                            cout << "wtf" << endl;
+                            syncPrint("wtf\n");
                         }
                         --elements;
                         tr = l.tick();
@@ -229,33 +225,33 @@ void testWaitingListRandom() {
         --elements;
     }
     if (elements == 0 && l.remove() == nullptr) {
-        cout << "PASS" << endl;
+        syncPrint("PASS\n");
     } else {
-        cout << "FAIL" << endl;
+        syncPrint("FAIL\n");
     }
 }
 
 void testList() {
-    cout << "===================================== list =====================================" << endl;
+    syncPrint("===================================== list =====================================\n");
     testListDestructor();
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
     testWaitingListDestructor();
-    cout << "PASS" << endl;
-    cout << "Testing memory overuse... ";
+    syncPrint("PASS\n");
+    syncPrint("Testing memory overuse... ");
     unsigned mor1 = testListMemoryOveruse();
     unsigned mor2 = testListMemoryOveruse();
     if (mor1 == mor2) {
-        cout << "PASS (failed at index " << mor1 << ")" << endl;
+        syncPrint("PASS (failed at index %u)\n", mor1);
     } else {
-        cout << "FAIL" << endl;
+        syncPrint("FAIL\n");
     }
-    cout << "Testing memory overuse for waiting list... ";
+    syncPrint("Testing memory overuse for waiting list... ");
     mor1 = testWaitingListMemoryOveruse();
     mor2 = testWaitingListMemoryOveruse();
     if (mor1 == mor2) {
-        cout << "PASS (failed at index " << mor1 << ")" << endl;
+        syncPrint("PASS (failed at index %u)\n", mor1);
     } else {
-        cout << "FAIL" << endl;
+        syncPrint("FAIL\n");
     }
     testListMemoryLeak();
     testWaitingListMemoryLeak();

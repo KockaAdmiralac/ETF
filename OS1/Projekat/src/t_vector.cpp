@@ -5,7 +5,6 @@
  * Does NOT test for critical section interruptions.
  */
 #include <test.h>
-#include <util.h>
 #include <vector.h>
 
 void testVectorDestructor() {
@@ -51,32 +50,32 @@ void testVectorDestructor() {
     v2.remove(1);
     testCase("Removing an element in front of a removed element should compact the vector", v2.getSize() == 0);
     // Testing destructor.
-    cout << "Destructor for each of the vectors should work... ";
+    syncPrint("Destructor for each of the vectors should work... ");
 }
 
 void testVectorFullCapacity() {
     PtrVector v(3);
     int data = 612;
     unsigned i = 0;
-    cout << "Test filling the vector to full capacity... ";
+    syncPrint("Test filling the vector to full capacity... ");
     for (; i < 16383; ++i) {
         if (v.put(&data) != i) {
-            cout << "FAIL (at index " << i << ")" << endl;
+            syncPrint("FAIL (at index %d)\n", i);
             return;
         }
     }
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
     testCase("Capacity should be full", v.getCapacity() == PtrVector::MAX_CAPACITY);
     testCase("Capacity should be equal to size", v.getSize() == v.getCapacity());
     testCase("Attempting to insert a new element should fail (assertion should fail)", v.put(&data) == -1);
-    cout << "All the data should remain in its place... ";
+    syncPrint("All the data should remain in its place... ");
     for (i = 0; i < 16383; ++i) {
         if (v.get(i) != &data) {
-            cout << "FAIL (at index " << i << ")" << endl;
+            syncPrint("FAIL (at index %d)\n", i);
             return;
         }
     }
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
 }
 
 struct MemoryOveruseResult {
@@ -96,15 +95,6 @@ int operator==(MemoryOveruseResult& mor1, MemoryOveruseResult& mor2) {
            mor1.failed == mor2.failed;
 }
 
-ostream& operator<<(ostream& os, MemoryOveruseResult& mor) {
-    os << "Memory overuse result: ";
-    if (mor.failed) {
-        os << "failed at vector " << mor.vector << " and index " << mor.index;
-    } else {
-        os << "did not fail!";
-    }
-    return os;
-}
 
 MemoryOveruseResult testVectorMemoryOveruse() {
     PtrVector vectors[256];
@@ -124,29 +114,34 @@ MemoryOveruseResult testVectorMemoryOveruse() {
 
 void testVectorMemoryLeak() {
     int data = 1405;
-    cout << "Testing whether the vector leaks memory... ";
+    syncPrint("Testing whether the vector leaks memory... ");
     for (unsigned i = 0; i < 65535U; ++i) {
         PtrVector v(PtrVector::MAX_CAPACITY);
         if (v.put(&data) < 0) {
-            cout << "FAIL" << endl;
+            syncPrint("FAIL\n");
             return;
         }
     }
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
 }
 
 void testVector() {
-    cout << "==================================== vector ====================================" << endl;
+    syncPrint("==================================== vector ====================================\n");
     testVectorDestructor();
-    cout << "PASS" << endl;
+    syncPrint("PASS\n");
     testVectorFullCapacity();
-    cout << "Testing memory overuse... " << endl;
+    syncPrint("Testing memory overuse...\n");
     MemoryOveruseResult mor1 = testVectorMemoryOveruse();
     MemoryOveruseResult mor2 = testVectorMemoryOveruse();
     if (mor1 == mor2) {
-        cout << "PASS" << endl << mor1 << endl;
+        syncPrint("PASS\nMemory overuse result: ");
+        if (mor1.failed) {
+            syncPrint("failed at vector %u and index %u\n", mor1.vector, mor1.index);
+        } else {
+            syncPrint("did not fail!\n");
+        }
     } else {
-        cout << "FAIL" << endl;
+        syncPrint("FAIL\n");
     }
     testVectorMemoryLeak();
 }

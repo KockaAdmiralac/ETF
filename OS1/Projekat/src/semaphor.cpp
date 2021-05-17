@@ -13,30 +13,30 @@
  * @param init Initial semaphore value
  */
 Semaphore::Semaphore(int init) {
-    lockInterrupts
+    lockInterrupts("Semaphore::Semaphore");
     myImpl = new KernelSem(init);
-    unlockInterrupts
     if (assert(myImpl != nullptr, "Kernel semaphore failed to allocate!")) {
+        unlockInterrupts("Semaphore::Semaphore (1)");
         return;
     }
     if (myImpl->id < 0) {
-        lockInterrupts
         delete myImpl;
         myImpl = nullptr;
-        unlockInterrupts
+        unlockInterrupts("Semaphore::Semaphore (2)");
     }
+    unlockInterrupts("Semaphore::Semaphore (3)");
 }
 
 /**
  * Frees resources used by the semaphore.
  */
 Semaphore::~Semaphore() {
+    lockInterrupts("Semaphore::~Semaphore");
     if (myImpl != nullptr) {
-        lockInterrupts
         delete myImpl;
-        unlockInterrupts
         myImpl = nullptr;
     }
+    unlockInterrupts("Semaphore::~Semaphore");
 }
 
 /**

@@ -7,39 +7,30 @@
 #include <util.h>
 
 void testAssert() {
-    cout << "Testing assert():" << endl;
-    cout << "1. Test with true value... ";
-    testResult(!assert(true, "This should not be printed."));
-    cout << "2. Test with false value (assertion should fail)... ";
-    testResult(assert(false, "This should be printed."));
+    syncPrint("Testing assert():\n");
+    testCase("1. Test with true value", !assert(true, "This should not be printed."));
+    testCase("2. Test with false value (assertion should fail)", assert(false, "This should be printed."));
 }
 
 void testGetBit() {
-    cout << "Testing getBit():" << endl;
-    cout << "1. Test with zero bit... ";
-    testResult(getBit(0, 3) == 0);
-    cout << "2. Test with zero bit again... ";
-    testResult(getBit(0xFF, 9) == 0);
-    cout << "3. Test with one bit... ";
-    testResult(getBit(0xFFFF, 3) == 1);
-    cout << "4. Test with one bit again... ";
-    testResult(getBit(0xFFFF, 9) == 1);
-    cout << "5. Test with invalid bit (assertion should fail)... ";
-    testResult(getBit(0, 16) == 0);
+    syncPrint("Testing getBit():\n");
+    testCase("1. Test with zero bit", getBit(0, 3) == 0);
+    testCase("2. Test with zero bit again", getBit(0xFF, 9) == 0);
+    testCase("3. Test with one bit", getBit(0xFFFF, 3) == 1);
+    testCase("4. Test with one bit again", getBit(0xFFFF, 9) == 1);
+    testCase("5. Test with invalid bit (assertion should fail)", getBit(0, 16) == 0);
 }
 
 void testGetPSW() {
-    cout << "Testing getPSW():" << endl;
+    syncPrint("Testing getPSW():\n");
     lock
-    cout << "1. Test with I = 0... ";
-    testResult(getBit(getPSW(), 9) == 0);
+    testCase("1. Test with I = 0", getBit(getPSW(), 9) == 0);
     unlock
-    cout << "2. Test with I = 1... ";
-    testResult(getBit(getPSW(), 9) == 1);
+    testCase("2. Test with I = 1", getBit(getPSW(), 9) == 1);
 }
 
 void testUtil() {
-    cout << "===================================== util =====================================" << endl;
+    syncPrint("===================================== util =====================================\n");
     testAssert();
     testGetBit();
     testGetPSW();

@@ -3,7 +3,6 @@
  *
  * Implementation of a simple linked list.
  */
-#include <iostream.h>
 #include <kernel.h>
 #include <list.h>
 #include <stdlib.h>
@@ -20,10 +19,10 @@ PtrList::PtrList() : back(nullptr), front(nullptr) {}
  * @returns Whether the insertion succeeded
  */
 int PtrList::insert(void* ptr) {
-    lockInterrupts
+    lockInterrupts("PtrList::insert");
     Element* element = new Element(ptr);
     if (element == nullptr) {
-        unlockInterrupts
+        unlockInterrupts("PtrList::insert (1)");
         return false;
     }
     if (back == nullptr) {
@@ -33,7 +32,7 @@ int PtrList::insert(void* ptr) {
         back->next = element;
         back = element;
     }
-    unlockInterrupts
+    unlockInterrupts("PtrList::insert (2)");
     return true;
 }
 
@@ -45,15 +44,15 @@ void* PtrList::remove() {
     if (front == nullptr) {
         return nullptr;
     }
+    lockInterrupts("PtrList::remove");
     void* data = front->data;
     Element* oldFront = (Element*) front;
-    lockInterrupts
     front = front->next;
     delete oldFront;
     if (front == nullptr) {
         back = nullptr;
     }
-    unlockInterrupts
+    unlockInterrupts("PtrList::remove");
     return data;
 }
 
@@ -61,7 +60,7 @@ void* PtrList::remove() {
  * Deallocates all elements allocated by the list, but not the data associated.
  */
 PtrList::~PtrList() {
-    lockInterrupts
+    lockInterrupts("PtrList::~PtrList");
     Element* curr = (Element*) front;
     while (curr != nullptr) {
         Element* old = curr;
@@ -70,7 +69,7 @@ PtrList::~PtrList() {
     }
     front = nullptr;
     back = nullptr;
-    unlockInterrupts
+    unlockInterrupts("PtrList::~PtrList");
 }
 
 /**
@@ -107,11 +106,11 @@ PtrWaitingList::PtrWaitingList() :
  * @returns Whether the insertion succeeded
  */
 int PtrWaitingList::insert(void* ptr, unsigned time) {
-    lockInterrupts
+    lockInterrupts("PtrWaitingList::insert");
     checkListConsistency();
     Element* element = new Element(ptr, time);
     if (element == nullptr) {
-        unlockInterrupts
+        unlockInterrupts("PtrWaitingList::insert (1)");
         return false;
     }
     // Inserting by order.
@@ -158,7 +157,7 @@ int PtrWaitingList::insert(void* ptr, unsigned time) {
     }
     // Finished inserting.
     ++size;
-    unlockInterrupts
+    unlockInterrupts("PtrWaitingList::insert (2)");
     return true;
 }
 
@@ -173,11 +172,11 @@ PtrWaitingList::TickResult PtrWaitingList::tick() {
         // Empty list.
         return TickResult();
     }
-    lockInterrupts
+    lockInterrupts("PtrWaitingList::tick");
     checkListConsistency();
     if (frontTime->time != 0 && --frontTime->time != 0) {
         // Time hasn't expired.
-        unlockInterrupts
+        unlockInterrupts("PtrWaitingList::tick (1)");
         return TickResult();
     }
     void* data = frontTime->data;
@@ -200,7 +199,7 @@ PtrWaitingList::TickResult PtrWaitingList::tick() {
     }
     delete oldFront;
     --size;
-    unlockInterrupts
+    unlockInterrupts("PtrWaitingList::tick (2)");
     return TickResult(data, frontTime != nullptr && frontTime->time <= 0);
 }
 
@@ -212,9 +211,9 @@ void* PtrWaitingList::remove() {
     if (frontOrder == nullptr) {
         return nullptr;
     }
+    lockInterrupts("PtrWaitingList::remove");
     void* data = frontOrder->data;
     Element* oldFront = (Element*) frontOrder;
-    lockInterrupts
     checkListConsistency();
     frontOrder = frontOrder->nextOrder;
     frontOrder->prevOrder = nullptr;
@@ -233,7 +232,7 @@ void* PtrWaitingList::remove() {
         backOrder = nullptr;
     }
     --size;
-    unlockInterrupts
+    unlockInterrupts("PtrWaitingList::remove");
     return data;
 }
 
@@ -249,7 +248,7 @@ unsigned PtrWaitingList::getSize() const {
  * Deallocates all elements allocated by the list, but not the data associated.
  */
 PtrWaitingList::~PtrWaitingList() {
-    lockInterrupts
+    lockInterrupts("PtrWaitingList::~PtrWaitingList");
     Element* curr = (Element*) frontOrder;
     while (curr != nullptr) {
         Element* old = curr;
@@ -259,7 +258,7 @@ PtrWaitingList::~PtrWaitingList() {
     frontOrder = nullptr;
     backOrder = nullptr;
     frontTime = nullptr;
-    unlockInterrupts
+    unlockInterrupts("PtrWaitingList::~PtrWaitingList");
 }
 
 /**
@@ -281,15 +280,15 @@ PtrWaitingList::Element::Element(void* data, unsigned time) :
 void PtrWaitingList::checkListConsistency() {
     #if KERNEL_DEBUG
     if (frontOrder != nullptr && frontOrder->prevOrder != nullptr) {
-        cout << "frontOrder is not the first in order!" << endl;
+        syncPrint("frontOrder is not the first in order!\n");
         exit(1);
     }
     if (frontTime != nullptr && frontTime->prevTime != nullptr) {
-        cout << "frontOrder is not the first in order!" << endl;
+        syncPrint("frontOrder is not the first in order!\n");
         exit(1);
     }
     if (backOrder != nullptr && backOrder->nextOrder != nullptr) {
-        cout << "backOrder is not the last in order!" << endl;
+        syncPrint("backOrder is not the last in order!\n");
         exit(1);
     }
     #endif

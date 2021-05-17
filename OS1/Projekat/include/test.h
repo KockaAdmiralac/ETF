@@ -5,7 +5,7 @@
  */
 #ifndef _TEST_H_
 #define _TEST_H_
-#include <iostream.h>
+#include <util.h>
 
 void testUtil();
 void testVector();

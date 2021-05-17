@@ -14,22 +14,22 @@
  * @param ivtNo Entry number in the IVT
  */
 Event::Event(IVTNo ivtNo) {
-    lockInterrupts
+    lockInterrupts("Event::Event");
     myImpl = new KernelEv(ivtNo);
-    unlockInterrupts
     assert(myImpl != nullptr, "Kernel event failed to allocate!");
+    unlockInterrupts("Event::Event");
 }
 
 /**
  * Frees resources used by the event listener.
  */
 Event::~Event() {
+    lockInterrupts("Event::~Event");
     if (myImpl != nullptr) {
-        lockInterrupts
         delete myImpl;
-        unlockInterrupts
         myImpl = nullptr;
     }
+    unlockInterrupts("Event::~Event");
 }
 
 /**

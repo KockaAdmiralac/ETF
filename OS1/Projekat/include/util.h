@@ -22,5 +22,6 @@
 unsigned assert(unsigned condition, const char *message);
 unsigned getPSW();
 unsigned getBit(unsigned number, unsigned bit);
+int syncPrint(const char *format, ...);
 
 #endif

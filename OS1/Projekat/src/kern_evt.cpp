@@ -16,9 +16,9 @@ KernelEv::KernelEv(IVTNo ivtNo) :
     if (assert(IVTEntry::entries[entry] != nullptr, "Initialized event with an uninitialized IVT entry!")) {
         return;
     }
-    lockInterrupts
+    lockInterrupts("KernelEv::KernelEv");
     IVTEntry::entries[entry]->event = this;
-    unlockInterrupts
+    unlockInterrupts("KernelEv::KernelEv");
 }
 
 /**
@@ -26,11 +26,11 @@ KernelEv::KernelEv(IVTNo ivtNo) :
  * @todo Use list for registering events? Don't unregister if not registered?
  */
 KernelEv::~KernelEv() {
+    lockInterrupts("KernelEv::~KernelEv");
     if (IVTEntry::entries[entry] != nullptr) {
-        lockInterrupts
         IVTEntry::entries[entry]->event = nullptr;
-        unlockInterrupts
     }
+    unlockInterrupts("KernelEv::~KernelEv");
 }
 
 /**
@@ -41,26 +41,24 @@ void KernelEv::wait() {
     if (PCB::running != owner) {
         return;
     }
+    lockInterrupts("KernelEv::wait");
     if (value) {
-        lockInterrupts
         value = false;
-        unlockInterrupts
-    } else {
-        lockInterrupts
-        owner->status = PCB::BLOCKED;
-        blocked = true;
-        unlockInterrupts
-        dispatch();
+        unlockInterrupts("KernelEv::wait (1)");
+        return;
     }
-    
+    owner->status = PCB::BLOCKED;
+    blocked = true;
+    unlockInterrupts("KernelEv::wait (2)");
+    dispatch();    
 }
 
 /**
  * Called from the interrupt routine to signal that the event has occurred.
  */
 void KernelEv::signal() {
+    lockInterrupts("KernelEv::signal");
     if (!value) {
-        lockInterrupts
         if (blocked) {
             blocked = false;
             owner->status = PCB::READY;
@@ -68,6 +66,6 @@ void KernelEv::signal() {
         } else {
             value = true;
         }
-        unlockInterrupts
     }
+    unlockInterrupts("KernelEv::signal");
 }
