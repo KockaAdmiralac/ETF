@@ -1,7 +1,7 @@
 -mh
 -y
 -v
--Id:\include;c:\lib;c:\include
+-Id:\include;c:\lib;c:\h
 -Ld:\lib;c:\lib
 -nc:\
 -ePROJ.exe
