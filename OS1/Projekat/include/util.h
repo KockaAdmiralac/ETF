@@ -19,7 +19,7 @@
 // Common pointer type.
 #define nullptr 0
 
-unsigned assert(unsigned condition, const char *message);
+unsigned ensure(unsigned condition, const char *message);
 unsigned getPSW();
 unsigned getBit(unsigned number, unsigned bit);
 int syncPrint(const char *format, ...);

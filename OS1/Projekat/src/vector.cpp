@@ -19,12 +19,12 @@ const unsigned PtrVector::MAX_CAPACITY = 0xFFFF / sizeof(void*);
  */
 PtrVector::PtrVector(unsigned initialCapacity) : size(0) {
     lockInterrupts("PtrVector::PtrVector");
-    if (assert(initialCapacity > 0, "Initial capacity cannot be 0!")) {
+    if (ensure(initialCapacity > 0, "Initial capacity cannot be 0!")) {
         initialCapacity = 256;
     }
     capacity = initialCapacity;
     data = new void*[capacity];
-    if (assert(data != nullptr, "Vector initial capacity failed to allocate!")) {
+    if (ensure(data != nullptr, "Vector initial capacity failed to allocate!")) {
         // We shall retry creating the vector on every put().
         capacity = 0;
     }
@@ -41,7 +41,7 @@ PtrVector::PtrVector(unsigned initialCapacity) : size(0) {
  * @returns Index of the newly added element, or error code on failure
  */
 int PtrVector::put(void* ptr) {
-    if (assert(size < MAX_CAPACITY, "We are at maximum capacity!")) {
+    if (ensure(size < MAX_CAPACITY, "We are at maximum capacity!")) {
         return -1;
     }
     lockInterrupts("PtrVector::put");
@@ -54,7 +54,7 @@ int PtrVector::put(void* ptr) {
             newCapacity = MAX_CAPACITY;
         }
         void** newData = new void*[newCapacity];
-        if (assert(newData != nullptr, "Failed to allocate new vector data!")) {
+        if (ensure(newData != nullptr, "Failed to allocate new vector data!")) {
             unlockInterrupts("PtrVector::put (1)");
             return -2;
         }

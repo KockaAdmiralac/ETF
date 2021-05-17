@@ -16,7 +16,7 @@
 Event::Event(IVTNo ivtNo) {
     lockInterrupts("Event::Event");
     myImpl = new KernelEv(ivtNo);
-    assert(myImpl != nullptr, "Kernel event failed to allocate!");
+    ensure(myImpl != nullptr, "Kernel event failed to allocate!");
     unlockInterrupts("Event::Event");
 }
 

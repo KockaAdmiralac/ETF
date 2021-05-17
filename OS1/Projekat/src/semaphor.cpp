@@ -15,7 +15,7 @@
 Semaphore::Semaphore(int init) {
     lockInterrupts("Semaphore::Semaphore");
     myImpl = new KernelSem(init);
-    if (assert(myImpl != nullptr, "Kernel semaphore failed to allocate!")) {
+    if (ensure(myImpl != nullptr, "Kernel semaphore failed to allocate!")) {
         unlockInterrupts("Semaphore::Semaphore (1)");
         return;
     }

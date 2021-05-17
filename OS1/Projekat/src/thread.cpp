@@ -14,7 +14,7 @@
  * Creates the new execution context and starts the thread.
  */
 void Thread::start() {
-    if (assert(myPCB != nullptr, "Cannot start a thread with uninitialized PCB!")) {
+    if (ensure(myPCB != nullptr, "Cannot start a thread with uninitialized PCB!")) {
         return;
     }
     myPCB->start();
@@ -51,7 +51,7 @@ Thread::~Thread() {
  * @returns ID of the thread, or -1 if the PCB failed to initialize
  */
 ID Thread::getId() {
-    if (assert(myPCB != nullptr, "Cannot get ID of uninitialized PCB!")) {
+    if (ensure(myPCB != nullptr, "Cannot get ID of uninitialized PCB!")) {
         return -1;
     }
     return myPCB->id;
@@ -63,7 +63,7 @@ ID Thread::getId() {
  *          initialize
  */
 ID Thread::getRunningId() {
-    if (assert(PCB::running != nullptr, "Cannot get ID of running uninitialized PCB!")) {
+    if (ensure(PCB::running != nullptr, "Cannot get ID of running uninitialized PCB!")) {
         return -1;
     }
     return PCB::running->id;
@@ -88,11 +88,11 @@ Thread* Thread::getThreadById(ID id) {
  *          thread and -1 if an error occurred
  */
 ID Thread::fork() {
-    if (assert(PCB::running != nullptr, "Attempted to fork a thread when no thread is running!")) {
+    if (ensure(PCB::running != nullptr, "Attempted to fork a thread when no thread is running!")) {
         return -1;
     }
     PCB* runningCopy = (PCB*) PCB::running;
-    if (assert(runningCopy->myThread != nullptr, "Cannot fork the main thread!")) {
+    if (ensure(runningCopy->myThread != nullptr, "Cannot fork the main thread!")) {
         return -1;
     }
     Thread* newThread = runningCopy->myThread->clone();
@@ -128,10 +128,10 @@ ID Thread::fork() {
  * Finishes the current thread.
  */
 void Thread::exit() {
-    if (assert(PCB::running != nullptr, "Attempted exit when no thread is running!")) {
+    if (ensure(PCB::running != nullptr, "Attempted exit when no thread is running!")) {
         return;
     }
-    if (assert(PCB::running->myThread != nullptr, "You cannot exit the loop thread!")) {
+    if (ensure(PCB::running->myThread != nullptr, "You cannot exit the loop thread!")) {
         return;
     }
     if (PCB::running->myThread == Kernel::mainThread) {
@@ -147,7 +147,7 @@ void Thread::exit() {
  * Waits until all child threads have finished.
  */
 void Thread::waitForForkChildren() {
-    if (assert(PCB::running != nullptr, "Attempted waiting for children when no thread is running!")) {
+    if (ensure(PCB::running != nullptr, "Attempted waiting for children when no thread is running!")) {
         return;
     }
     PCB::running->waitForChildren();
@@ -163,7 +163,7 @@ void Thread::waitForForkChildren() {
  * @returns Pointer to the cloned thread, or null on error
  */
 Thread* Thread::clone() const {
-    assert(false, "Thread::clone() has not been overriden before calling!");
+    ensure(false, "Thread::clone() has not been overriden before calling!");
     return nullptr;
 }
 
@@ -177,11 +177,11 @@ Thread* Thread::clone() const {
 Thread::Thread(StackSize stackSize, Time timeSlice) {
     lockInterrupts("Thread::Thread");
     myPCB = new PCB(*this, stackSize, timeSlice);
-    if (assert(myPCB != nullptr, "PCB failed to allocate!")) {
+    if (ensure(myPCB != nullptr, "PCB failed to allocate!")) {
         unlockInterrupts("Thread::Thread (1)");
         return;
     }
-    if (assert(myPCB->status == PCB::INITIALIZING, "PCB failed to initialize!")) {
+    if (ensure(myPCB->status == PCB::INITIALIZING, "PCB failed to initialize!")) {
         delete myPCB;
         myPCB = nullptr;
         unlockInterrupts("Thread::Thread (2)");
@@ -195,7 +195,7 @@ Thread::Thread(StackSize stackSize, Time timeSlice) {
  */
 void dispatch() {
     lock
-    assert(!Kernel::cannotInterrupt, "Kernel cannot interrupt during dispatch()!");
+    ensure(!Kernel::cannotInterrupt, "Kernel cannot interrupt during dispatch()!");
     Kernel::contextSwitchOnDemand = true;
     Kernel::timer();
     unlock

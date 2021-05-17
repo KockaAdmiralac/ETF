@@ -14,7 +14,7 @@
  * @param message Message to print if in debug mode
  * @returns Whether an alternate path should be taken if the condition is false
  */
-unsigned assert(unsigned condition, const char* message) {
+unsigned ensure(unsigned condition, const char* message) {
     if (condition) {
         return false;
     }
@@ -61,7 +61,7 @@ unsigned getPSW() {
  * @returns Extracted bit
  */
 unsigned getBit(unsigned number, unsigned bit) {
-    if (assert(bit < 16, "The requested bit is over 15!")) {
+    if (ensure(bit < 16, "The requested bit is over 15!")) {
         return 0;
     }
     return (number >> bit) & 1;

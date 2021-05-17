@@ -19,7 +19,7 @@ PtrVector KernelSem::allSemaphores;
  */
 KernelSem::KernelSem(int value) : value(value) {
     id = allSemaphores.put(this);
-    assert(id >= 0, "Failed to register kernel semaphore! Semaphore will not time out.");
+    ensure(id >= 0, "Failed to register kernel semaphore! Semaphore will not time out.");
 }
 
 /**
@@ -48,7 +48,7 @@ int KernelSem::wait(Time maxTimeToWait) {
         return true;
     }
     PCB::running->status = PCB::BLOCKED;
-    assert(blocked.insert((void*) PCB::running, maxTimeToWait), "Failed to wait for the semaphore to signal! The running thread will now be blocked forever.");
+    ensure(blocked.insert((void*) PCB::running, maxTimeToWait), "Failed to wait for the semaphore to signal! The running thread will now be blocked forever.");
     unlockInterrupts("KernelSem::wait (2)");
     dispatch();
     return PCB::running->semaphoreResult;
@@ -62,7 +62,7 @@ void KernelSem::signal() {
     lockInterrupts("KernelSem::signal");
     if (++value <= 0) {
         PCB* unblocked = (PCB*) blocked.remove();
-        if (assert(unblocked != nullptr, "Unblocked thread in signal() is null!")) {
+        if (ensure(unblocked != nullptr, "Unblocked thread in signal() is null!")) {
             unlockInterrupts("KernelSem::signal (1)");
             return;
         }

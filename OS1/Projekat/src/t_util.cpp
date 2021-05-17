@@ -6,10 +6,10 @@
 #include <test.h>
 #include <util.h>
 
-void testAssert() {
-    syncPrint("Testing assert():\n");
-    testCase("1. Test with true value", !assert(true, "This should not be printed."));
-    testCase("2. Test with false value (assertion should fail)", assert(false, "This should be printed."));
+void testEnsure() {
+    syncPrint("Testing ensure():\n");
+    testCase("1. Test with true value", !ensure(true, "This should not be printed."));
+    testCase("2. Test with false value (assertion should fail)", ensure(false, "This should be printed."));
 }
 
 void testGetBit() {
@@ -31,7 +31,7 @@ void testGetPSW() {
 
 void testUtil() {
     syncPrint("===================================== util =====================================\n");
-    testAssert();
+    testEnsure();
     testGetBit();
     testGetPSW();
 }

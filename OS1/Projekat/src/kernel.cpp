@@ -38,7 +38,7 @@ MainPCB::MainPCB() {
     parent = nullptr;
     parentIndex = -1;
     id = allPCBs.put(this);
-    if (assert(id >= 0, "Main thread failed to register!")) {
+    if (ensure(id >= 0, "Main thread failed to register!")) {
         status = TERMINATING;
         return;
     }
@@ -183,7 +183,7 @@ void interrupt Kernel::timer(...) {
                 //syncPrint("Getting %d\n", PCB::running->id);
                 PCB::running->status = PCB::RUNNING;
             }
-            if (assert(PCB::running != nullptr, "Loop thread is null in timer interrupt!")) {
+            if (ensure(PCB::running != nullptr, "Loop thread is null in timer interrupt!")) {
                 return;
             }
             tsp = PCB::running->sp;
@@ -240,6 +240,7 @@ int Kernel::run(int argc, char* argv[]) {
     // Wait for user code to finish executing.
     dispatch();
     while (!userMainThread.done) {
+        #ifdef KERNEL_DEBUG
         lockInterrupts("Kernel::run");
         syncPrint("Loopin' ");
         for (unsigned i = 0; i < PCB::allPCBs.getSize(); ++i) {
@@ -249,6 +250,7 @@ int Kernel::run(int argc, char* argv[]) {
         }
         syncPrint("\n");
         unlockInterrupts("Kernel::run");
+        #endif
     }
     // This will not execute if the user main thread has been exited using
     // Thread::exit();

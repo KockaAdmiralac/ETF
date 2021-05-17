@@ -131,16 +131,16 @@ void testListThreads() {
 
 Semaphore sem;
 
-class Producer : public Thread {
+class TestProducer : public Thread {
     public:
-        Producer() : Thread(1, 10) {}
+        TestProducer() : Thread(1, 10) {}
         virtual void run();
-        ~Producer() {
+        ~TestProducer() {
             waitToComplete();
         }
 };
 
-void Producer::run() {
+void TestProducer::run() {
     while (true) {
         syncPrint("Prodooc\n");
         sem.signal();
@@ -148,16 +148,16 @@ void Producer::run() {
     }
 }
 
-class Consumer : public Thread {
+class TestConsumer : public Thread {
     public:
-        Consumer() : Thread(1, 10) {}
+        TestConsumer() : Thread(1, 10) {}
         virtual void run();
-        ~Consumer() {
+        ~TestConsumer() {
             waitToComplete();
         }
 };
 
-void Consumer::run() {
+void TestConsumer::run() {
     while (true) {
         int waitResult = sem.wait(0);
         if (waitResult) {
@@ -170,8 +170,8 @@ void Consumer::run() {
 }
 
 void testProducerConsumer() {
-    Producer p;
-    Consumer c[10];
+    TestProducer p;
+    TestConsumer c[10];
     lockInterrupts("testProducerConsumer");
     p.start();
     for (unsigned i = 0; i < 10; ++i) {
@@ -283,6 +283,7 @@ void testThreadClone() {
 
 #ifdef KERNEL_DEBUG
 void tick() {}
+volatile int theEnd = 0;
 
 int userMain(int argc, char* argv[]) {
     (void) argc;

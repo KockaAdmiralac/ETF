@@ -21,7 +21,7 @@ IVTEntry* IVTEntry::entries[256];
  */
 IVTEntry::IVTEntry(IVTNo entry, InterruptRoutine routine) :
     entry(entry), routine(routine), oldRoutine(getvect(entry)) {
-    if (assert(entries[entry] == nullptr, "Re-registering existing entry!")) {
+    if (ensure(entries[entry] == nullptr, "Re-registering existing entry!")) {
         return;
     }
     // Locking interrupts should not be needed since the IVTEntry constructor
@@ -60,7 +60,7 @@ void IVTEntry::signal(int chain) {
         event->signal();
     }
     if (chain) {
-        if (assert(oldRoutine != nullptr, "Old interrupt routine does not exist!")) {
+        if (ensure(oldRoutine != nullptr, "Old interrupt routine does not exist!")) {
             unlockInterrupts("IVTEntry::signal (1)");
             return;
         }

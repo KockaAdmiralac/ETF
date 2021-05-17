@@ -13,7 +13,7 @@
  */
 KernelEv::KernelEv(IVTNo ivtNo) :
     value(false), blocked(false), owner((PCB*) PCB::running), entry(ivtNo) {
-    if (assert(IVTEntry::entries[entry] != nullptr, "Initialized event with an uninitialized IVT entry!")) {
+    if (ensure(IVTEntry::entries[entry] != nullptr, "Initialized event with an uninitialized IVT entry!")) {
         return;
     }
     lockInterrupts("KernelEv::KernelEv");

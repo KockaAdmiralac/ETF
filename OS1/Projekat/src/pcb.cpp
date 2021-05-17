@@ -64,7 +64,7 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
     unsigned uStackSize = stackSize;
     this->stackSize = uStackSize;
     stack = new unsigned[uStackSize];
-    if (assert(stack != nullptr, "Stack space failed to allocate!")) {
+    if (ensure(stack != nullptr, "Stack space failed to allocate!")) {
         status = TERMINATING;
         unlockInterrupts("PCB::PCB (1)");
         return;
@@ -82,7 +82,7 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
     bp = sp;
     // Registering the PCB in the list of all PCBs and assigning the ID.
     id = allPCBs.put(this);
-    if (assert(id >= 0, "Failed to register the PCB in the list of PCBs!")) {
+    if (ensure(id >= 0, "Failed to register the PCB in the list of PCBs!")) {
         status = TERMINATING;
         delete[] stack;
         stack = nullptr;
@@ -123,7 +123,7 @@ void* applyPtrDiff(void* oldPointer, unsigned* base, unsigned* oldBase) {
  * function.
  */
 void interrupt PCB::copyStack(...) {
-    if (assert(running == copyStackFrom, "PCB::copyStack isn't called from the currently running thread!")) {
+    if (ensure(running == copyStackFrom, "PCB::copyStack isn't called from the currently running thread!")) {
         return;
     }
     lockInterrupts("PCB::copyStack");
@@ -152,7 +152,7 @@ void interrupt PCB::copyStack(...) {
     void* oldBasePointer = MK_FP(copyStackFrom->ss, copyStackFrom->bp);
     void* newBasePointer = applyPtrDiff(oldBasePointer, copyStackTo->stack, copyStackFrom->stack);
     copyStackTo->bp = FP_OFF(newBasePointer);
-    assert(FP_SEG(newBasePointer) == copyStackTo->ss, "Segments of stack and base pointers don't match!");
+    ensure(FP_SEG(newBasePointer) == copyStackTo->ss, "Segments of stack and base pointers don't match!");
     syncPrint("New registers: %u %u %u\n", copyStackTo->ss, copyStackTo->sp, copyStackTo->bp);
     unsigned oldStackBP = *((unsigned*) newBasePointer);
     while (oldStackBP != 0) {
@@ -171,7 +171,7 @@ void interrupt PCB::copyStack(...) {
  * main thread's PCB.
  */
 PCB::PCB() : children(1) {
-    assert(allPCBs.getSize() == 0, "The default PCB constructor is only to be used by the main thread!");
+    ensure(allPCBs.getSize() == 0, "The default PCB constructor is only to be used by the main thread!");
 }
 
 /**
@@ -218,10 +218,10 @@ void PCB::start() {
  * @todo Make it not do that?
  */
 void PCB::waitToComplete() {
-    if (assert(running != nullptr, "Running PCB that requested the wait is null!")) {
+    if (ensure(running != nullptr, "Running PCB that requested the wait is null!")) {
         return;
     }
-    if (assert(running != this, "You cannot wait for yourself to complete!")) {
+    if (ensure(running != this, "You cannot wait for yourself to complete!")) {
         return;
     }
     if (status != READY && status != BLOCKED && status != MATERNITY_LEAVE) {
@@ -230,7 +230,7 @@ void PCB::waitToComplete() {
     }
     lockInterrupts("PCB::waitToComplete");
     running->status = BLOCKED;
-    assert(blocked.insert((void*) running), "Failed to wait for the thread to complete! The running thread will remain blocked forever.");
+    ensure(blocked.insert((void*) running), "Failed to wait for the thread to complete! The running thread will remain blocked forever.");
     unlockInterrupts("PCB::waitToComplete");
     dispatch();
 }
@@ -241,13 +241,13 @@ void PCB::waitToComplete() {
  * The current thread will not be returned to.
  */
 void PCB::exit() {
-    if (assert(this == running, "PCB::exit may only be called on the current thread!")) {
+    if (ensure(this == running, "PCB::exit may only be called on the current thread!")) {
         return;
     }
     lockInterrupts("PCB::exit");
     PCB* unblocked = (PCB*) blocked.remove();
     while (unblocked != nullptr) {
-        if (assert(unblocked != nullptr, "A PCB from the blocked list turned out to be null!")) {
+        if (ensure(unblocked != nullptr, "A PCB from the blocked list turned out to be null!")) {
             continue;
         }
         unblocked->status = READY;
@@ -301,10 +301,10 @@ PCB* PCB::getPCBById(ID id) {
  * This is a wrapper function that will be executed upon starting a thread.
  */
 void PCB::execute() {
-    if (assert(running != nullptr, "PCB::execute called with no running thread!")) {
+    if (ensure(running != nullptr, "PCB::execute called with no running thread!")) {
         return;
     }
-    if (assert(running->myThread != nullptr, "Associated thread is null! Are you calling this from the main thread?")) {
+    if (ensure(running->myThread != nullptr, "Associated thread is null! Are you calling this from the main thread?")) {
         return;
     }
     running->myThread->run();
