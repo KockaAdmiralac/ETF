@@ -7,6 +7,7 @@
 - Ne zaboravi da cout može da postavi I na 1
 
 ## Pitanja
+- Da li je greška što se u javnom testu ne oslobađa dečija nit
 
 ## Zaključci
 - `exit()` treba da gasi bez čekanja na ostale niti kad se izlazi iz glavne niti
@@ -20,3 +21,10 @@
 - `PREPAREENTRY` mora da stoji u `evt.h`
 - Zaglavlja ne smemo da menjamo
 - `Event::signal` može da se poziva iz prekidne rutine ali ne mora
+- Smatramo da korisnik ne dira naše interne detalje implementacije, samo interfejs
+- `waitToComplete` može da radi `waitForForkChildren`, ali ne možemo da računamo na to da će roditeljska nit da se završi posle dečijih
+- Veličina steka za `userMain` može biti podrazumevana
+- Decu napravljenu sa `fork()` oslobađa onaj koji ih je napravio
+- `clone()` poziva običan konstruktor i sigurna je
+- Možemo da ponesemo bilo kakve tekstualne fajlove na odbranu
+- `wait()` vraća 0 samo ako čekanje ne uspe

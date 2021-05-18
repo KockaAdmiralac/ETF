@@ -1,7 +1,0 @@
-h/bounded.h
-h/intLock.h
-h/keyevent.h
-h/user.h
-src/bounded.cpp
-src/intLock.cpp
-src/keyevent.cpp

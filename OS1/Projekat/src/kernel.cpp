@@ -208,7 +208,9 @@ void Kernel::cleanup() {
     // Reset timer interrupt.
     lock
     setvect(0x08, oldTimerRoutine);
+    #ifdef KERNEL_DEBUG
     syncPrint("Happy End\n");
+    #endif
     unlock
 }
 

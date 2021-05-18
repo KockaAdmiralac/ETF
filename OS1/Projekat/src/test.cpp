@@ -1,7 +1,7 @@
 /**
- * t_main.cpp
+ * test.cpp
  *
- * Entry point for test suite.
+ * Testing utilities.
  */
 #include <kernel.h>
 #include <test.h>
@@ -31,42 +31,12 @@ void testCase(const char* message, unsigned condition) {
     testResult(condition);
 }
 
-/*
-unsigned tbpm;
-unsigned tssm;
-unsigned tspm;
-void *tptr;
-
-#include <dos.h>
-void testFunc() {
-    asm {
-        mov tbpm, bp
-        mov tssm, ss
-    }
-    cout << "BP value: " << tbpm << endl;
-    while (tbpm != 0) {
-        tptr = MK_FP(tssm, tbpm);
-        tbpm = *((unsigned*) tptr);
-        cout << "BP value: " << tbpm << endl;
+/**
+ * Loops for a certain amount of time.
+ * @param delay The amount of loops to perform, in units of 1000 loops
+ */
+void dumbSleep(int delay) {
+    for (int i = 0; i < 1000; ++i) {
+        for (int j = 0; j < delay; ++j);
     }
 }
-
-void testFunc2() {
-    testFunc();
-}
-
-void testFunc3() {
-    testFunc2();
-}
-*/
-
-#ifdef KERNEL_DEBUG
-int main() {
-    testCase("Kernel can interrupt at the beginning of tests", Kernel::cannotInterrupt == 0);
-    testUtil();
-    //testVector();
-    //testList();
-    testKernel();
-    return 0;
-}
-#endif
