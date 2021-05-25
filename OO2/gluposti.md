@@ -34,8 +34,8 @@
 - Podrazumevani konstruktor je javan samo ako je klasa javna
 - Redosled izvršavanja konstruktora i inicijalizatora isti kao u C++
 - Ako se pozove metod prilikom inicijalizacije, taj metod će biti pozvan nad neinicijalizovanim objektom
-- Nadjačavanje je podrazumevano dinamički u Javi, sve ostalo isto kao u C++
 - Statički metodi ne mogu da se polimorfno redefinišu i nemaju pristup `super`
+- Redefinisana metoda ne može bacati više tipova izuzetka od osnovne
 - Ne može se smanjiti pravo pristupa nadjačanom metodu
 - Kada se pristupa polju klase i kada se metoda poziva preko `super` koristi se tip reference (nepolimorfno)
 - Ako se sužavanje može proveriti dolazi do greške prilikom prevođenja, ako ne može dolazi do `ClassCastException`
@@ -51,16 +51,18 @@
 - `default` i `static` metodi u interfejsu mogu imati telo
 - Polja interfejsa su uvek statička, javna i konačna
 - Poenta podrazumevanih metoda jeste da se izbegne modifikovanje postojećih aplikacija nakon proširivanja interfejsa
-- Ako se metodi dva implementirana interfejsa razlikuju samo po povratnom tipu to je greška, a samo po throws klauzuli to pravi metod koji "zadovoljava" obe klauzule (presek?)
+- Ako se metodi dva implementirana interfejsa razlikuju samo po povratnom tipu to je greška, a samo po throws klauzuli to pravi metod koji "zadovoljava" obe klauzule (presek)
 - Greška je ukoliko se nasleđuju dva različita podrazumevana metoda sa istim potpisom i nisu implementirani u samoj klasi
 - Nestatičke metode natklase sa istim potpisom kao podrazumevane metode interfejsa ih nadjačavaju
 - Ako dva implementirana interfejsa imaju isti naziv konstante, naziv se mora kvalifikovati
 - Nabrajanja se alociraju na hipu a konstante tipa nabrajanja su reference na njih
+- Višestrukim nasleđivanjem se smatra i kada klasa nasleđuje klasu i interfejs, i kada klasa implementira više interfejsa
 
 ## Izuzeci
 - Greška je ako je opštiji rukovaoc iznad konkretnijeg
+- `finally` će se izvršiti čak iako se baci izuzetak iz `catch` bloka (može `try` bez `catch` ako ima `finally`)
 
-## Ugnježđene klase
+## Ugnežđene klase
 - Potpuno uzajamno poverenje sa okružujućom
 - Klasa koja nasleđuje ugnežđenu ne nasleđuje prava pristupa
 - Nestatičke ugnežđene klase moraju uvek biti u kontekstu njihove spoljašnje klase kako bi se znalo kojim poljima spoljašnje klase pristupaju neposredno
@@ -82,6 +84,7 @@
 - Brava klase nema efekta na brave objekata klase
 - `synchronized` se ne nasleđuje, ali se poziv metoda superklase računa kao poziv sinhronizovanog metoda
 - `wait` i `notify` se pozivaju samo iz sinhronizovanih metoda
+- Demonstvo se ne može promeniti nakon što se nit pokrene
 
 ## Generici
 - Kada se koriste sirovi tipovi vraća se na staro ponašanje (vraća se `Object`)
@@ -104,8 +107,12 @@
 - Sintaksa nasleđenih indeksera: `tip I.this[...] {...}`
 
 ## Greške
-- (C# Tipovi:24) Ne samo interfejsi, i obične klase mogu sadržati `get` i `set` bez tela pristupnika
-- (C# Niti:6) `Start()` se poziva kada nit završi...?
+- Na testu kaže da abstract može da stoji pre definicije metode
+> An abstract method declaration introduces the method as a member, providing its signature (§8.4.2), result (§8.4.5), and throws clause if any (§8.4.6), but does not provide an implementation (§8.4.7).
+https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.4.3.1
+- Nema sekundarnog this kada nema instance
+> When an inner class (whose declaration does not occur in a static context) refers to an instance variable that is a member of a lexically enclosing class, the variable of the corresponding lexically enclosing instance is used.
+https://docs.oracle.com/javase/specs/jls/se7/html/jls-8.html#jls-8.1.3
 
 ## Pitanja
 - Da li nam u prva dva ispitna roka može doći u kojoj je verziji Jave uvedeno nešto?
