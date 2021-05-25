@@ -1,0 +1,25 @@
+* C:\Users\OS1\DZ1-2.sch
+
+* Schematics Version 9.1 - Web Update 1
+* Fri May 21 02:19:54 2021
+
+
+
+** Analysis setup **
+.tran 0ns 400u
+.OP 
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "dig_io.lib"
+.lib "74hc.lib"
+.lib "nom.lib"
+
+.INC "DZ1-2.net"
+.INC "DZ1-2.als"
+
+
+.probe
+
+
+.END

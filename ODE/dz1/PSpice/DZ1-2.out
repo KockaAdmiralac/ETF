@@ -1,0 +1,515 @@
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+* Schematics Version 9.1 - Web Update 1
+* Fri May 21 02:19:54 2021
+
+
+
+** Analysis setup **
+.tran 0ns 400u
+.OP 
+
+
+* From [PSPICE NETLIST] section of pspiceev.ini:
+.lib "dig_io.lib"
+.lib "74hc.lib"
+.lib "nom.lib"
+
+.INC "DZ1-2.net"
+
+**** INCLUDING DZ1-2.net ****
+* Schematics Netlist *
+
+
+
+X_U1A         $N_0001 $N_0002 $G_DPWR $G_DGND 74HC04 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+R_R1         $N_0004 $N_0003  10k  
+I_I1         0 $N_0005 DC 10m  
+R_R3         $N_0005 0  1k  
+V_V1         $N_0003 0 5V
+S_S1         $N_0005 $N_0007 $N_0006 0 Sbreak
+RS_S1        $N_0006 0 1G
+I_I3         $N_0007 0 DC 2m  
+V_V2         $N_0008 0 3V
+C_C2         $N_0009 $N_0007  10n IC=0 
+E_U5         $N_0009 0 VALUE {LIMIT(V(0,$N_0007)*1E6,-12V,+12V)}
+X_U3A         $N_0010 $N_0004 $N_0001 $G_DPWR $G_DGND 74HC00 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+E_U6         $N_0010 0 VALUE {LIMIT(V($N_0008,$N_0009)*1E6,0V,5V)}
+X_U2A         $N_0004 $N_0006 $G_DPWR $G_DGND 74HC04 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+R_R2         $N_0006 0  1k  
+C_C1         $N_0002 $N_0004  6n  
+
+**** RESUMING DZ1-2.cir ****
+.INC "DZ1-2.als"
+
+
+
+**** INCLUDING DZ1-2.als ****
+* Schematics Aliases *
+
+.ALIASES
+X_U1A           U1A(A=$N_0001 Y=$N_0002 PWR=$G_DPWR GND=$G_DGND )
+R_R1            R1(1=$N_0004 2=$N_0003 )
+I_I1            I1(+=0 -=$N_0005 )
+R_R3            R3(1=$N_0005 2=0 )
+V_V1            V1(+=$N_0003 -=0 )
+S_S1            S1(3=$N_0005 4=$N_0007 1=$N_0006 2=0 )
+RS_S1           S1(1=$N_0006 2=0 )
+I_I3            I3(+=$N_0007 -=0 )
+V_V2            V2(+=$N_0008 -=0 )
+C_C2            C2(1=$N_0009 2=$N_0007 )
+E_U5            U5(OUT=$N_0009 +=0 -=$N_0007 )
+X_U3A           U3A(A=$N_0010 B=$N_0004 Y=$N_0001 PWR=$G_DPWR GND=$G_DGND )
+E_U6            U6(OUT=$N_0010 +=$N_0008 -=$N_0009 )
+X_U2A           U2A(A=$N_0004 Y=$N_0006 PWR=$G_DPWR GND=$G_DGND )
+R_R2            R2(1=$N_0006 2=0 )
+C_C1            C1(1=$N_0002 2=$N_0004 )
+_    _($G_DGND=$G_DGND)
+_    _($G_DPWR=$G_DPWR)
+.ENDALIASES
+
+
+**** RESUMING DZ1-2.cir ****
+.probe
+
+
+.END
+
+
+**** Generated AtoD and DtoA Interfaces ****
+
+*
+* Analog/Digital interface for node $N_0004
+*
+* Moving X_U2A.U1:IN1 from analog node $N_0004 to new digital node $N_0004$AtoD
+X$$N_0004_AtoD1
++ $N_0004
++ $N_0004$AtoD
++ $G_DPWR
++ $G_DGND
++ AtoD_HC
++       PARAMS: CAPACITANCE=   3.5000E-12
+* Moving X_U3A.U1:IN2 from analog node $N_0004 to new digital node $N_0004$AtoD2
+X$$N_0004_AtoD2
++ $N_0004
++ $N_0004$AtoD2
++ $G_DPWR
++ $G_DGND
++ AtoD_HC
++       PARAMS: CAPACITANCE=   3.5000E-12
+*
+* Analog/Digital interface for node $N_0006
+*
+* Moving X_U2A.U1:OUT1 from analog node $N_0006 to new digital node $N_0006$DtoA
+X$$N_0006_DtoA1
++ $N_0006$DtoA
++ $N_0006
++ $G_DPWR
++ $G_DGND
++ DtoA_HC
++       PARAMS: DRVH=  87     DRVL=  87     CAPACITANCE=   0     
+*
+* Analog/Digital interface for node $N_0010
+*
+* Moving X_U3A.U1:IN1 from analog node $N_0010 to new digital node $N_0010$AtoD
+X$$N_0010_AtoD1
++ $N_0010
++ $N_0010$AtoD
++ $G_DPWR
++ $G_DGND
++ AtoD_HC
++       PARAMS: CAPACITANCE=   3.5000E-12
+*
+* Analog/Digital interface for node $N_0002
+*
+* Moving X_U1A.U1:OUT1 from analog node $N_0002 to new digital node $N_0002$DtoA
+X$$N_0002_DtoA1
++ $N_0002$DtoA
++ $N_0002
++ $G_DPWR
++ $G_DGND
++ DtoA_HC
++       PARAMS: DRVH=  87     DRVL=  87     CAPACITANCE=   0     
+*
+* Analog/Digital interface power supply subcircuits
+*
+
+X$DIGIFPWR 0 DIGIFPWR
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     Voltage Controlled Switch MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               Sbreak          
+         RON    1            
+        ROFF    1.000000E+06 
+         VON    1            
+        VOFF    0            
+
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     Digital Input MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               DIN74HC         
+        FILE DSO_DTOA        
+      FORMAT    6            
+    TIMESTEP  100.000000E-12 
+      S0NAME 0               
+       S0TSW    5.000000E-09 
+       S0RLO    1            
+       S0RHI  100.000000E+03 
+      S1NAME 1               
+       S1TSW    5.000000E-09 
+       S1RLO  100.000000E+03 
+       S1RHI    1            
+      S2NAME X               
+       S2TSW    5.000000E-09 
+       S2RLO  110            
+       S2RHI  100            
+      S3NAME R               
+       S3TSW    5.000000E-09 
+       S3RLO  110            
+       S3RHI  100            
+      S4NAME F               
+       S4TSW    5.000000E-09 
+       S4RLO  110            
+       S4RHI  100            
+      S5NAME Z               
+       S5TSW    5.000000E-09 
+       S5RLO  200.000000E+03 
+       S5RHI  200.000000E+03 
+
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     Digital Output MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               DO74HC          
+        FILE DSO_ATOD        
+      FORMAT    6            
+     CHGONLY    1            
+    TIMESTEP  100.000000E-12 
+      S0NAME X               
+       S0VHI     .7          
+       S0VLO     .2          
+      S1NAME 0               
+       S1VHI     .2          
+       S1VLO    -.3          
+      S2NAME R               
+       S2VHI     .55         
+       S2VLO     .2          
+      S3NAME R               
+       S3VHI     .7          
+       S3VLO     .45         
+      S4NAME X               
+       S4VHI     .7          
+       S4VLO     .2          
+      S5NAME 1               
+       S5VHI    1.3          
+       S5VLO     .7          
+      S6NAME F               
+       S6VHI     .7          
+       S6VLO     .45         
+      S7NAME F               
+       S7VHI     .55         
+       S7VLO     .2          
+
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     Digital Gate MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               D_H04C          D_HC00          
+      TPLHMN    3.600000E-09    3.600000E-09 
+      TPLHTY    9.000000E-09    9.000000E-09 
+      TPLHMX   24.000000E-09   23.000000E-09 
+      TPHLMN    3.600000E-09    3.600000E-09 
+      TPHLTY    9.000000E-09    9.000000E-09 
+      TPHLMX   24.000000E-09   23.000000E-09 
+
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     Digital IO  MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               IO_HC           IO_HC_DTOA      
+        INLD    3.500000E-12                 
+        DRVL   87                            
+        DRVH   87                            
+       AtoD1 AtoD_HC                         
+       AtoD2 AtoD_HC_NX                      
+       AtoD3 AtoD_HC                         
+       AtoD4 AtoD_HC_NX                      
+       DtoA1 DtoA_HC                         
+       DtoA2 DtoA_HC                         
+       DtoA3 DtoA_HC_E                       
+       DtoA4 DtoA_HC_E                       
+      TSWHL1    2.742000E-09                 
+      TSWHL2    2.742000E-09                 
+      TSWHL3    2.751000E-09                 
+      TSWHL4    2.751000E-09                 
+      TSWLH1    2.758000E-09                 
+      TSWLH2    2.758000E-09                 
+      TSWLH3    2.763000E-09                 
+      TSWLH4    2.763000E-09                 
+       TPWRT    2.000000E-09  100.000000E+03 
+
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+($G_DGND)    0.0000                   ($G_DPWR)    5.0000                       
+
+($N_0002)    4.9975                   ($N_0003)    5.0000                       
+
+($N_0004)    5.0000                   ($N_0005)    9.9900                       
+
+($N_0006)     .0021                   ($N_0007)-3.980E-12                       
+
+($N_0008)    3.0000                   ($N_0009) 3.980E-06                       
+
+($N_0010)    5.0000                   (X$$N_0004_AtoD1.NORM)    1.0000          
+
+(X$$N_0004_AtoD2.NORM)    1.0000      (X$$N_0010_AtoD1.NORM)    1.0000          
+
+(X$$N_0002_DtoA1.DGND_OL)     .0022   (X$$N_0002_DtoA1.DPWR_OH)    4.9975       
+
+(X$$N_0006_DtoA1.DGND_OL)     .0021   (X$$N_0006_DtoA1.DPWR_OH)    4.9975   
+
+
+
+ DGTL NODE : STATE  DGTL NODE : STATE  DGTL NODE : STATE  DGTL NODE : STATE
+
+
+($N_0004$AtoD) : 1                    ($N_0002$DtoA) : 1                        
+
+($N_0004$AtoD2) : 1                   ($N_0006$DtoA) : 0                        
+
+( $N_0001) : 0     ($N_0010$AtoD) : 1                    
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1        -1.000E-11
+    V_V2         0.000E+00
+    X$DIGIFPWR.VDPWR  -1.049E-04
+    X$DIGIFPWR.VDGND  -7.127E-06
+
+    TOTAL POWER DISSIPATION   5.25E-04  WATTS
+
+
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     OPERATING POINT INFORMATION      TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+
+
+**** VOLTAGE-CONTROLLED CURRENT SOURCES
+
+
+NAME         X$$N_0006_DtoA1.G_OH    X$$N_0006_DtoA1.G_OL  
+I-SOURCE     4.995E-05               4.783E-05            
+
+NAME         X$$N_0002_DtoA1.G_OH    X$$N_0002_DtoA1.G_OL  
+I-SOURCE     4.996E-05               4.995E-05            
+
+NAME         X$$N_0004_AtoD1.X1.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0004_AtoD1.X2.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0004_AtoD2.X1.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0004_AtoD2.X2.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0006_DtoA1.X1.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0006_DtoA1.X2.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0010_AtoD1.X1.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0010_AtoD1.X2.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0002_DtoA1.X1.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+NAME         X$$N_0002_DtoA1.X2.G_Clamp        
+I-SOURCE     1.000E-09                        
+
+
+**** VOLTAGE-CONTROLLED VOLTAGE SOURCES
+
+
+NAME         E_U5        E_U6        X$$N_0004_AtoD1.ENORM 
+V-SOURCE     3.980E-06   5.000E+00   1.000E+00            
+I-SOURCE    -1.990E-03  -5.000E-12  -1.000E-12            
+
+NAME         X$$N_0004_AtoD2.ENORM   X$$N_0010_AtoD1.ENORM 
+V-SOURCE     1.000E+00               1.000E+00            
+I-SOURCE    -1.000E-12              -1.000E-12            
+
+
+**** VOLTAGE CONTROLLED SWITCHES
+
+
+NAME         S_S1      
+MODEL        Sbreak    
+I LOAD       9.99E-06 
+V LOAD       9.99E+00 
+R LOAD       1.00E+06 
+V CTRL       2.13E-03 
+**** 05/21/21 02:20:07 *********** Evaluation PSpice (Nov 1999) **************
+
+ * C:\Users\OS1\DZ1-2.sch
+
+
+ ****     INITIAL TRANSIENT SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+($G_DGND)    0.0000                   ($G_DPWR)    5.0000                       
+
+($N_0002)    4.9975                   ($N_0003)    5.0000                       
+
+($N_0004)    5.0000                   ($N_0005)    9.9900                       
+
+($N_0006)     .0021                   ($N_0007)-3.980E-12                       
+
+($N_0008)    3.0000                   ($N_0009) 3.980E-06                       
+
+($N_0010)    5.0000                   (X$$N_0004_AtoD1.NORM)    1.0000          
+
+(X$$N_0004_AtoD2.NORM)    1.0000      (X$$N_0010_AtoD1.NORM)    1.0000          
+
+(X$$N_0002_DtoA1.DGND_OL)     .0022   (X$$N_0002_DtoA1.DPWR_OH)    4.9975       
+
+(X$$N_0006_DtoA1.DGND_OL)     .0021   (X$$N_0006_DtoA1.DPWR_OH)    4.9975   
+
+
+
+ DGTL NODE : STATE  DGTL NODE : STATE  DGTL NODE : STATE  DGTL NODE : STATE
+
+
+($N_0004$AtoD) : 1                    ($N_0002$DtoA) : 1                        
+
+($N_0004$AtoD2) : 1                   ($N_0006$DtoA) : 0                        
+
+( $N_0001) : 0     ($N_0010$AtoD) : 1                    
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1        -1.000E-11
+    V_V2         0.000E+00
+    X$DIGIFPWR.VDPWR  -1.049E-04
+    X$DIGIFPWR.VDGND  -7.127E-06
+
+    TOTAL POWER DISSIPATION   5.25E-04  WATTS
+
+
+
+          JOB CONCLUDED
+
+          TOTAL JOB TIME             .11
+

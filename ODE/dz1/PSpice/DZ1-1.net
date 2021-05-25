@@ -1,0 +1,38 @@
+* Schematics Netlist *
+
+
+
+R_R2         $N_0002 $N_0001  1.5k  
+V_V1         $N_0003 0 10V
+R_R1         $N_0003 $N_0001  1.5k  
+R_R4         0 $N_0002  1.5k  
+R_R7         $N_0005 $N_0004  1.5k  
+R_R5         $N_0006 $N_0004  1.5k  
+V_V2         $N_0006 0 10V
+R_R8         0 $N_0005  1.5k  
+R_R3         $N_0007 $N_0001  1.5k  
+C_C1         0 $N_0002  100n  
+X_U4         $N_0007 $N_0002 Sw_tClose PARAMS: tClose=100u ttran=1u
++  Rclosed=0.01 Ropen=1Meg
+R_R6         $N_0008 $N_0004  1.5k  
+C_C2         0 $N_0005  100n  
+X_U3         $N_0008 $N_0005 Sw_tOpen PARAMS: tOpen=90u ttran=1u Rclosed=0.01
++  Ropen=1Meg
+I_I4         0 $N_0009 DC 10mA  
+C_C8         $N_0010 $N_0011  10n  
+R_R19         $N_0009 0  1k  
+V_V8         $N_0012 0 3V
+X_U19A         $N_0013 $N_0014 $N_0015 $G_DPWR $G_DGND 74HC00 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+X_U17A         $N_0015 $N_0016 $G_DPWR $G_DGND 74HC04 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+V_V11         $N_0017 0 5V
+X_U18A         $N_0016 $N_0018 $G_DPWR $G_DGND 74HC04 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+R_R22         $N_0013 $N_0017  10k  
+I_I3         $N_0010 0 DC 2mA  
+S_S2         $N_0009 $N_0010 $N_0018 0 Sbreak
+RS_S2        $N_0018 0 1G
+E_U21         $N_0011 0 VALUE {LIMIT(V(0,$N_0010)*1E3,-12V,+12V)}
+E_U20         $N_0014 0 VALUE {LIMIT(V($N_0012,$N_0011)*1E3,0V,+5V)}
+C_C9         $N_0013 $N_0016  1n  

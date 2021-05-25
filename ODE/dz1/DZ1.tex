@@ -1,0 +1,245 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\usepackage[english,croatian]{babel}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+    \usetikzlibrary{arrows}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{siunitx}
+\usepackage{subfig}
+\usepackage{pgf}
+\usepackage[a4paper,left=1in,top=1in,right=1in,bottom=1in,nohead]{geometry}
+\usepackage{xcolor}
+\setlist[enumerate,1]{% (
+leftmargin=*, itemsep=12pt, label={\textbf{\arabic*.}}}
+
+
+\title{Prvi domaći zadatak iz Osnova digitalne elektronike}
+\author{Luka Simić, 2019/0368}
+\date{}
+
+\begin{document}
+    \begin{titlepage}
+        \maketitle
+        \vspace*{\fill}
+        \tableofcontents
+    \end{titlepage}
+
+    \section{Zadatak 1}
+        \subsection{Postavka}
+            Za kolo sa slike 1 koje se za $t < 0$ nalazi u stacionarnom stanju:
+            \begin{enumerate}[label=(\alph*)]
+                \item Matematički odrediti vremenske dijagrame napona u čvorovima $A$ i $B$, u intervalu $-\tau_{off} < t < 5\tau_{on}$ ako se u trenutku $t = 0$ zatvori prekidač $P$ koji je pre toga bio otvoren.
+                \item Verifikovati prethodnu tačku upotrebom PSpice simulacije.
+                \item Matematički odrediti vremenske dijagrame napona u čvorovima A i B, u intervalu $-\tau_{on} < t < 5\tau_{off}$ ako se u trenutku $t = 0$ otvori prekidač $P$ koji je pre toga bio zatvoren.
+                \item Verifikovati prethodnu tačku upotrebom PSpice simulacije.
+            \end{enumerate}
+            Napomena: Vremenske konstante $\tau_{off}$, $\tau_{on}$ karakterišu kolo za slučaj otvorenog i zatvorenog prekidača, respektivno. Koristiti nekontrolisane prekidače.
+        \subsection{Rešenje}
+            \subsubsection{Vremenske konstante}
+                Dato kolo možemo naći u dva stanja: sa otvorenim i zatvorenim prekidačem. Ako je prekidač otvoren, možemo da izbacimo granu sa otpornikom sa kim je povezan redno.
+
+                Na osnovu toga računamo konstante $\tau$:
+                \begin{itemize}
+                    \item $\tau_{off}$: Ako je prekidač otvoren, sa kondenzatora se vidi otpornost od $R || 2R$, pa je $\tau_off = \frac{2}{3}RC = 100ns$.
+                    \item $\tau_{on}$: Ako je prekidač zatvoren, sa kondenzatora se vidi otpornost od $R || (R + (R || R)) = R || 1.5R$, pa je $\tau_{on} = 90ns$.
+                \end{itemize}
+            \subsubsection{Prva varijanta}
+                Prvo računamo napon u tačkama $A$ i $B$ dok traje stacionarno stanje u $t < 0$. Na osnovu naponskog razdelnika od tri jednaka otpornika otpornosti $R$ dobijamo:
+                \begin{equation}
+                    \label{va0min}
+                    v_A(0^{-}) = \frac{2R}{3R} 10V = 6.66V
+                \end{equation}
+                \begin{equation}
+                    \label{vb0min}
+                    v_B(0^{-}) = \frac{R}{3R} 10V = 3.33V
+                \end{equation}
+                Kada se prekidač spusti, napon na kondenzatoru ostaje isti (jer napon na kondenzatoru ne može naglo da se promeni) pa iz \eqref{vb0min} dobijamo i:
+                \begin{equation}
+                    \label{vb0}
+                    v_B(0^{+}) = v_B(0^{-}) = 3.33V
+                \end{equation}
+                Kako bismo izračunali $v_A(0^{+})$, možemo zameniti kondenzator naponskim generatorom koji generiše napon $v_B(0^{+})$, odnosno 3.33V. Pošto sad imamo jednu struju koja protiče od generatora napona od 10V do zamenjenog kondenzatora, tu imamo jedan naponski razdelnik i dobijamo da je napon u tački $A$ tik nakon zatvaranja prekidača jednak:
+                \begin{equation}
+                    \label{va0}
+                    v_A(0^{+}) = 10V - \frac{R}{1.5R} (10V - v_A(0^{+})) = 10V - 4.44V = 5.56V
+                \end{equation}
+                Posle određenog vremena (uglavnom posle $5\tau_{on}$) kolo ponovo ulazi u stacionarno stanje. U ovakom stanju kondenzator je ponovo otvorena veza, samo je raspored otpornika drugačiji, pa na osnovu novog naponskog razdelnika dobijamo:
+                \begin{equation}
+                    \label{vainf}
+                    v_A(\infty) = \frac{1.5R}{2.5R} 10V = 6V
+                \end{equation}
+                \begin{equation}
+                    \label{vbinf}
+                    v_B(\infty) = \frac{1R}{2.5R} 10V = 4V
+                \end{equation}
+                Iz \eqref{vb0} i \eqref{vbinf} dobijamo:
+                $$v_B(t) = \left\{ \begin{array}{ll}
+                    3.33V & t < 0 \\
+                    4V - 0.66V \cdot e^{-\frac{t}{\tau_{on}}} & t \geq 0
+                \end{array}\right.$$
+                Iz \eqref{va0} i \eqref{vainf} dobijamo:
+                $$v_A(t) = \left\{ \begin{array}{ll}
+                    6.66V & t < 0 \\
+                    6V - 0.44 \cdot e^{-\frac{t}{\tau_{on}}} & t \geq 0
+                \end{array}\right.$$
+                PSpice simulacija na slikama \ref{PSpice1aA} i \ref{PSpice1aB} kao i grafici gornjih funkcija na slici \ref{MPL1a} vraćaju slične rezultate.
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-1aA.pdf}
+                    \caption{Verifikacija rezultata zadatka 1 pod a, grafik napona u tački $A$.}
+                    \label{PSpice1aA}
+                \end{figure}
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-1aB.pdf}
+                    \caption{Verifikacija rezultata zadatka 1 pod a, grafik napona u tački $B$.}
+                    \label{PSpice1aB}
+                \end{figure}
+                \begin{figure}[H]
+                    \begin{center}
+                        \input{DZ1-1a.pgf}
+                    \end{center}
+                    \caption{Grafici izračunatih funkcija $v_a(t)$ i $v_b(t)$ u prvom zadatku pod a.}
+                    \label{MPL1a}
+                \end{figure}
+            \subsubsection{Druga varijanta}
+                U drugoj stavci zadatka su iste vremenske konstante, a naponi u stacionarnom stanju su samo obrnuti. Iz \eqref{vainf} i \eqref{vbinf} dobijamo da je napon u stacionarnom stanju za $t < 0$ u tački $A$ jednak 6V a u tački $B$ 4V, dok iz \eqref{va0min} i \eqref{vb0min} dobijamo da je napon u stacionarnom stanju za $t \geq 0$ u tački $A$ jednak 6.66V a u tački $B$ 3.33V. Odatle sledi da je napon u tački $B$ jednak:
+                $$v_B(t) = \left\{ \begin{array}{ll}
+                    4V & t < 0 \\
+                    3.33V + 0.66V \cdot e^{-\frac{t}{\tau_{off}}} & t \geq 0
+                \end{array}\right.$$
+                Za izračunavanje napona u tački $A$ nam je još potreban napon u toj tački tik nakon otvaranja prekidača. On se kao i u prvoj varijanti može izračunati tako što se kondenzator zameni generatorom napona. Onda imamo naponski razdelnik između 10V i 4V pa dobijamo:
+                \begin{equation}
+                    \label{va02}
+                    v_A(0^{+}) = 10V - \frac{R}{2R} (10V - 4V) = 10V - 3V = 7V
+                \end{equation}
+                Iz \eqref{va02}, \eqref{vainf} i \eqref{va0min} dobijamo:
+                $$v_A(t) = \left\{ \begin{array}{ll}
+                    6V & t < 0 \\
+                    6.66V + 0.34V \cdot e^{-\frac{t}{\tau_{off}}} & t \geq 0
+                \end{array}\right.$$
+                PSpice simulacija na slikama \ref{PSpice1bA} i \ref{PSpice1bB} vraćaju slične rezultate kao grafici gornjih funkcija na slici \ref{MPL1b}, sa šemama sa slike \ref{PSpice1}.
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-1bA.pdf}
+                    \caption{Verifikacija rezultata zadatka 1 pod b, grafik napona u tački $A$.}
+                    \label{PSpice1bA}
+                \end{figure}
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-1bB.pdf}
+                    \caption{Verifikacija rezultata zadatka 1 pod b, grafik napona u tački $B$.}
+                    \label{PSpice1bB}
+                \end{figure}
+                \begin{figure}[H]
+                    \begin{center}
+                        \input{DZ1-1b.pgf}
+                    \end{center}
+                    \caption{Grafici izračunatih funkcija $v_a(t)$ i $v_b(t)$ u prvom zadatku pod b.}
+                    \label{MPL1b}
+                \end{figure}
+                \begin{figure}[H]
+                    \centering
+                    \subfloat[Kolo za simulaciju prvog zadatka pod a.]{\includegraphics[width=0.4\textwidth]{DZ1-1a.png}}
+                    \hfill
+                    \subfloat[Kolo za simulaciju prvog zadatka pod b.]{\includegraphics[width=0.4\textwidth]{DZ1-1b.png}}
+                    \caption{Šeme za verifikaciju prvog zadatka.}
+                    \label{PSpice1}
+                \end{figure}
+    
+        \newpage
+        \section{Zadatak 2}
+            \subsection{Postavka}
+                \begin{enumerate}[label=(\alph*)]
+                    \item Izračunati frekvenciju oscilovanja kola i nacrtati vremenske dijagrame napona na izlazu idealnog operacionog pojačavača ($v_{IOP}$) i na izlazu komparatora K ($v_K$) u ustaljenom režimu, slika 2, u trajanju od 3 periode oscilovanja. Trajanje kvazistabilnog stanja monostabilnog multivibratora (MMV) iznosi $T_D = 10\mu s$, i za to vreme je izlaz MMV na visokom (5V) logičkom nivou. MMV se trigeruje silaznom ivicom signala sa izlaza komparatora. Prekidač je idealan. Kada je na izlazu MMV visok logički nivo prekidač je zatvoren, a kada je na izlazu MMV nizak logički nivo (0V) prekidač je otvoren. Poznato je i: $C = 10nF$, $V_R = 3V$, $I_R = 10mA$, $i_U = 2mA$.
+                    \item Korišćenjem CMOS logičkih kola po izboru realizovati MMV iz tačke a) ako su na raspolaganju otpornici od $10k\Omega$ i kondenzatori po izboru.
+                    \item Upotrebom PSpice simulacije verifikovati rezultate tačke a). Za integrator koristiti idealan operacioni pojačavač (OPAMP komponenta) sa napajanjem $\pm 12V$, dok za komparator treba koristiti idealan operacioni pojačavač sa napajanjem 0V i 5V. Za logička kola u MMV treba koristiti HC familiju, a kao prekidač koristiti naponski kontrolisani prekidač SBreak.
+                \end{enumerate}
+
+            \subsection{Rešenje}
+                \subsubsection{Perioda kola}
+                    Pretpostavićemo da je na početku kondenzator prazan, tako da kroz njega ne protiče struja, i da monostabilni multivibrator (MMV) izbacuje napon vrednosti logičke nule. To znači da je prekidač otvoren, i da je jedina stvar koja utiče na napon na kondezatoru $C$ struja $i_U$. Napon na kondenzatoru se menja linearno po formuli:
+                    \begin{equation}
+                        \label{Vc}
+                        \frac{I_0}{C} t
+                    \end{equation}
+                    Dobijamo da napon $V_{IOP}$ uskoro dostiže vrednost 3V, i izlaz komparatora se menja sa logičke jedinice na logičku nulu, čime uzrokuje da MMV izbaci napon logičke jedinice u trajanju $T_D$. Kada je prekidač spušten, na napon na kondenzatoru $C$ utiče struja $I_R - i_U$, i to tokom trajanja celog kvazistabilnog stanja. Na osnovu jedinačine \eqref{Vc} dobijamo da napon $V_{IOP}$ opadne za vrednost:
+                    \begin{equation}
+                        \label{deltaIOP}
+                        \Delta V_{IOP} = \frac{I_R - i_U}{C} T_D = \frac{10mA - 2mA}{10nF} 10\mu s = 8V
+                    \end{equation}
+                    Kada se završi kvazistabilno stanje MMV, prekidač se otvara i na napon na kondenzatoru ponovo utiče struja $i_U$. Na osnovu jednačina \eqref{Vc} i \eqref{deltaIOP} možemo izračunati vreme potrebno da napon na kondenzatoru ponovo dostigne 3V i time završi jednu oscilaciju:
+                    $$\frac{i_U}{C} T_U = \Delta V_{IOP}$$
+                    \begin{equation}
+                        \label{deltaTIOP}
+                        T_U = \frac{\Delta V_{IOP} C}{i_U} = \frac{8V \cdot 10nF}{2mA} = 40\mu s
+                    \end{equation}
+                    Iz jednačine \eqref{deltaTIOP} i vremena trajanja kvazistabilnog stanja $T_D$ dobijamo periodu ovog kola:
+                    \begin{equation}
+                        \label{T}
+                        T = T_D + T_U = 50\mu s
+                    \end{equation}
+                    Na osnovu \eqref{T} dobijamo traženu frekvenciju:
+                    $$f = \frac{1}{T} = 20kHz$$
+                    Na osnovu gornje analize vidimo da se napon $V_{IOP}$ menja po formuli:
+                    \begin{equation}
+                        \label{VIOP}
+                        V_{IOP} = \left\{\begin{array}{ll}
+                            3V - \frac{I_R - i_U}{C} t & t \in (nT, nT + T_D] \\
+                            -5V + \frac{i_U}{C} t & t \in (nT + T_D, (n+1) T]
+                        \end{array}\right.
+                        n \in \mathbb{N}
+                    \end{equation}
+                    Napon $V_K$ ima vrednost logičke nule za jako mali interval vremena kada $V_{IOP}$ dostigne 3V, pa vidimo da je za njega formula:
+                    % $$V_K = 5V \sum_{k = -\infty}^{+\infty} (1 - \delta(t - nT - T_D))$$
+                    % gde je $\delta$ Dirakov impuls.
+                    \begin{equation}
+                        \label{VK}
+                        V_K = \left\{\begin{array}{ll}
+                            0 & t = nT + T_D \\
+                            5V & t \neq nT + T_D
+                        \end{array}\right.
+                        n \in \mathbb{N}
+                    \end{equation}
+
+                \subsubsection{Monostabilni multivibrator}
+                    \begin{figure}[H]
+                        \centering
+                        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-2b.png}
+                        \caption{Šema multivibratora iz zadatka.}
+                        \label{PSpice2b}
+                    \end{figure}
+                    Šema monostabilnog multivibratora u ovom zadatku je slična šemi multivibratora u zadatku 20. sa drugih vežbi. Dok se na ovaj multivibrator dovodi napon logičke jedinice, na izlazu NI kola je logička nula, pa je na kondenzatoru napon logičke jedinice (na obe strane je logička nula). Kada napon na ulazu padne na logičku nulu, izlaz NI kola se promeni na logičku jedinicu, pa je potencijal na drugoj strani kondenzatora logička nula, i zbog toga struja protiče kroz generator napona u kondenzator. Napon na kondenzatoru se onda linearno povećava po jednačini iz \eqref{Vc}. Tako se potencijal povećava dok NI kolo ne detektuje napon logičke jedinice na ulazu, i za to vreme je na izlazu stanje logičke jedinice. To znači da za vreme $T_D$ napon mora da se poveća od logičke nule do napona praga, pa dobijamo sledeću jednačinu:
+                    $$\frac{I_0}{C} T_D = V_{TL} - V(0)$$
+                    $$\frac{\frac{5V}{10k\Omega}}{C} 10\mu s = 1V - 0V$$
+                    $$C = 5nF$$
+                \subsubsection{Simulacija}
+                    \begin{figure}[H]
+                        \centering
+                        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-2c.png}
+                        \caption{Šema simulacije zadatka.}
+                        \label{PSpice2c}
+                    \end{figure}
+                    Zbog neidealnosti komponenti, u simulaciji je kondenzator promenjen na 6nF, jer je inače napon umesto sa 3V na -5V padao na oko -3.5V. Šema sa slike \ref{PSpice2c} daje rezultate sa slika \ref{PSpice2} i \ref{MPL2}, pa su ovime verifikovane izračunate vrednosti.
+                    \begin{figure}[H]
+                        \centering
+                        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{DZ1-2.pdf}
+                        \caption{Rezultati simulacije drugog zadatka.}
+                        \label{PSpice2}
+                    \end{figure}
+                    \begin{figure}[H]
+                        \begin{center}
+                            \input{DZ1-2.pgf}
+                        \end{center}
+                        \caption{Grafici izračunatih funkcija $V_{IOP}(t)$ i $V_K(t)$.}
+                        \label{MPL2}
+                    \end{figure}
+    
+\end{document}

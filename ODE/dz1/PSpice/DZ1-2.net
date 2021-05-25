@@ -1,0 +1,23 @@
+* Schematics Netlist *
+
+
+
+X_U1A         $N_0001 $N_0002 $G_DPWR $G_DGND 74HC04 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+R_R1         $N_0004 $N_0003  10k  
+I_I1         0 $N_0005 DC 10m  
+R_R3         $N_0005 0  1k  
+V_V1         $N_0003 0 5V
+S_S1         $N_0005 $N_0007 $N_0006 0 Sbreak
+RS_S1        $N_0006 0 1G
+I_I3         $N_0007 0 DC 2m  
+V_V2         $N_0008 0 3V
+C_C2         $N_0009 $N_0007  10n IC=0 
+E_U5         $N_0009 0 VALUE {LIMIT(V(0,$N_0007)*1E6,-12V,+12V)}
+X_U3A         $N_0010 $N_0004 $N_0001 $G_DPWR $G_DGND 74HC00 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+E_U6         $N_0010 0 VALUE {LIMIT(V($N_0008,$N_0009)*1E6,0V,5V)}
+X_U2A         $N_0004 $N_0006 $G_DPWR $G_DGND 74HC04 PARAMS:
++ IO_LEVEL=0 MNTYMXDLY=0
+R_R2         $N_0006 0  1k  
+C_C1         $N_0002 $N_0004  6n  
