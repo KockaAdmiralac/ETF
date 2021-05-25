@@ -80,6 +80,7 @@
 - Bridge ID(8B): Priority(2B) MAC(6B)
 - Port Cost: Što je veća brzina, to je manja cena
 - Path Cost: Suma svih Port Cost
+- STP je protokol trećeg nivoa?
 - Bridge Protocol Data Unit poruke:
     - Configuration BPDU: Emituje se kad se određuje root bridge i Path Cost (na osnovu koga se određuju root portovi)
     - Topology Change Notification
@@ -154,7 +155,7 @@
     - Distribuirana koordinacija: Uređaji se nadmeću
 - DCF:
     - Ako je medijum slobodan, čeka se DIFS (50us) pa se šalje okvir
-    - Čeka se DIFS, pa se čeka $R = rand(0, CW) \cdot ST$ (slot time, 20us), CW se eksponencijalno povećava sa pokušajima
+    - Čeka se DIFS, pa se čeka $R = rand(0, CW) \cdot ST$ (slot time, 20us, vreme između dve najudaljenije tačke u mreži?), CW se eksponencijalno povećava sa pokušajima
     - Ako se medijum zauzme tokom backoff, backoff se pauzira dok se ne oslobodi ponovo, tada se čeka DIFS pa nastavlja
 - Prenos u dva koraka:
     1. Data
@@ -285,3 +286,210 @@
         - Time Exceeded: Istekao TTL
         - Redirect: Ruter obaveštava uređaj da postoji bolja ruta (od, recimo, podrazumevane)
         - Echo Request/Reply: Ping
+
+# Protokoli rutiranja
+- Interni (unutar jednog AS):
+    - Distance Vector: RIP, IGRP
+    - Link State: OSPF, IS-IS
+    - Hibridni: EIGRP
+- Eksterni: BGP
+- Uspostavljanje ruting tabele mora da bude: potpuno, konzistentno, optimalno, adaptivno
+- Autonomni sistem: organizaciona celina koja je na tehničkom nivou usaglašena, obično jedan ruting domen ali može i više
+- Distance Vector:
+    - Ruteri saznaju distancu do neke mreže (metrika) i next-hop do te mreže
+    - Poznaju samo susedne rutere
+    - Rute se periodično razmenjuju (na 30s čak iako nema promena)
+    - Konvergencija:
+        - Uspostavljanje stabilnog (tabele se ne menjaju) i konzistentnog (rute su ispravne) stanja
+        - Zavisi od brzine propagacije routing update i računanja ruta u ruting tabelama
+        - Tokom konvergencije može nastati nekonzistentno stanje (odsečene veze, petlje)
+        - Count-to-Infinity: Mreža se otkači, ruter sa kojeg nije otkačena javi da ima rutu, ruter sa koga jeste ponovo emituje tu vrednost pa se na B poveća metrika itd.
+            - Maksimalna, nevalidna, vrednost metrike je 16
+        - Metode zaštite od petlji:
+            - Route Poisoning: routing update kad postane nedostupna sa beskonačnom metrikom
+            - Split horizon: nikada se ne oglašava ruta na interfejs sa koga je pristigla
+                - Poison Reverse: Ako se desi Route Poisoning ipak šaljemo nazad tu istu rutu
+                - U Poison Reverse se vraćaju podaci preko Triggered update
+                - Redudantne veze neće odstupiti od ovog pravila ali neće ga baš ni sprovesti
+            - Holddown Timer: čeka određeno vreme dok se propagira kroz mrežu nevalidna ruta, ako za to vreme stigne nova ruta ignoriše se
+- Link State:
+    - Saznaje se cela topologija mreže (preko Link-State Advertisements)
+    - Rute se razmenjuju samo pri promeni topologije
+    - Nakon pravljenja Link-State Database rekonstruiše se mreža, Shortest Path First računa putanju i pravi ruting tabelu
+    - Link state = informacije o interfejsima rutera
+    - LSA razmenjuje informacije o povezanim linkovima i susedima
+    - Flooding = intenzivna razmena LSA
+    - Deljenje na oblasti kako bi se flooding dešavao samo na tom ograničenom nivou, sve periferne povezane na centralnu
+    - Konvergencija je brza, ali zahteva više memorije, CPU vremena i propusnog opsega
+    - U stabilnom stanju prenose se poruke za održavanje susedstva
+- Classful ruting protokoli:
+    - Ne sadrže maske, dužina na osnovu konfiguracije
+    - Autosumarizacija: agregira sve IP mreže u /24, /16 ili /8 (A, B ili C)
+    - Classless ruting protokoli imaju promenljivu dužinu maske, oni se zapravo koriste
+- Metrike:
+    - Hop count
+    - Bandwidth
+    - Cost (proizvoljna cena)
+    - Delay
+    - Load
+    - Reliability
+- Load Balancing:
+    - Više putanja do određene mreže sa istom metrikom pa se obe čuvaju u ruting tabeli
+    - Koriste se radi raspoređivanja opterećenja i boljeg iskorišćenja propusnog opsega
+- Administrativna distanca:
+    - Kad se porede metrike različitih ruting protokola
+    - Svaki protokol ima svoju AD, koristimo rutu sa najmanjom AD
+- RIP (L4? L5?):
+    - RIPv1:
+        - AD: 120
+        - Classful
+        - Metrika: Hop count, max: 16
+        - RIP poruke se prenose kao UDP poruke na portu 520
+        - Dva koraka:
+            - RIP Request: navodi se mrežna adresa za koju se traže rute i šalje se na broadcast
+            - RIP Response: obično se odgovara celom ruting tabelom, sa po 25 ruta u jednoj poruci, šalje se na unikast adresu rutera
+    - RIPv2:
+        - Classless
+        - RIP Request šalje na multikast na kojem slušaju svi RIPv2 ruteri
+        - Zajednički ključ ili niz ključeva (razmenjuju se sa MD5, periodično menjaju indeks)
+    - Format:
+        - Version
+        - Address Family Identifier (= 2 za IP adrese)
+        - IP Address: adresa na koju se odnose rute
+        - Subnet mask: koristi se samo u RIPv2
+        - Next-hop: samo u RIPv2
+        - Metric: hop-count 1-16
+    - Prednosti: jednostavni, nisu zahtevni po performanse, malo zauzeće linka za male mreže
+    - Mane: Metrika je loša, propagacija nije brza, spora konvergencija
+- IS-IS AD je 115
+- OSPF (L4?):
+    - AD: 110
+    - OSPF podaci idu u IP poruku sa protokolom 89, na multikast za AllSPFRouters ili AllDRouters (slušaju samo OSPF ruteri)
+    - Hello protokol:
+        - Da bi se uspostavila veza mora da bude ista IP mrežna adresa i da pripadaju istoj oblasti
+        - Na svakih 10s (preko Ethernet) se oglašavaju Hello poruke, nakon 4 propuštene veza se prekida
+        - Autentikacija i flegovi
+        - Koraci:
+            - Down: početno stanje
+            - Init: spremni za slanje
+            - 2-way: uspostavljeno susedstvo, u Seen polju je vraćen RID i usaglašeni parametri - u ovom stanju nisu OSPF susedi
+            - Veći nivo bliskosti: Adjacency
+        - ExStart: Ruter sa većim RID je master, koji zadaje sequence number
+        - Exchange: šalju se Database Description paketi sa opisom podataka, sequence number se povećava
+        - Loading stanja:
+            - LSR: Master kaže koji mu podaci fale
+            - LSU: Slave odgovara sa tim podacima
+            - LSAck: Master kaže hvala
+            - Full: Gotovo
+    - Loopback interfejs je logički interfejs sa proizvoljnom IP adresom i maskom koji je uvek aktivan i učestvuje u oglašavanju
+    - Router ID: Najveća IP adresa loopback interfejsa ili ako ne postoji fizičkog interfejsa
+    - Susedstvo:
+        - Nije dobro da bude svako sa svakim sused (Adjacency) pa se bira designated router i njegov backup
+        - Prioritet 0-255, 255 je najbolje, 0 ne učestvuje u izboru, razmenjuje se kroz Hello poruke
+        - Ako dva rutera imaju isti prioritet gleda se ruter sa većim RID
+        - Novododati ruteri ne menjaju DR i BDR da bi se smanjio flooding, već se DR i BDR menjaju samo kad prestanu da rade (ruter, interfejs ili OSPF)
+    - AllDRouters služi da LSA paket prvo stigne do DR i BDR a AllSPFRouters kada DR šalje svim ostalim
+    - Cena veze se izvodi kao 10^8/bandwidth, cena putanje je zbir svih cena na putanji
+    - Serijske veze imaju 1544kbps, iako pravi bandwidth može da bude manji, zato moramo da postavimo pravu metriku na ruteru
+    - Oblasti:
+        - Area 0 (Transita Area, Backbone Area)
+        - Ruteri:
+            - Area Border Router (između oblasti)
+            - Autonomous System Boundary Router (između OSPF i nečeg drugog)
+            - Internal Router (pripada samo jednoj oblasti)
+            - Backbone Router (pripada centralnoj oblasti)
+        - LSA:
+            - Router (1): generišu svi ruteri, daju informacije o svim interfejsima
+            - Network (2): generiše DR, oglašava ostalim ruterima mrežu
+            - Summary (3, 4): agregira sve IP mreže jedne oblasti i kroz Area 0 šalje drugim ABR, a može i da bude LSA koji ASBR oglašava za svoje interfejse
+            - External (5): dolazi spolja, može da se na metriku drugog ruting domena dodaje OSPF metrika ili da se ne dodaje
+        - Vrste oblasti:
+            - Standard Area: prihvata sve LSA, unutar je Router i Network LSA, Backbone je uvek Standard
+            - Stub Area: ne prima External LSA, sadrži samo Router i Network LSA, ima podrazumevanu rutu ka ostatku, na ruterima je Stub fleg
+            - Totally Stubby Area: ne prima ni External ni Summary LSA, ostalo kao Stub
+        - Ako je jedna periferna oblast povezana na drugu a ne na centralnu, dodajemo virtuelni link ka centralnoj
+            - Može i između dva dela centralne oblasti ako ne postoji fizička veza između njih
+- Redistribucija ruta:
+    - Connected rute su obuhvaćene konfiguracijom ruting protokola, sve ostale su eksterne
+    - Na graničnim ruterima se konfiguriše redistribucija ruta, tako da RIP domenu javlja OSPF a OSPF RIP
+
+## Transportni sloj
+- Port:
+    - Identifikuje aplikaciju na uređaju, kao što Protocol Type identifikuje protokol 3 ili 4 nivoa
+    - Well-known: 0-1023
+    - Registered: 1024-49151
+    - Private: 49152-65535
+- Socket: Identifikuje aplikaciju na mreži, sadrži IP, identifikaciju protokola i port
+- Dodatne funkcije:
+    - Uspostavljanje veze
+    - Pouzdan prenos
+    - Održavanje redosleda segmenata
+    - Kontrola toka
+
+## UDP
+- Samo osnovne funkcije, connectionless message-stream
+- Zaglavlje:
+    - Source i Destination port
+    - Length
+    - Checksum: Prvi komplement sume UDP zaglavlja, podataka i pseudo-header
+    - Pseudo-header: Izvorišna i odredišna IP adresa (donekle se krši princip razdvajanja slojeva), identifikacija UDP protokola (17) i dužina UDP paketa
+- Jednostavne aplikacije kad nije bitna pouzdanost, real-time aplikacije, malo kašnjenje i mala varijacija kašnjenja (jitter)
+- RTP: Real-Time Trasport Protocol, dodatne mogućnosti podsloja UDP, serijalizacija, baferovanje, kontrola jitter
+
+## TCP
+- Sve dodatne funkcije, veće opterećenje, byte-stream
+- Point-to-Point: Uvek između dva uređaja
+- Full-Duplex: U dva smera, čak i kada se aplikativni podaci prenose u jednom smeru u drugom idu kontrolni
+- Segmentacija: Deli veće celine ili spaja manje u segmente maksimalne veličine MMS (podrazumevano 536B, definiše se pri uspostavljanju)
+- Zaglavlje:
+    - Source port, destination port, Checksum kao kod UDP
+    - HLEN: 4 bita (ukupna dužina u jedinicama od 4B)
+    - Window Size: broj bajtova koji se mogu poslati pre nego što se čeka na potvrdu
+    - Options
+    - Sequence Number: inicijalno slučajno izabran, inkrementira se
+    - Acknowledgement Number: potvrda prijema niza bajtova, jednak sledećem SEQ koji se očekuje
+    - Flags:
+        - SYN: inicijalizuje SEQ
+        - ACK: AN je validno
+        - FIN: poslednji segment, završetak konekcije
+        - PSH: momentalna predaja aplikaciji bez baferovanja
+        - URG: Urgent Pointer polje je validno
+        - RST: resetovanje konekcije
+- Three-way handshake:
+    - Šalje se SYN i prvi SEQ (Active Open)
+    - Šalje se ACK, ACK = SYN+1, u istoj poruci šalju se i SEQ i SYN kako bi uspostavio sesiju i u drugom smeru (Established)
+    - Potvrda u drugom smeru
+- Raskidanje: FIN, ACK
+- Timeout potvrde je round trip time koji se procenjuje na osnovu starog RTT i formule, puta uvećanje b
+- Radimo višestruki ACK ako nam fali neki paket
+- Window:
+    - Ukupan broj bajtova koji se šalje pre čekanja na potvrdu
+    - U njega se uračunavaju bajtovi koji čekaju na potvrdu i oni koji su spremni za slanje
+    - Veličina se dogovara pri uspostavljanju veze, može da se smanjuje na zahtev primaoca ili povećava ako nema grešaka
+- Kontrola zagušenja:
+    - Algoritmi: Slow Start, Congestion Avoidance, Fast Retransmit, Fast Recovery
+    - Advertised Window: Inicijalna vrednost prozora
+    - Congestion Window: Postepeno se povećava prozor do maksimalne vrednosti (AD), ako se potvrđuje svaki segment onda je eksponencijalno
+    - Slow Start: Ako dođe timeout, ponavljamo CW=1
+    - Congestion Avoidance: Ograničavamo eksponencijalni rast a posle toga idemo linearno, sshtresh se smanjuje za polovinu poslednje vrednosti kad dođe timeout
+    - Fast Retransmit: Ponovno slanje segmenta pre timeout, tek ako dođe 3 dupla ACK
+    - Fast Recovery: Ako su najmanje 3 segmenta uspešno stigla, idemo direktno u Congestion Avoidance bez Slow Start
+- QUIC: HTTP preko QUIC, koristi UDP, može da multipleksira veze, zadržava se veza i prilikom promene IP
+
+## Aplikativni sloj
+- HTTP: Persistent i Non-Persistent, Stateless i Stateful
+- FTP: Kontrolna konekcija i konekcija za podatke, 7-bitni ASCII tekst za zadavanje komandi
+
+## DNS
+- Zona: Deo stabla domena, pripada jednoj celini, delegacija zona
+- Primarni DNS server: Definisana zona za neki domen
+- Sekundarni DNS server: Periodično preuzima zonu od primarnog
+- Autoritativni DNS server: Primarni i svi sekundarni DNS serveri
+- Rekurzivni upit: Klijent pita servera, dobija pun odgovor
+- Iterativni upit: Pita root gde je rs, pita rs gde je ac, ... ako ne znaju celu domenu da razreše
+- Record: Name, TTL, Class (uvek IN), Type (SOA, NS, MX, A, AAAA, PTR, TXT...), Value
+    - SOA: Start of authority (naziv primarnog DNS servera, email adresa admina (@ se zamenjuje tačkom), serijski broj zone (za diff), refresh, retry, expire, minimum TTL)
+    - NS: DNS server domena
+    - A: Glue record, ako se koristi naziv za NS mora da postoji i IP adresa koja taj naziv razrešava
+    - CNAME: Canonical name
+    - PTR: Inverzna dotted-decimal notacija, `4.3.2.1.in-addr.arpa`
