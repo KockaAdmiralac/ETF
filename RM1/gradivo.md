@@ -493,3 +493,120 @@
     - A: Glue record, ako se koristi naziv za NS mora da postoji i IP adresa koja taj naziv razrešava
     - CNAME: Canonical name
     - PTR: Inverzna dotted-decimal notacija, `4.3.2.1.in-addr.arpa`
+
+## IPv6
+- L2 identifikacija IPv6 je 0x86dd umesto 0x800
+- Efikasnije agregiranje zbog hijerarhijske strukture mrežnih adresa
+- Podrška za automatsku konfiguraciju računara, IPSec za bezbednost podataka, mobilne uređaje, alokaciju resursa i kvalitet servisa, povećan broj multicast adresa
+- Zaglavlje:
+    - HLEN: Izbačen jer nema opcionih polja
+    - Header Checksum ne postoji jer se proverava od TCP/UDP
+    - Fragmentacija je potpuno izbačena:
+        - Sprovodi se na izvorištu, ne u ruterima
+        - Garantuje Maximum Transmission Unit od 1280 bajtova, a može i da se radi Path MTU Discovery
+        - Ako je paket veći od MTU on se uništava i šalje se ICMPv6 poruka Packet Too Big (na ovome se zasniva Path MTU Discovery)
+        - Path MTU Discovery ima problem što se putanja može promeniti ali to se retko dešava
+    - Traffic Class: Preimenovan Type of Service, različite klase sa različitim prioritetima
+    - Flow Label: Oznaka jednog toka komunikacije, kešira se Flow Label i ne mora da se gleda ruting tabela
+    - Payload Length: Dužina podataka u bajtovima
+    - Hop Limit: Isto što i TTL
+    - Hext Header: Umesto Protocol, označava koji je tip sledećeg zaglavlja pa se tako mogu ubaciti opciona zaglavlja
+- Routing Extension opcija: Definiše se sekvenca adresa rutera i koliko je još međutačaka preostalo
+- Anycast: Isporučuje bilo kom interfejsu koji sluša na jednoj adresi
+- Unicast adrese:
+    - Global Unicast: javne adrese, 2000::/3, počinje 001
+        - Prefix: mrežni deo adrese
+            - Global Routing Prefix: Dodeljuje se organizacijama, RIR dobija 23, ISP dobija 32 bita...
+            - Subnet ID: Organizaciona podmreža
+        - Interface ID: adresa interfejsa u IPv6 mreži (obično 64 bita)
+            - Može da se dodeljuje statički, dozvoljene su sve jedinice i sve nule, a može i dinamički (EUI-64 ili nasumično)
+            - EUI-64: MAC adresa i umetne se FFFE u sredinu, sedmi bit prvog bajta je 0 ako je univerzalna i 1 ako je lokalna
+    - Unique Local: privatne adrese, fc00::/7, sedmi bit je jedino dozvoljen da bude 1
+        - Ne smeju da se oglašavaju na internetu
+        - Global ID: Pseudo-slučajna vrednost sa algoritmom za generisanje, povezuje više mreža sa Unique Local adresama
+    - Link Local: samo unutar lokalne IP mreže, fe80::/10
+        - Ruteri ne prosleđuju pakete sa ovim adresama
+        - 54 bita posle prefiksa su samo nule
+        - Interface ID: EUI-64, manuelno, nasumično
+    - Loopback: ::1/128, kao 127.0.0.1
+    - Unspecified: Nepostojeća, ::/128, samo kao izvorišna adresa
+    - Embedded IPv4: ::/80, na početku 80 nula i 16 jedinica, IPv4 poslednja adresa
+- Multicast adrese: ff00::/8
+    - Flags:
+        - T fleg:
+            - 0: Well-Known, dodeljeno od IANA
+            - 1: Transient, dodeljeno od multicast aplikacija
+    - Scope: Opsezi korišćenja
+        - 2: Samo na lokalnom L2 segmentu
+        - 8: Na nivou organizacije
+        - E: Globalni opseg
+    - Solicited-Node multicast adrese:
+        - Automatski generisane iz GUA, ULA i LLA
+        - Za Neighbor Discovery Protocol, koji se koristi za Address Resolution i Duplicate Address Detection
+        - Fiksan prefiks: ff02:0:0:0:0:1:ff00::/104, na poslednja 24 bita iz Interface ID
+- Anycast adrese: paketi stižu do najbližeg uređaja
+- Konfigurisanje adresa:
+    - Statički: ili cele adrese ili samo mrežnog dela
+    - Dinamički:
+        - Stateful DHCPv6
+        - Stateless Address Autoconfiguration (SLAAC):
+            - Uređaji automatski saznaju mrežni deo, default gateway i DNS server a Interface ID se postavlja automatski
+- ICMPv6: Novi tipovi poruka
+    - Neighbor Discovery Protocol:
+        - Stateless Address Autoconfiguration je NDP u dva koraka:
+            1. Uređaj šalje upit svim ruterima na lokalnoj mreži preko Router Solicitation poruke, izvorište je link-local adresa a odredište All IPv6 Routers
+            2. Ruter odgovara Router Advertisement porukom, izvorište je LL adres rutera a odredište uređaja, sadržaj je mrežna adresa i opciono DNS, za default gateway se uzima izvorišna IP adresa
+        - Ruteri i sami oglašavaju RA poruke
+        - Dodela DNS: NDP, Stateless DHCPv6 (svima iste informacije), Stateful DHCPv6 (dodeljuje se i adresa, maska, default gateway i DNS server sa pamćenjem)
+        - Address Resolution:
+            1. Uređaj šalje Neighbor Solicitation poruku izvorišna adresa je unikast adresa uređaja koji zahteva MAC adresu a odredišna Solicited-Node multikast adresa za poznatu IP adresu, odredišni MAC je multikast
+            2. Neighbor Advertisement: Izvorišna adresa je unikast adresa uređaja koji šalje, odredišna je unikast uređaja koji je poslao a sadržaj zahtevana MAC adresa
+        - Duplicate Address Detection: Address Resolution pa ako neko odgovori onda je dupla
+- Tranzicija:
+    - IPv4/IPv6 Dual stack: Dvostruki IP sloj
+    - IPv6 tunelovanje: IPv6 paketi se zapakuju u IPv4 pakete
+    - NAT-PT
+
+## RARP
+- Nalazi se MAC adresa na osnovu IP adrese
+- RARP server mapira MAC adrese u IP adrese
+- Koristilo se na diskless računarima
+- Operation polje u L3 zaglavlju
+- Sve ostalo isto kao ARP
+- Nedostatak: nema default gateway, ne možemo da izađemo
+
+## BOOTP
+- Kao RARP ali aplikativnog nivoa i šalje i default gateway, masku, DNS itd.
+- Aplikativnog nivoa, koristi UDP
+- Na UDP nivou podešeni portovi, na IP broadcast, na Ethernet broadcast
+
+## DHCP
+- Dinamičko dodeljivanje adresa iz predefinisanog opsega
+- Može da postoji više DHCP servera
+- Četiri koraka:
+    - DHCP-DISCOVER: Otkrivamo DHCP servere
+    - DHCP-OFFER: DHCP server dodeljuje adresu i šalje nazad
+    - DHCP-REQUEST: Odgovara koju IP adresu sada koristi
+    - DHCP-ACK: Korisnik može da koristi dobijene parametre
+
+## NAT
+- Prevodi privatne adrese na internet
+- Adrese:
+    - Inside Local Address: Privatna adresa unutar mreže
+    - Inside Global Address: Adresa u koju se pretvara Inside Local adresa
+    - Outside Global Address: IP adresa na spoljašnjoj mreži
+- Statički NAT:
+    - Ako bi se svaka adresa mapirala u globalnu ne postiže se puna ušteda adresa
+- Dinamički NAT:
+    - Dodeljuje se IP adresa za svaku konekciju (timeout)
+- Overload NAT:
+    - Koriste se portovi
+    - Port forwarding
+- Dozvole pristupa portu: Symmetric, Full-Cone, Restricted-Cone, Port-Restricted-Cone
+- Mapiranje ICMP:
+    - Query: Imaju Query ID pa se preko toga radi mapiranje
+    - Error: Potrebno promeniti lokalne adrese i portove u originalnom paketu
+- Application Level Gateway: Menja IP adrese i u aplikativnim podacima
+
+## ACL
+- Implicitno odbacivanje
