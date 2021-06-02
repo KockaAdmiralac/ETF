@@ -18,7 +18,7 @@ PtrList::PtrList() : back(nullptr), front(nullptr) {}
  * @param ptr Data to insert
  * @returns Whether the insertion succeeded
  */
-int PtrList::insert(void* ptr) {
+int PtrList::insert(void* ptr) volatile {
     lockInterrupts("PtrList::insert");
     Element* element = new Element(ptr);
     if (element == nullptr) {
@@ -40,7 +40,7 @@ int PtrList::insert(void* ptr) {
  * Removes an element from the list.
  * @returns The removed element, or null if empty
  */
-void* PtrList::remove() {
+void* PtrList::remove() volatile {
     if (front == nullptr) {
         return nullptr;
     }
@@ -105,7 +105,7 @@ PtrWaitingList::PtrWaitingList() :
  *             not expire
  * @returns Whether the insertion succeeded
  */
-int PtrWaitingList::insert(void* ptr, unsigned time) {
+int PtrWaitingList::insert(void* ptr, unsigned time) volatile {
     lockInterrupts("PtrWaitingList::insert");
     checkListConsistency();
     Element* element = new Element(ptr, time);
@@ -167,7 +167,7 @@ int PtrWaitingList::insert(void* ptr, unsigned time) {
  * @returns The element whose waiting time expired and whether there are more
  *          results
  */
-PtrWaitingList::TickResult PtrWaitingList::tick() {
+PtrWaitingList::TickResult PtrWaitingList::tick() volatile {
     if (frontTime == nullptr) {
         // Empty list.
         return TickResult();
@@ -207,7 +207,7 @@ PtrWaitingList::TickResult PtrWaitingList::tick() {
  * Removes an element from the waiting list in order that it was inserted in.
  * @returns The removed element, or null if empty
  */
-void* PtrWaitingList::remove() {
+void* PtrWaitingList::remove() volatile {
     if (frontOrder == nullptr) {
         return nullptr;
     }
@@ -240,7 +240,7 @@ void* PtrWaitingList::remove() {
  * Gets the amount of elements in the list. Useful for debugging.
  * @returns The amount of elements in the list
  */
-unsigned PtrWaitingList::getSize() const {
+unsigned PtrWaitingList::getSize() const volatile {
     return size;
 }
 
@@ -277,7 +277,7 @@ PtrWaitingList::Element::Element(void* data, unsigned time) :
  * Only available during the debug mode! Assumes that interrupts have been
  * previously locked.
  */
-void PtrWaitingList::checkListConsistency() {
+void PtrWaitingList::checkListConsistency() volatile {
     #if KERNEL_DEBUG
     if (frontOrder != nullptr && frontOrder->prevOrder != nullptr) {
         syncPrint("frontOrder is not the first in order!\n");

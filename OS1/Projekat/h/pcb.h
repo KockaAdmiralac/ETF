@@ -59,8 +59,8 @@ class PCB {
 
         virtual void start();
         virtual void waitToComplete();
-        void exit();
-        void waitForChildren();
+        void exit() volatile;
+        void waitForChildren() volatile;
         static PCB* getPCBById(ID id);
         static void execute();
         static void interrupt copyStack(...);

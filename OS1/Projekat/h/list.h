@@ -13,8 +13,8 @@
 class PtrList {
     public:
         PtrList();
-        int insert(void* ptr);
-        void* remove();
+        int insert(void* ptr) volatile;
+        void* remove() volatile;
         ~PtrList();
     private:
         struct Element {
@@ -41,10 +41,10 @@ class PtrWaitingList {
             TickResult(void* data, int more);
         };
         PtrWaitingList();
-        int insert(void* ptr, unsigned time);
-        TickResult tick();
-        void* remove();
-        unsigned getSize() const;
+        int insert(void* ptr, unsigned time) volatile;
+        TickResult tick() volatile;
+        void* remove() volatile;
+        unsigned getSize() const volatile;
         ~PtrWaitingList();
     private:
         struct Element {
@@ -59,7 +59,7 @@ class PtrWaitingList {
         // Cannot be copied. BC31 does not support deleting constructors.
         PtrWaitingList(PtrWaitingList&);
         PtrWaitingList& operator=(PtrWaitingList&);
-        void checkListConsistency();
+        void checkListConsistency() volatile;
         volatile Element* frontOrder;
         volatile Element* backOrder;
         volatile Element* frontTime;

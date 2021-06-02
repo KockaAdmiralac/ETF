@@ -16,12 +16,12 @@
 class PtrVector {
     public:
         PtrVector(unsigned initialCapacity = 256);
-        int put(void* ptr);
-        volatile void* get(unsigned index) const;
-        void remove(unsigned index);
+        int put(void* ptr) volatile;
+        volatile void* get(unsigned index) const volatile;
+        void remove(unsigned index) volatile;
         ~PtrVector();
-        unsigned getCapacity() const;
-        unsigned getSize() const;
+        unsigned getCapacity() const volatile;
+        unsigned getSize() const volatile;
         static const unsigned MAX_CAPACITY;
     private:
         // Cannot be copied. BC31 does not support deleting constructors.

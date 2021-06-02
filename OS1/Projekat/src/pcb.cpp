@@ -61,7 +61,9 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
     stackSize /= sizeof(unsigned);
     // Conversion is safe, because we know this does not exceed
     // the maximum stack size, which fits into an unsigned.
+    #pragma warn -sig
     unsigned uStackSize = stackSize;
+    #pragma warn .sig
     this->stackSize = uStackSize;
     stack = new unsigned[uStackSize];
     if (ensure(stack != nullptr, "Stack space failed to allocate!")) {
@@ -240,7 +242,7 @@ void PCB::waitToComplete() {
  *
  * The current thread will not be returned to.
  */
-void PCB::exit() {
+void PCB::exit() volatile {
     if (ensure(this == running, "PCB::exit may only be called on the current thread!")) {
         return;
     }
@@ -275,7 +277,7 @@ void PCB::exit() {
  * Blocks the thread until all child threads created via fork() have finished
  * executing.
  */
-void PCB::waitForChildren() {
+void PCB::waitForChildren() volatile {
     lockInterrupts("PCB::waitForChildren");
     if (children.getSize() == 0) {
         unlockInterrupts("PCB::waitForChildren (1)");

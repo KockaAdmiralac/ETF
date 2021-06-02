@@ -40,7 +40,7 @@ PtrVector::PtrVector(unsigned initialCapacity) : size(0) {
  * @param ptr Pointer to put into the vector
  * @returns Index of the newly added element, or error code on failure
  */
-int PtrVector::put(void* ptr) {
+int PtrVector::put(void* ptr) volatile {
     if (ensure(size < MAX_CAPACITY, "We are at maximum capacity!")) {
         return -1;
     }
@@ -73,7 +73,7 @@ int PtrVector::put(void* ptr) {
  * @param index Index of the pointer to get
  * @returns Pointer from the vector, or nullptr
  */
-volatile void* PtrVector::get(unsigned index) const {
+volatile void* PtrVector::get(unsigned index) const volatile {
     if (index >= size) {
         return nullptr;
     }
@@ -86,7 +86,7 @@ volatile void* PtrVector::get(unsigned index) const {
  * @param index Index of the pointer to remove
  * @todo This can be more efficient!
  */
-void PtrVector::remove(unsigned index) {
+void PtrVector::remove(unsigned index) volatile {
     if (index >= size) {
         return;
     }
@@ -118,7 +118,7 @@ PtrVector::~PtrVector() {
  * Gets the capacity of the vector.
  * @returns Capacity of the vector
  */
-unsigned PtrVector::getCapacity() const {
+unsigned PtrVector::getCapacity() const volatile {
     return (unsigned) capacity;
 }
 
@@ -126,6 +126,6 @@ unsigned PtrVector::getCapacity() const {
  * Gets the size of the vector.
  * @returns Size of the vector
  */
-unsigned PtrVector::getSize() const {
+unsigned PtrVector::getSize() const volatile {
     return (unsigned) size;
 }
