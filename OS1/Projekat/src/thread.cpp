@@ -95,11 +95,15 @@ ID Thread::fork() {
     if (ensure(runningCopy->myThread != nullptr, "Cannot fork the main thread!")) {
         return -1;
     }
+    lockInterrupts("Thread::fork");
     Thread* newThread = runningCopy->myThread->clone();
     if (newThread == nullptr || newThread->myPCB == nullptr) {
+        if (newThread != nullptr) {
+            delete newThread;
+        }
+        unlockInterrupts("Thread::fork (1)");
         return -1;
     }
-    lockInterrupts("Thread::fork");
     PCB::copyStackFrom = runningCopy;
     PCB::copyStackTo = newThread->myPCB;
     PCB::copyStack();
@@ -111,12 +115,12 @@ ID Thread::fork() {
         int index = runningCopy->children.put(newThread->myPCB);
         if (index < 0) {
             delete newThread;
-            unlockInterrupts("Thread::fork (1)");
+            unlockInterrupts("Thread::fork (2)");
             return -1;
         }
         newThread->myPCB->parentIndex = index;
         newThread->start();
-        unlockInterrupts("Thread::fork (2)");
+        unlockInterrupts("Thread::fork (3)");
         return newThread->getId();
     }
     // We don't unlock interrupts here because they have already been unlocked
@@ -160,10 +164,11 @@ void Thread::waitForForkChildren() {
  * because the responsibility of freeing it is not on the kernel but rather
  * on the user.
  * Also because the method is marked const, duh.
+ * This method is a critical section. Do not call it without locking first.
  * @returns Pointer to the cloned thread, or null on error
  */
 Thread* Thread::clone() const {
-    ensure(false, "Thread::clone() has not been overriden before calling!");
+    ensure(false, "Thread::clone() has not been overriden before forking!");
     return nullptr;
 }
 
