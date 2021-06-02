@@ -23,11 +23,11 @@ KernelEv::KernelEv(IVTNo ivtNo) :
 
 /**
  * Frees resources used by the kernel implementation of an event listener.
- * @todo Use list for registering events? Don't unregister if not registered?
  */
 KernelEv::~KernelEv() {
     lockInterrupts("KernelEv::~KernelEv");
-    if (IVTEntry::entries[entry] != nullptr) {
+    IVTEntry* ivtEntry = IVTEntry::entries[entry];
+    if (ivtEntry != nullptr && ivtEntry->event == this) {
         IVTEntry::entries[entry]->event = nullptr;
     }
     unlockInterrupts("KernelEv::~KernelEv");
