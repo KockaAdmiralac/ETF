@@ -3,6 +3,7 @@
  *
  * Implementation of utility functions.
  */
+#include <kernel.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <util.h>
@@ -70,8 +71,7 @@ unsigned getBit(unsigned number, unsigned bit) {
 /**
  * Wrapper around printf() that is thread-safe.
  *
- * Interrupts are disabled in this function because this may be called from
- * an actual interrupt routine.
+ * DO NOT call this from interrupt routines.
  * @param format Output format string
  * @param ... Rest of the arguments
  * @returns The total number of written characters on success, negative on
@@ -83,11 +83,13 @@ int syncPrint(const char *format, ...) {
         pushf
         cli
     }
+    lockInterrupts("syncPrintf")
     int res;
     va_list args;
     va_start(args, format);
     res = vprintf(format, args);
     va_end(args);
+    unlockInterrupts("syncPrintf")
     asm popf
     return res;
 }
