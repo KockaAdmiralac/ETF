@@ -22,9 +22,8 @@ Semaphore::Semaphore(int init) {
     if (myImpl->id < 0) {
         delete myImpl;
         myImpl = nullptr;
-        unlockInterrupts("Semaphore::Semaphore (2)");
     }
-    unlockInterrupts("Semaphore::Semaphore (3)");
+    unlockInterrupts("Semaphore::Semaphore (2)");
 }
 
 /**
