@@ -19,7 +19,7 @@ PtrVector KernelSem::allSemaphores;
  */
 KernelSem::KernelSem(int value) : value(value) {
     id = allSemaphores.put(this);
-    ensure(id >= 0, "Failed to register kernel semaphore! Semaphore will not time out.");
+    ensure(id >= 0, "Failed to register kernel semaphore! Semaphore will not be able to wait.");
 }
 
 /**
@@ -48,8 +48,13 @@ int KernelSem::wait(Time maxTimeToWait) {
         return true;
     }
     PCB::running->status = PCB::BLOCKED;
-    ensure(blocked.insert((void*) PCB::running, maxTimeToWait), "Failed to wait for the semaphore to signal! The running thread will now be blocked forever.");
-    unlockInterrupts("KernelSem::wait (2)");
+    if (ensure(blocked.insert((void*) PCB::running, maxTimeToWait), "Failed to wait for the semaphore to signal!")) {
+        ++value;
+        PCB::running->status = PCB::RUNNING;
+        unlockInterrupts("KernelSem::wait (2)");
+        return false;
+    }
+    unlockInterrupts("KernelSem::wait (3)");
     dispatch();
     return PCB::running->semaphoreResult;
 }
