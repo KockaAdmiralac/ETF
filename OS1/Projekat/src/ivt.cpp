@@ -40,13 +40,9 @@ IVTEntry::IVTEntry(IVTNo entry, InterruptRoutine routine) :
  * deallocate.
  */
 IVTEntry::~IVTEntry() {
-    lockInterrupts("IVEntry::~IVTEntry");
-    if (oldRoutine != nullptr) {
-        lock
-        setvect(entry, oldRoutine);
-        unlock
-    }
-    unlockInterrupts("IVTEntry::~IVTEntry");
+    lock
+    setvect(entry, oldRoutine);
+    unlock
 }
 
 /**
