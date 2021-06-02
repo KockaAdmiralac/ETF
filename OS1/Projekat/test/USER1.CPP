@@ -220,9 +220,10 @@ char keymap[128] = {	0 , 27,'1','2','3','4','5','6','7','8','9','0','-','=', 8 ,
 /**
  * Listens for keyboard events and feeds them into a bounded buffer.
  */
-class KeyboardEvent : public Thread{
+class KeyboardEvent : public Thread {
 	public:
-		KeyboardEvent(BoundedBuffer*);		virtual ~KeyboardEvent() {
+		KeyboardEvent(BoundedBuffer*);
+		virtual ~KeyboardEvent() {
 			waitToComplete();
 		}
 		Thread* clone() const {
@@ -273,6 +274,7 @@ void KeyboardEvent::run() {
 				}
 			}
 			asm{
+				pushf
 				cli
 				in      al, 61h         //; Send acknowledgment without
 				or      al, 10000000b   //;   modifying the other bits.
@@ -281,12 +283,12 @@ void KeyboardEvent::run() {
 				out     61h, al         //;
 				mov     al, 20h         //; Send End-of-Interrupt signal
 				out     20h, al         //;
-				sti
+				popf
 			}
 		} while (!theEnd && status & 0x01);
 	}
 	intLock
-	cout << endl << "KeyebordListener stopped!" << endl;
+	cout << endl << "KeyboardListener stopped!" << endl;
 	intUnlock
 }
 

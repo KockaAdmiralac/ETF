@@ -50,7 +50,7 @@ class Znak : public Thread {
 };
 
 void Znak::run() {
-    for (long i = 0; i < 1000; i++) {
+    for (long i = 0; i < 100000UL; i++) {
         if (mutex->wait(n)) {
             cout << znak;
             mutex->signal();

@@ -2,13 +2,15 @@
  * USER9.CPP
  *
  * Creates as many child threads as possible and then exits them all.
+ * Child threads are never actually removed from memory, only terminated.
  */
 #include <kernel.h>
+#include <test.h>
 #include <thread.h>
 
 class ForkThread : public Thread {
     public:
-        ForkThread() : Thread(1, 0) {}
+        ForkThread() : Thread(1, 1) {}
         virtual void run();
         virtual Thread* clone() const {
             return new ForkThread();
@@ -32,6 +34,7 @@ void ForkThread::run() {
             syncPrint("We are in child %d\n", getRunningId());
         } else {
             syncPrint("Cloned thread: %d\n", forked);
+            dumbSleep(10000);
         }
     }
     waitForForkChildren();

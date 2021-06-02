@@ -20,7 +20,7 @@ class TestThread : public Thread {
 };
 
 void TestThread::run() {
-    for (int i = 0; i < 320; i++) {
+    for (int i = 0; i < 32000; i++) {
         for (int j = 0; j < 16; j++) {
             dispatch();
             syncPrint(".");

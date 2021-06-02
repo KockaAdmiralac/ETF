@@ -1,7 +1,7 @@
 /**
  * USER103.cpp
  *
- * Tests gettings threads by ID.
+ * Tests getting threads by ID.
  * @see https://drive.google.com/open?id=11uyCIaCpMwSKIyfH7PFRzwGazAMxSnMa
  */
 #include <thread.h>
@@ -23,7 +23,7 @@ class TestThread : public Thread {
 
 void TestThread::run() {
     int buffer = 2;
-    for (int i = 0; i < 320; i++) {
+    for (int i = 0; i < 32000; i++) {
         buffer = 4096/2048;
         for (int j = 0; j < 1024; j++) {
             buffer = buffer * 2;

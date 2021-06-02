@@ -19,13 +19,13 @@ class TestThread : public Thread {
 
 void TestThread::run() {
     syncPrint("Thread %d: loop1 starts\n", getId());
-    for(int i = 0; i < 320; i++) {
-        for (int j = 0; j < 320; j++);
+    for(int i = 0; i < 32000; i++) {
+        for (int j = 0; j < 32000; j++);
     }
     syncPrint("Thread %d: loop1 ends, dispatch\n",getId());
     dispatch();
     syncPrint("Thread %d: loop2 starts\n",getId());
-    for (int k = 0; k < 200; k++);
+    for (int k = 0; k < 20000; k++);
     syncPrint("Thread %d: loop2 ends\n",getId());
 }
 

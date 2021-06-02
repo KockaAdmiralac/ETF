@@ -28,8 +28,8 @@ class TestThread : public Thread {
 void TestThread::run() {
     s.wait(0);
     cout << "Thread " << getId() << " in critical section." << endl;
-    for (unsigned int i = 0; i < 640; i++) {
-        for (unsigned int j = 0; j < 640; j++);
+    for (unsigned int i = 0; i < 64000U; i++) {
+        for (unsigned int j = 0; j < 64000U; j++);
     }
     s.signal();
 }

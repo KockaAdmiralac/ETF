@@ -50,11 +50,15 @@ int userMain(int argc, char* argv[]) {
             dispatch();
         }
     }
-    lockInterrupts("userMain3 (3)");
     for (unsigned j = 0; j < 256; ++j) {
+        // We cannot wait for a thread to complete while interrupts are locked!
+        threads[j]->waitToComplete();
+        lockInterrupts("userMain3 (3)");
         delete threads[j];
+        unlockInterrupts("userMain3 (3)");
     }
+    lockInterrupts("userMain3 (4)");
     delete[] threads;
-    unlockInterrupts("userMain3 (3)");
+    unlockInterrupts("userMain3 (4)");
     return 0;
 }
