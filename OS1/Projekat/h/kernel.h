@@ -35,6 +35,7 @@ class UserMainThread : public Thread {
         int retval;
         volatile int done;
         UserMainThread(int argc, char* argv[]);
+        ~UserMainThread();
         virtual Thread* clone() const;
     protected:
         virtual void run();
@@ -57,7 +58,7 @@ class Kernel {
     private:
         static volatile Time counter;
         static InterruptRoutine oldTimerRoutine;
-        static volatile int semaphoreSignalCounter;
+        static volatile unsigned semaphoreSignalCounter;
         static volatile PCB* loop;
 };
 

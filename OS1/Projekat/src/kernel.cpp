@@ -57,6 +57,13 @@ UserMainThread::UserMainThread(int argc, char* argv[]) :
     Thread(PCB::maximumStackSize, 0), argc(argc), argv(argv), done(false) {}
 
 /**
+ * Waits for the user main thread to complete before destruction, just in case.
+ */
+UserMainThread::~UserMainThread() {
+    waitToComplete();
+}
+
+/**
  * Runs the user main function with arguments from main().
  */
 void UserMainThread::run() {
@@ -73,8 +80,8 @@ Thread* UserMainThread::clone() const {
 }
 
 /**
- * Whether the thread is safe to interrupt (0) or is in a critical section
- * (every other value).
+ * Whether it's safe to switch to another thread (0) or the current thread is
+ * in a critical section (every other value).
  */
 volatile unsigned long Kernel::cannotInterrupt = 0;
 
@@ -91,7 +98,7 @@ volatile Time Kernel::counter = 0;
 /**
  * Counts how many ticks passed since semaphores could be signalled.
  */
-volatile int Kernel::semaphoreSignalCounter = 0;
+volatile unsigned Kernel::semaphoreSignalCounter = 0;
 
 /**
  * Pointer to the loop thread. This thread must not end up in the scheduler!
@@ -119,19 +126,19 @@ unsigned tbp;
  */
 void interrupt Kernel::timer(...) {
     // The context isn't forcibly switched.
-    //syncPrint("timer\n");
     if (!contextSwitchOnDemand) {
         if (PCB::running->timeSlice != 0) {
             --counter;
         }
-        ++semaphoreSignalCounter;
+        if (!ensure(semaphoreSignalCounter < semaphoreSignalCounter + 1, "Semaphore signal counter is overflowing!")) {
+            ++semaphoreSignalCounter;
+        }
         if (cannotInterrupt == 0) {
             for (unsigned i = 0; i < KernelSem::allSemaphores.getSize(); ++i) {
                 KernelSem* sem = (KernelSem*) KernelSem::allSemaphores.get(i);
                 if (sem == nullptr) {
                     continue;
                 }
-                //syncPrint("Ticking list\n");
                 PtrWaitingList::TickResult tr;
                 for (unsigned j = 0; j < semaphoreSignalCounter; ++j) {
                     do {
@@ -143,7 +150,6 @@ void interrupt Kernel::timer(...) {
                         unblocked->status = PCB::READY;
                         unblocked->semaphoreResult = false;
                         ++sem->value;
-                        //syncPrint("Unblocking thread %d\n", unblocked->id);
                         Scheduler::put(unblocked);
                     } while (tr.more);
                 }
@@ -157,10 +163,8 @@ void interrupt Kernel::timer(...) {
     // The time is up or a synchronous context switch occurred.
     if ((counter == 0 && PCB::running->timeSlice != 0) || contextSwitchOnDemand) {
         if (cannotInterrupt) {
-            //syncPrint("Kernel cannot interrupt\n");
             contextSwitchOnDemand = true;
         } else {
-            //syncPrint("Kernel can interrupt\n");
             contextSwitchOnDemand = false;
             // Saving thread context.
             asm {
@@ -177,10 +181,8 @@ void interrupt Kernel::timer(...) {
             }
             PCB::running = Scheduler::get();
             if (PCB::running == nullptr) {
-                //syncPrint("Getting loop %d\n", loop->id);
                 PCB::running = loop;
             } else {
-                //syncPrint("Getting %d\n", PCB::running->id);
                 PCB::running->status = PCB::RUNNING;
             }
             if (ensure(PCB::running != nullptr, "Loop thread is null in timer interrupt!")) {
@@ -208,14 +210,17 @@ void Kernel::cleanup() {
     // Reset timer interrupt.
     lock
     setvect(0x08, oldTimerRoutine);
+    unlock
     #ifdef KERNEL_DEBUG
     syncPrint("Happy End\n");
     #endif
-    unlock
 }
 
 /**
  * Main function of the kernel.
+ *
+ * While this is a separate function from the real main(), it isn't really
+ * atomic as the return to main() isn't guaranteed.
  * @param argc Number of command-line arguments
  * @param argv Command-line arguments
  * @returns Exit code
@@ -241,19 +246,7 @@ int Kernel::run(int argc, char* argv[]) {
     unlock
     // Wait for user code to finish executing.
     dispatch();
-    while (!userMainThread.done) {
-        #ifdef KERNEL_DEBUG
-        lockInterrupts("Kernel::run");
-        syncPrint("Loopin' ");
-        for (unsigned i = 0; i < PCB::allPCBs.getSize(); ++i) {
-            if (PCB::allPCBs.get(i) != nullptr) {
-                syncPrint("%d %d ", i, ((PCB*) PCB::allPCBs.get(i))->status);
-            }
-        }
-        syncPrint("\n");
-        unlockInterrupts("Kernel::run");
-        #endif
-    }
+    while (!userMainThread.done);
     // This will not execute if the user main thread has been exited using
     // Thread::exit();
     cleanup();
