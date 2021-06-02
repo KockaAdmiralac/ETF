@@ -52,6 +52,9 @@ PCB::PCB(Thread& myThread, StackSize stackSize, Time timeSlice) :
     myThread(&myThread), timeSlice(timeSlice), children(1), parent(nullptr),
     parentIndex(-1) {
     lockInterrupts("PCB::PCB");
+    // We set the ID to -1 so we can properly detect whether the PCB wasn't
+    // inserted into the list of PCBs at all.
+    id = -1;
     // Initialize the stack.
     if (stackSize < minimumStackSize) {
         stackSize = minimumStackSize;
@@ -116,7 +119,6 @@ void* applyPtrDiff(void* oldPointer, unsigned* base, unsigned* oldBase) {
     }
 }
 
-#include <iostream.h>
 /**
  * Copies the stack of the PCB in PCB::copyStackFrom into the stack of
  * PCB::copyStackTo.
@@ -143,9 +145,6 @@ void interrupt PCB::copyStack(...) {
     copyStackFrom->bp = tbp;
     // Copy the stack.
     memcpy(copyStackTo->stack, copyStackFrom->stack, copyStackTo->stackSize * sizeof(unsigned));
-    syncPrint("Old stack: %p\n", copyStackFrom->stack);
-    syncPrint("New stack: %p\n", copyStackTo->stack);
-    syncPrint("Old registers: %u %u %u\n", copyStackFrom->ss, copyStackFrom->sp, copyStackFrom->bp);
     // Update stack pointers (SS, SP, BP, old BPs).
     void* oldStackPointer = MK_FP(copyStackFrom->ss, copyStackFrom->sp);
     void* newStackPointer = applyPtrDiff(oldStackPointer, copyStackTo->stack, copyStackFrom->stack);
@@ -155,13 +154,10 @@ void interrupt PCB::copyStack(...) {
     void* newBasePointer = applyPtrDiff(oldBasePointer, copyStackTo->stack, copyStackFrom->stack);
     copyStackTo->bp = FP_OFF(newBasePointer);
     ensure(FP_SEG(newBasePointer) == copyStackTo->ss, "Segments of stack and base pointers don't match!");
-    syncPrint("New registers: %u %u %u\n", copyStackTo->ss, copyStackTo->sp, copyStackTo->bp);
     unsigned oldStackBP = *((unsigned*) newBasePointer);
     while (oldStackBP != 0) {
-        syncPrint("Old stack BP: %u\n", oldStackBP);
         oldBasePointer = newBasePointer;
         newBasePointer = applyPtrDiff(MK_FP(copyStackFrom->ss, oldStackBP), copyStackTo->stack, copyStackFrom->stack);
-        syncPrint("New stack BP: %u\n", FP_OFF(newBasePointer));
         *((unsigned*) oldBasePointer) = FP_OFF(newBasePointer);
         oldStackBP = *((unsigned*) newBasePointer);
     }
@@ -181,7 +177,7 @@ PCB::PCB() : children(1) {
  */
 PCB::~PCB() {
     lockInterrupts("PCB::~PCB");
-    if (status != TERMINATING) {
+    if (id >= 0) {
         allPCBs.remove(id);
         status = TERMINATING;
     }
@@ -217,7 +213,6 @@ void PCB::start() {
  * Adds the running thread to this thread's waiting queue.
  *
  * On failure, the running thread will remain blocked forever.
- * @todo Make it not do that?
  */
 void PCB::waitToComplete() {
     if (ensure(running != nullptr, "Running PCB that requested the wait is null!")) {
@@ -226,8 +221,9 @@ void PCB::waitToComplete() {
     if (ensure(running != this, "You cannot wait for yourself to complete!")) {
         return;
     }
-    if (status != READY && status != BLOCKED && status != MATERNITY_LEAVE) {
+    if (status == INITIALIZING || status == TERMINATING) {
         // The thread has finished or hasn't started.
+        // Status cannot be RUNNING at this point.
         return;
     }
     lockInterrupts("PCB::waitToComplete");
@@ -249,9 +245,6 @@ void PCB::exit() volatile {
     lockInterrupts("PCB::exit");
     PCB* unblocked = (PCB*) blocked.remove();
     while (unblocked != nullptr) {
-        if (ensure(unblocked != nullptr, "A PCB from the blocked list turned out to be null!")) {
-            continue;
-        }
         unblocked->status = READY;
         Scheduler::put(unblocked);
         unblocked = (PCB*) blocked.remove();
@@ -301,6 +294,8 @@ PCB* PCB::getPCBById(ID id) {
  * Executes the currently running thread.
  *
  * This is a wrapper function that will be executed upon starting a thread.
+ * DO NOT USE LOCAL VARIABLES OR ARGUMENTS HERE. BP is most likely set to ZERO
+ * after returning from the interrupt routine.
  */
 void PCB::execute() {
     if (ensure(running != nullptr, "PCB::execute called with no running thread!")) {
