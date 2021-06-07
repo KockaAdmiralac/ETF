@@ -239,7 +239,7 @@
     - Total Length (2): Ukupna veličina IP paketa u bajtovima, uključujući zaglavlje
     - Identification(2): Jedinstveni identifikator paketa
     - Flags(0.5): MF (postavljen kad fragment nije poslednji), DF (postavljen kad se zabranjuje fragmentacija)
-    - Fragement Offset(1.5): Redosled fragmenta za defragmentaciju
+    - Fragment Offset(1.5): Redosled fragmenta za defragmentaciju
     - Time to Live(1): Petlje su tehnički moguće, pa se postavlja TTL, i smanjuje na svakom hopu
     - Header Checksum(2): Prvi komplement sume reči od 16b celog zaglavlja
     - Protocol(1): L4 protokol
@@ -471,7 +471,7 @@
     - Advertised Window: Inicijalna vrednost prozora
     - Congestion Window: Postepeno se povećava prozor do maksimalne vrednosti (AD), ako se potvrđuje svaki segment onda je eksponencijalno
     - Slow Start: Ako dođe timeout, ponavljamo CW=1
-    - Congestion Avoidance: Ograničavamo eksponencijalni rast a posle toga idemo linearno, sshtresh se smanjuje za polovinu poslednje vrednosti kad dođe timeout
+    - Congestion Avoidance: Ograničavamo eksponencijalni rast a posle toga idemo linearno, sstresh se smanjuje za polovinu poslednje vrednosti kad dođe timeout
     - Fast Retransmit: Ponovno slanje segmenta pre timeout, tek ako dođe 3 dupla ACK
     - Fast Recovery: Ako su najmanje 3 segmenta uspešno stigla, idemo direktno u Congestion Avoidance bez Slow Start
 - QUIC: HTTP preko QUIC, koristi UDP, može da multipleksira veze, zadržava se veza i prilikom promene IP
