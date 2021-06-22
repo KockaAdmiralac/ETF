@@ -93,11 +93,14 @@
 - Nije dozvoljeno praviti nove objekte tipa T (ne zna se koji objekat da napravi, tip je izgubljen)
 - Argumenti generika moraju biti tipovi do kojih se može napraviti referenca, tj. ne-primitivni tipovi
 - U pozivu konstruktora se mogu izostaviti argumenti tipa ako se mogu zaključiti
+- Generička klasa ne sme biti izvedena iz Throwable
+- Kod ugnežđenih tipova i spoljašnji i unutrašnji moraju biti ili generički ili ne
+- Ograničavanje sa obe strane ili sa više tipova nije moguće
 
 # .NET
 - U C# je ponovo dozvoljen `goto` (moguće skakanje na `switch` labele), ali labele u `break` i `continue` nisu
 - `switch` ne dozvoljava propadanje
-- Sa `goto` nije moguće uskakanje u neki blok ili iskakanje iz `finally`, a iskakanje iz `try`/`catch` poziva `finally`ć
+- Sa `goto` nije moguće uskakanje u neki blok ili iskakanje iz `finally`, a iskakanje iz `try`/`catch` poziva `finally`
 - Izvođenje osim sa intefejsima nije dozvoljeno kod struktura
 - Metodi se razlikuju po tome da li koriste `ref` i `out` ali se ne mogu razlikovati ako jedan koristi `ref` a drugi `out`
 - Statički članovi su dostupni samo preko klase
@@ -105,6 +108,8 @@
 - Podrazumevano pravo pristupa je privatno
 - Za `++`, `--` i kombinovane dodele potrebna je realizacija i `set` i `get` u svojstvima i indekserima
 - Sintaksa nasleđenih indeksera: `tip I.this[...] {...}`
+- Moguće je koristiti ključne reči kao identifikatore dodavanjem `@`
+- Apstraktna klasa mora da naznači da je nerealizovani metod interfejsa apstraktan
 
 ## Greške
 - Na testu kaže da abstract može da stoji pre definicije metode
@@ -113,6 +118,7 @@ https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.4.3.1
 - Nema sekundarnog this kada nema instance
 > When an inner class (whose declaration does not occur in a static context) refers to an instance variable that is a member of a lexically enclosing class, the variable of the corresponding lexically enclosing instance is used.
 https://docs.oracle.com/javase/specs/jls/se7/html/jls-8.html#jls-8.1.3
+- Ona `using` sintaksa sa više klasa ne postoji
 
 ## Pitanja
 - Da li nam u prva dva ispitna roka može doći u kojoj je verziji Jave uvedeno nešto?
