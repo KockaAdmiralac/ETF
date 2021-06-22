@@ -392,7 +392,7 @@
     - Cena veze se izvodi kao 10^8/bandwidth, cena putanje je zbir svih cena na putanji
     - Serijske veze imaju 1544kbps, iako pravi bandwidth može da bude manji, zato moramo da postavimo pravu metriku na ruteru
     - Oblasti:
-        - Area 0 (Transita Area, Backbone Area)
+        - Area 0 (Transit Area, Backbone Area)
         - Ruteri:
             - Area Border Router (između oblasti)
             - Autonomous System Boundary Router (između OSPF i nečeg drugog)
