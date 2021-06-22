@@ -32,8 +32,6 @@ router ospf 1
 network 192.168.0.0 0.0.0.255 area 0
 network 192.168.12.0 0.0.0.255 area 0
 network 192.168.13.0 0.0.0.255 area 0
-area 1 stub no-summary
-area 2 stub
 exit
 # Telnet
 line vty 0 4
@@ -86,8 +84,6 @@ exit
 router ospf 1
 network 192.168.12.0 0.0.0.255 area 0
 network 192.168.24.0 0.0.0.255 area 0
-area 1 stub no-summary
-area 2 stub
 redistribute rip metric 25 metric-type 2 subnets
 exit
 # Izađi iz moda podešavanja
@@ -116,7 +112,6 @@ router ospf 1
 network 192.168.13.0 0.0.0.255 area 0
 network 192.168.1.0 0.0.0.255 area 1
 area 1 stub no-summary
-area 2 stub
 exit
 # Izađi iz moda podešavanja
 exit
@@ -143,7 +138,6 @@ exit
 router ospf 1
 network 192.168.24.0 0.0.0.255 area 0
 network 192.168.2.0 0.0.0.255 area 2
-area 1 stub no-summary
 area 2 stub
 exit
 # Izađi iz moda podešavanja
@@ -298,3 +292,62 @@ U Desktop > IP Configuration podesiti:
     - `permit icmp any host 8.0.0.2 echo`: Uđite u Command Prompt na nekom računaru i pokrenite `ping google.com`
     - `deny ip any host 8.0.0.2`: Uđite u Command Prompt na nekom računaru i pokrenite `telnet google.com`
     - `permit ip any any`: Uđite u Command Prompt na nekom računaru i pokrenite `ping 8.0.0.16`
+
+## Modifikacije
+### RX
+```
+en
+conf t
+hostname RX
+# Podešavanje IP adrese
+interface Fa0/0
+ip address 192.168.1.4 255.255.255.0
+no shutdown
+exit
+# Podešavanje OSPF kako bi se prihvatile rute
+router ospf 1
+network 192.168.1.0 0.0.0.255 area 1
+area 1 stub
+exit
+# Čuvanje
+exit
+copy running-config startup-config
+```
+### R1
+```
+en
+conf t
+ip access-list extended R1_ACL
+# Dozvoljava se DNS upit za DNS local
+permit udp any host 192.168.0.2 eq domain
+# Bez ovoga neće raditi pristup google.com osim ako se ne kešira na DNS local
+permit udp host 8.0.0.3 host 192.168.0.2
+# Dozvoljava se ping sa RX na DNS local
+permit icmp host 192.168.1.4 host 192.168.0.2 echo
+# Zabranjuje se sve ostalo sa DNS local
+deny ip any host 192.168.0.2
+# Dozvoljava se sve ostalo sa ostalim računarima
+permit ip any any
+exit
+# Podešavanje ACL na ulaznim interfejsima (prema R2 i prema R3)
+interface Fa0/0
+ip access-group R1_ACL in
+exit
+interface Fa1/0
+ip access-group R1_ACL in
+exit
+# Čuvanje
+copy running-config startup-config
+```
+### DNS local
+- Dodati NS unos za `rs` ka `ns.rs`
+- Dodati A unos za `ns.rs` ka `8.0.0.3`
+
+### DNS google.com:
+- Dodati CNAME unos za `rm1.rs` ka `google.com`
+
+### Testiranje
+- Pristup `google.com` kroz web browser (prikazuje se)
+- `ping ip 192.168.0.2` kroz RX (prihvata se)
+- `ping 192.168.0.2` kroz bilo koji računar (odbija se jer ACL ne dozvoljava)
+- Pristup `rm1.rs` kroz web browser (prikazuje isti sajt kao `google.com`)
