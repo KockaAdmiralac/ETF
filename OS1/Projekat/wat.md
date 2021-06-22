@@ -1,15 +1,4 @@
-# wat
-## Pažnja
-- `canInterrupt = false;` uvek mora da ima odgovarajući `canInterrupt = true;`!!!!!
-- Deljeni podaci moraju biti `volatile`
-- Ne zaboravi da markiraš kritične sekcije
-- Ne zaboravi da su svi pozivi bibliotečkih funkcija kritične sekcije
-- Ne zaboravi da cout može da postavi I na 1
-
-## Pitanja
-- Da li je greška što se u javnom testu ne oslobađa dečija nit
-
-## Zaključci
+# Zaključci
 - `exit()` treba da gasi bez čekanja na ostale niti kad se izlazi iz glavne niti
 - 08 poziva 1C na kraju pa se koristi 08 (ima neki komplikovan razlog ali ne koristiti 1C)
 - Garantuje da će `waitToComplete` biti pozvana od strane korisnika u destruktoru niti (verovatno pitati ponovo na velikim konsultacijama)
@@ -25,6 +14,6 @@
 - `waitToComplete` može da radi `waitForForkChildren`, ali ne možemo da računamo na to da će roditeljska nit da se završi posle dečijih
 - Veličina steka za `userMain` može biti podrazumevana
 - Decu napravljenu sa `fork()` oslobađa onaj koji ih je napravio
-- `clone()` poziva običan konstruktor i sigurna je
+- `clone()` poziva običan konstruktor i treba da zaključavamo sekcije kad je pozivamo
 - Možemo da ponesemo bilo kakve tekstualne fajlove na odbranu
 - `wait()` vraća 0 samo ako čekanje ne uspe
