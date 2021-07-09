@@ -31,6 +31,7 @@ int sync_write(char* buffer) {
         return request;
     }
     wait(request);
+    return request;
 }
 ```
 
