@@ -21,3 +21,16 @@ Misc/imena.csv
 Misc/rezultati.csv
 SIS/test.py
 node_modules
+## Quartus
+# Quartus generated files
+*.qws
+*.hex
+*.bak
+db/
+incremental_db/
+simulation/
+output_files/
+# Has tmp in the name so i assume its safe to ignore
+greybox_tmp/
+*.qdf
+*.rpt
