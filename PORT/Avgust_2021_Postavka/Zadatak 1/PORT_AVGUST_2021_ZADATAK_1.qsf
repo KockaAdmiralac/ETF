@@ -18,14 +18,14 @@
 #
 # Quartus II 64-Bit
 # Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-# Date created = 18:04:24  July 11, 2020
+# Date created = 17:11:03  September 08, 2020
 #
 # -------------------------------------------------------------------------- #
 #
 # Notes:
 #
 # 1) The default values for assignments are stored in the file:
-#		main_assignment_defaults.qdf
+#		PORT_AVGUST_2021_ZADATAK_1_assignment_defaults.qdf
 #    If this file doesn't exist, see file:
 #		assignment_defaults.qdf
 #
@@ -36,12 +36,12 @@
 # -------------------------------------------------------------------------- #
 
 
-set_global_assignment -name DEVICE EP3C16F484C6
 set_global_assignment -name FAMILY "Cyclone III"
-set_global_assignment -name TOP_LEVEL_ENTITY main
+set_global_assignment -name DEVICE EP3C16F484C6
+set_global_assignment -name TOP_LEVEL_ENTITY PORT_AVGUST_2021_ZADATAK_1
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
-set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:04:24  JULY 11, 2020"
-set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "17:11:03  SEPTEMBER 08, 2020"
+set_global_assignment -name LAST_QUARTUS_VERSION 13.1
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -49,20 +49,6 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
-set_global_assignment -name BDF_FILE CMP1.bdf
-set_global_assignment -name BDF_FILE CMP3.bdf
-set_global_assignment -name BDF_FILE MX2_3.bdf
-set_global_assignment -name BDF_FILE MX4_3.bdf
-set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
-set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name BDF_FILE REG1_LD_CL_INC_SL_SR.bdf
-set_global_assignment -name BDF_FILE REG2_INC_CL.bdf
-set_global_assignment -name BDF_FILE REG3_LD_CL_INC_SL_SR.bdf
-set_global_assignment -name BDF_FILE main.bdf
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
 set_location_assignment PIN_F1 -to BTN[2]
 set_location_assignment PIN_G3 -to BTN[1]
 set_location_assignment PIN_H2 -to BTN[0]
@@ -87,4 +73,33 @@ set_location_assignment PIN_H6 -to SW[2]
 set_location_assignment PIN_H5 -to SW[1]
 set_location_assignment PIN_J6 -to SW[0]
 set_location_assignment PIN_G21 -to CLK
+
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+
+set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH testbench -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_NAME testbench -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id testbench
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME testbench -section_id testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/testbench.vhd -section_id testbench
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+
+set_global_assignment -name BDF_FILE PORT_AVGUST_2021_ZADATAK_1.bdf
+set_global_assignment -name BDF_FILE CMP1.bdf
+set_global_assignment -name BDF_FILE CMP6.bdf
+set_global_assignment -name BDF_FILE MX2_6.bdf
+set_global_assignment -name BDF_FILE MX4_6.bdf
+set_global_assignment -name BDF_FILE FallingEdge.bdf
+set_global_assignment -name BDF_FILE REG1_LD_SL_SR_CL.bdf
+set_global_assignment -name BDF_FILE REG6_LD_SL_SR_CL.bdf
+set_global_assignment -name VHDL_FILE tests/test_CMP1.vhd
+set_global_assignment -name VHDL_FILE tests/test_CMPx.vhd
+set_global_assignment -name VHDL_FILE tests/test_MX2_x.vhd
+set_global_assignment -name VHDL_FILE tests/test_MX4_x.vhd
+set_global_assignment -name VHDL_FILE tests/test_FallingEdge.vhd
+set_global_assignment -name VHDL_FILE tests/test_REGx_LD_SL_SR_CL.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
