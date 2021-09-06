@@ -18,13 +18,13 @@ begin
 	begin
 		if (rising_edge(clk)) then
 			cnt <= cnt_next;
-			if cnt = 1388889 then
+			if cnt_next = 1388889 then
 				cnt <= 0;
 				cnt_next := 1;
-				output <= '0';
+				output <= '1';
 			else
 				cnt_next := cnt_next + 1;
-				output <= '1';
+				output <= '0';
 			end if;
 		end if;
 	end process;

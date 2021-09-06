@@ -23,7 +23,7 @@ applicable agreement for further details.
 	(input)
 	(rect 72 40 240 56)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "EN" (rect 5 0 21 12)(font "Arial" ))
+	(text "EN" (rect 5 0 20 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -39,7 +39,7 @@ applicable agreement for further details.
 	(input)
 	(rect 72 64 240 80)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "CLK" (rect 5 0 27 12)(font "Arial" ))
+	(text "CLK" (rect 5 0 26 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -506,12 +506,6 @@ applicable agreement for further details.
 	(pt 568 80)
 )
 (connector
-	(text "out[5..0]" (rect 555 48 596 60)(font "Arial" ))
-	(pt 552 64)
-	(pt 600 64)
-	(bus)
-)
-(connector
 	(text "CLK" (rect 312 160 333 172)(font "Arial" ))
 	(pt 304 176)
 	(pt 432 176)
@@ -520,26 +514,6 @@ applicable agreement for further details.
 	(text "zero" (rect 312 144 332 156)(font "Arial" ))
 	(pt 304 160)
 	(pt 432 160)
-)
-(connector
-	(text "out[0]" (rect 312 128 340 140)(font "Arial" ))
-	(pt 304 144)
-	(pt 432 144)
-)
-(connector
-	(text "cycle" (rect 312 112 339 124)(font "Arial" ))
-	(pt 304 128)
-	(pt 432 128)
-)
-(connector
-	(text "zero" (rect 312 96 332 108)(font "Arial" ))
-	(pt 304 112)
-	(pt 432 112)
-)
-(connector
-	(text "zero" (rect 312 80 332 92)(font "Arial" ))
-	(pt 304 96)
-	(pt 432 96)
 )
 (connector
 	(text "powerup" (rect 312 48 352 60)(font "Arial" ))
@@ -568,11 +542,6 @@ applicable agreement for further details.
 	(text "powerup" (rect 312 296 352 308)(font "Arial" ))
 	(pt 304 312)
 	(pt 432 312)
-)
-(connector
-	(text "one36thOfSecond" (rect 312 328 400 340)(font "Arial" ))
-	(pt 432 344)
-	(pt 304 344)
 )
 (connector
 	(text "counter[5]" (rect 312 344 361 356)(font "Arial" ))
@@ -624,18 +593,48 @@ applicable agreement for further details.
 	(pt 856 576)
 )
 (connector
-	(text "one36thOfSecond" (rect 1065 560 1153 572)(font "Arial" ))
-	(pt 1056 576)
-	(pt 1152 576)
-)
-(connector
 	(text "WM[5..0]" (rect 672 56 716 68)(font "Arial" ))
 	(pt 664 72)
 	(pt 736 72)
 	(bus)
 )
+(connector
+	(text "output[5..0]" (rect 555 48 611 60)(font "Arial" ))
+	(pt 552 64)
+	(pt 600 64)
+	(bus)
+)
+(connector
+	(text "a36thOfSecond" (rect 1065 560 1141 572)(font "Arial" ))
+	(pt 1056 576)
+	(pt 1152 576)
+)
+(connector
+	(text "a36thOfSecond" (rect 312 328 388 340)(font "Arial" ))
+	(pt 432 344)
+	(pt 304 344)
+)
+(connector
+	(text "cycle" (rect 312 80 339 92)(font "Arial" ))
+	(pt 304 96)
+	(pt 432 96)
+)
+(connector
+	(text "zero" (rect 312 112 332 124)(font "Arial" ))
+	(pt 304 128)
+	(pt 432 128)
+)
+(connector
+	(text "zero" (rect 312 128 332 140)(font "Arial" ))
+	(pt 304 144)
+	(pt 432 144)
+)
+(connector
+	(text "output[0]" (rect 312 96 355 108)(font "Arial" ))
+	(pt 304 112)
+	(pt 432 112)
+)
 (text "Ovaj registar nam sluzi tome da rotiranjem (siftovanjem) bitova u njemu simuliramo pomeranje segmenta" (rect 304 232 888 246)(font "Arial" (font_size 8)))
-(text "sedmosegmentnog ekrana po kruznoj putanji." (rect 304 248 560 262)(font "Arial" (font_size 8)))
 (text "Ovaj registar nam sluzi da u njemu brojimo koliko je trideset sestih delova sekunde proslo. Posto nemamo ni" (rect 304 472 908 486)(font "Arial" (font_size 8)))
 (text "inkrementiranje ni dekrementiranje, ni njihove kombinacione varijante, ovaj brojac zapravo siftuje jednu jedinicu" (rect 304 488 925 502)(font "Arial" (font_size 8)))
 (text "u krug (isto kao prosli registar) i kada je ona na najvisem mestu znamo da je otkucano sest puta." (rect 304 504 847 518)(font "Arial" (font_size 8)))
@@ -646,3 +645,4 @@ applicable agreement for further details.
 (text "Posto brojac trideset sestih delova sekunde zadrzava svoj najvisi bit na jedinici duze od jednog takta," (rect 856 392 1428 406)(font "Arial" (font_size 8)))
 (text "to bi znacilo da ce se nas registar rotacije ves masine siftovati vise od jednom po sestom delu sekunde, sto je lose." (rect 856 408 1508 422)(font "Arial" (font_size 8)))
 (text "Da bismo to zaobisli, ovaj FallingEdge nam sluzi da siftujemo registar rotacije tacno jednom, cim taj bit postane 1." (rect 856 424 1488 438)(font "Arial" (font_size 8)))
+(text "sedmosegmentnog ekrana po kruznoj putanji. Ispisuje se na izlaz samo dok je masina ukljucena." (rect 304 248 845 262)(font "Arial" (font_size 8)))

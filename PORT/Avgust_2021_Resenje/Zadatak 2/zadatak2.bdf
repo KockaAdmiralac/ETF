@@ -23,23 +23,7 @@ applicable agreement for further details.
 	(input)
 	(rect 56 48 224 64)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "INC" (rect 5 0 26 12)(font "Arial" ))
-	(pt 168 8)
-	(drawing
-		(line (pt 84 12)(pt 109 12))
-		(line (pt 84 4)(pt 109 4))
-		(line (pt 113 8)(pt 168 8))
-		(line (pt 84 12)(pt 84 4))
-		(line (pt 109 4)(pt 113 8))
-		(line (pt 109 12)(pt 113 8))
-	)
-	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
-)
-(pin
-	(input)
-	(rect 56 72 224 88)
-	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "ON[2..0]" (rect 5 0 48 12)(font "Arial" ))
+	(text "INC" (rect 5 0 25 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -55,7 +39,23 @@ applicable agreement for further details.
 	(input)
 	(rect 56 96 224 112)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "CLK" (rect 5 0 27 12)(font "Arial" ))
+	(text "CLK" (rect 5 0 26 12)(font "Arial" ))
+	(pt 168 8)
+	(drawing
+		(line (pt 84 12)(pt 109 12))
+		(line (pt 84 4)(pt 109 4))
+		(line (pt 113 8)(pt 168 8))
+		(line (pt 84 12)(pt 84 4))
+		(line (pt 109 4)(pt 113 8))
+		(line (pt 109 12)(pt 113 8))
+	)
+	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
+)
+(pin
+	(input)
+	(rect 56 72 224 88)
+	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
+	(text "ON1[2..0]" (rect 5 0 54 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -336,11 +336,6 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(text "zero" (rect 288 64 308 76)(font "Arial" ))
-	(pt 280 80)
-	(pt 384 80)
-)
-(connector
 	(text "INC" (rect 288 96 308 108)(font "Arial" ))
 	(pt 280 112)
 	(pt 384 112)
@@ -356,20 +351,9 @@ applicable agreement for further details.
 	(pt 384 160)
 )
 (connector
-	(text "zero" (rect 288 160 308 172)(font "Arial" ))
-	(pt 280 176)
-	(pt 384 176)
-)
-(connector
 	(text "CLK" (rect 288 176 309 188)(font "Arial" ))
 	(pt 280 192)
 	(pt 384 192)
-)
-(connector
-	(text "zero,zero,zero,ON[2..0]" (rect 288 336 401 348)(font "Arial" ))
-	(pt 384 352)
-	(pt 280 352)
-	(bus)
 )
 (connector
 	(text "oneSecond" (rect 288 320 342 332)(font "Arial" ))
@@ -396,11 +380,6 @@ applicable agreement for further details.
 	(text "zero" (rect 288 400 308 412)(font "Arial" ))
 	(pt 384 416)
 	(pt 280 416)
-)
-(connector
-	(text "zero" (rect 288 416 308 428)(font "Arial" ))
-	(pt 384 432)
-	(pt 280 432)
 )
 (connector
 	(text "CLK" (rect 288 432 309 444)(font "Arial" ))
@@ -446,6 +425,33 @@ applicable agreement for further details.
 	(text "counter[0]" (rect 288 128 337 140)(font "Arial" ))
 	(pt 280 144)
 	(pt 384 144)
+)
+(connector
+	(text "zero,zero,zero,ON1[2..0]" (rect 288 336 407 348)(font "Arial" ))
+	(pt 384 352)
+	(pt 280 352)
+	(bus)
+)
+(connector
+	(text "zero,zero,zero,zero,zero,zero" (rect 288 80 426 92)(font "Arial" ))
+	(pt 384 96)
+	(pt 280 96)
+	(bus)
+)
+(connector
+	(text "zero" (rect 288 64 308 76)(font "Arial" ))
+	(pt 280 80)
+	(pt 384 80)
+)
+(connector
+	(text "zero" (rect 288 416 308 428)(font "Arial" ))
+	(pt 384 432)
+	(pt 280 432)
+)
+(connector
+	(text "zero" (rect 288 160 308 172)(font "Arial" ))
+	(pt 280 176)
+	(pt 384 176)
 )
 (text "Ovaj brojac sluzi da se na svaku jednu sekundu u njega ucitaju trenutno ukljucene ves masine" (rect 280 504 812 518)(font "Arial" (font_size 8)))
 (text "Brojac zetona za ves masine. Siftovanje ulevo inkrementira a siftovanje udesno dekrementira broj zetona." (rect 272 248 870 262)(font "Arial" (font_size 8)))
