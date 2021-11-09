@@ -1,6 +1,7 @@
 **/Materijali/**/*.doc
 **/Materijali/**/*.pdf
 **/Materijali/**/*.vmdk
+**/Materijali/**/*.bin
 __pycache__
 a.out
 ASP1/Materijal
