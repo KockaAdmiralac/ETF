@@ -1,0 +1,9 @@
+| Komponenta       | Rokovi                                    |
+| ---------------- | ----------------------------------------- |
+| CMP1             | AVG2021                                   |
+| CMP6             | AVG2021                                   |
+| FallingEdgeMoore | AVG2021                                   |
+| MX2_6            | AVG2021                                   |
+| MX4_6            | AVG2021                                   |
+| REG1_LD_SL_SR_CL | AVG2021                                   |
+| REG6_LD_SL_SR_CL | AVG2021                                   |
