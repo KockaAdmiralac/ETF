@@ -1,0 +1,158 @@
+## Uvod
+- Jezik je objektno orijentisan ako podržava objekte koji apstrahuju podatke, interfejs i sakrivanje stanja, pridruživanje tipa objektu i nasleđivanje
+- OOA&D principi
+    - Obavezni: apstrakcija, kapsulacija, modularnost, hijerarhija, (polimorfizam)
+    - Dodatni: (tipizacija), konkurentnost, perzistencija
+
+## UML
+- Gradivni blokovi:
+    - Stvari
+        - strukture
+            - Klasa: opis skupa atributa koji dele zajedničke karakteristike (atribute i operacije), ograničenja i semantiku
+            - Aktivna klasa: klasa čiji objekti imaju vlastitu nit kontrole
+            - Interfejs: skup operacija koje specificiraju uslugu klase ili komponente
+            - Slučaj korišćenja: opis skupa sekvenci akcija (scenarija) koje obavlja sistem da bi proizveo vidljiv rezultat vredan za pojedinačnog aktera
+            - Saradnja: opisuje strukturu skupa uloga koje imaju specifične funkcije da bi zajedno ostvarile ciljnu funkcionalnost
+            - Komponenta: modularni deo sistema koji kapsulira neki sadržaj (u UML1 fizička a u UML2 logička stvar)
+            - Artefakt: fizički i zamenljivi deo sistema koji sadrži informacije
+            - Čvor: fizička stvar koja postoji u vreme izvršenja i reprezentuje resurs obrade
+        - ponašanja
+            - Interakcija: ponašanje koje specificira sekvence poruka koje se razmenjuje između skupa uloga unutar posebnog konteksta da se ostvari specifična svrha
+            - Automat stanja: ponašanje koje specificira sekvence stanja kroz koje prolazi jedan objekat ili interakcija za vreme svog životnog veka, sa prelazima kao posledicama događaja
+        - grupisanja
+            - Paket: opštenamenski mehanizam za organizovanje elemenata u grupe, uspostavlja vlasništvo i obezbeđuje jedinstvenost
+            - Radni okviri
+            - Modeli
+        - anotacije
+            - Napomena: simbol za prikazivanje komentara pridruženi elementu ili više elemenata
+    - Relacije
+        - Zavisnost
+        - Asocijacija (npr. sadržanje): može da prikazuje multiplikativnost i uloge
+        - Generalizacija: izvođenje
+        - Realizacija: implementiranje interfejsa
+    - Dijagrami (prikaz strukture ili ponašanja):
+        - klasa
+        - paketa
+        - objekata
+        - složene strukture
+        - komponenata: komponente sa unutrašnjom strukturom i zavisnostima
+        - raspoređivanja: čvorovi obrade i artefakti na njima
+        - slučajevi korišćenja: slučajevi korišćenja i akteri
+        - interakcije:
+            - sekvence: vremenski redosled
+            - komunikacije: naglašava organizaciju uloga
+            - pregleda interakcije
+            - vremenski
+        - stanja
+        - aktivnosti (ne postoji u UML2)
+- Opšti mehanizmi:
+    - specifikacije: stoje iza grafičkih elemenata, potpune su iako mogu delovi da se ne prikazuju, može postojati više pogleda na istu klasu
+    - ukrasi: stilski, simbolički, grafički, tekstualni ukras osnovnog elementa:
+        - italic naziv klase ili metode: apstraktna (može i ograničenje `{abstract}`)
+        - vidljivost sa `+`, `#`, `~`, `-`
+        - agregacija je simbol sa strane celine i ne govori ništa o životnim vekovima
+        - kompozicija je popunjeni dijamant i govori da su životni vekovi koincidentni
+        - ugnežđenje je oznaka kao xor
+    - opšte podele
+        - apstrakcije (klase, slučajevi korišćenja, čvorovi) i primerci (objekti, primerci slučajeva korišćenja, primerci čvorova)
+        - interfejs (interfejsi, slučajevi korišćenja, operacije) i implementacija (komponente, saradnje, metodi): imena primeraka se podvlače, relacija između njih je relacija realizacije
+    - mehanizmi proširivosti
+        - stereotipi: dopušta kreiranje novih vrsta gradivnih blokova specifičnih za problem `<<>>`
+        - obeležene vrednosti: dopušta dodavanje novih informacija `{info1=value1, info2, value2...}`
+        - ograničenja: proširuje semantiku gradivnog bloka, piše se ili kao slobodan tekst ili na OCL
+
+## Dijagrami klasa
+- Klasifikator je:
+    - karakterizacija primeraka sa zajedničkim karakteristikama
+    - mehanizam koji opisuje strukturu i ponašanje
+    - apstraktna metaklasa
+    - prostor imena
+    - tip koji može da bude generalizacija ili specijalizacija drugog
+    - može da bude ugnežđen
+- Odgovornosti klase imaju naziv odeljka `responsibilities` i neformalno su opisane
+- Prazan odeljak ne znači da ih klasa nema nego da nisu relevantni, može se koristiti `(...)` da naznači još članova
+- Tipovi podataka: tipovi čiji podaci nemaju identitet
+    - apstraktni tipovi podataka (`<<dataType>>`) imaju samo vrednost (`Datum`)
+    - tipovi nabrajanja (`<<enumeration>>`) uzimaju vrednost iz skupa simboličkih imena (`boolean`)
+    - primitivni tipovi (`<<primitive>>`) su postojeći prosti tipovi u jeziku implemnetacije (`int`)
+- Osobine klasa:
+    - Multiplikativnost (ograničava broj primeraka klase):
+        - 0: Uslužna klasa
+        - 1: Unikat
+    - `{root}` i `{leaf}` za stabla izvođenja klasa, pišu se u odeljku naziva
+- Sintaksa atributa: `[pravo_pristupa] [/] ime [:tip] [multiplikativnost] [=inicijalna_vrednost][{osobine}]`
+    - `/` je ako je atribut izveden
+    - Multiplikativnost se piše u `[]`
+    - Osobine atributa: `readOnly`, `ordered`, `unique`, `bag`, `seq`/`sequence`, `composite`, `redefines [...]`, `subsets [...]`
+- Sintaksa operacije: `[pravo_pristupa] ime ([lista_parametara]) [: tip_rezultata] [{osobina}]`
+    - Sintaksa parametra: `[smer] ime : tip [multiplikativnost] [ = podrazumevana_vrednost] [{osobina}]`
+    - Smer je `in`, `out`, `inout`, `return`
+    - Osobine su `query`, `exception [...]`, `leaf`, `concurrency = (sequential|guarded|concurrent)`
+- Aktivne klase:
+    - Poseban odeljak za primljene signale
+    - Proces ima neku ikonicu u sebi
+- Šabloni:
+    - Iskače kvadrat sa imenima parametara
+    - Za eksplicitno generisanje se koristi `<<bind>><...>` a za implicitno se stavi u ime klase
+- Izuzeci:
+    - Vrste signala, bacaju se sa `<<send>>`
+    - Modeliraju se stereotipom `<<exception>>`
+- Ukrasi:
+    - naziv
+    - smer čitanja
+    - uloge
+    - navigabilnost: x znači nema, strelica znači ima, ništa znači neodređena
+    - multiplikativnost (UML2 ne dozvoljava diskontinuitet): `{ordered}`, `{unique}`
+    - sadržanje
+    - pravo pristupa
+    - vlasništvo kraja
+
+## Dijagrami paketa
+- Kvalifikacija se vrši preko `::`
+- Sadržanje se može naglasiti:
+    - nikako
+    - nabrojani unutar fascikle sa imenom na jezičku
+    - ovo gore samo sa kvadratima
+    - povezani sa fasciklom preko xor simbola
+- Zavisnosti:
+    - `<<import>>`: Javno uvoženje (C++)
+    - `<<access>>`: Privatno uvoženje (Java, C#)
+    - `<<merge>>`: Koristi se u metamodeliranju
+- Alternativno:
+    - `{import/access [paket]}`
+    - `{element import/access [puno ime elementa] as [alias]}`
+- Uvoz sadržanog paketa se ne podrazumeva i može da se doda neka strelica
+- Principi modeliranja:
+    - Minimizirati broj zavisnosti između paketa
+    - Bez cirkularnih zavisnosti
+    - U istom paketu su klase koje se menjaju iz sličnih razloga
+    - U istom paketu su klase koje se ponovo koriste zajedno
+    - Sužavanje javnog interfejsa paketa
+- Stereotipovi:
+    - `<<model>>`: semantički potpun opis sistema (može samo mali trougao)
+    - `<<Framework>>`: generička arhitektura kao proširiv obrazac za aplikacije u nekom domenu, obično osnova za specijalizaciju
+    - `<<Subsystem>>`: od UML2 više nije stereotip paketa
+
+## Dijagrami objekata
+- Opisuju fizički i statički aspekt modela
+- Veze su primerci asocijacija, multiplikativnost je uvek 1
+
+## Projektni uzorci
+- Namena:
+    - kreiranje: Unikat, prototip, fabrički metod, graditelj, apstraktna fabrika
+    - struktura: Sastav, dekorater, fasada, muva, zastupnik, adapter, most
+    - ponašanje: Šablonski metod, interpreter, lanac odgovornosti, komanda, iterator, posrednik, podsetnik, posmatrač, stanje, strategija, posetilac
+- Domen:
+    - klasni: Fabrički metod, adapter, interpreter, šablonski metod
+    - objektni: sve ostalo
+- Unikat:
+    - treba koristiti kada klasa treba da bude proširljiva izvođenjem (iz nekog razloga)
+    - Uloge: Unikat
+- Šablonski metod:
+    - Uloge: Apstraktna i konkretna klasa
+- Prototip:
+    - Uloge: Klijent, prototip, konkretan prototip
+- Sastav:
+    - Uloge: Element, list, sastav, klijent
+- Dekorater:
+    - Uloge: Komponenta, subjekat, dopuna, konkretna dopuna
