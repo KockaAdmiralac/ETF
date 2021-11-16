@@ -1,3 +1,4 @@
+**/Materijali/*/**
 **/Materijali/**/*.doc
 **/Materijali/**/*.pdf
 **/Materijali/**/*.vmdk
@@ -35,3 +36,6 @@ output_files/
 greybox_tmp/
 *.qdf
 *.rpt
+IS1/**/nbproject/private/
+IS1/**/build/
+IS1/**/dist/
