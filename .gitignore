@@ -36,6 +36,9 @@ output_files/
 greybox_tmp/
 *.qdf
 *.rpt
+# NetBeans
 IS1/**/nbproject/private/
 IS1/**/build/
 IS1/**/dist/
+IS1/**/target/
+*.jar
