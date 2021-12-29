@@ -78,7 +78,20 @@ usertrap(void)
 
   // give up the CPU if this is a timer interrupt.
   if(which_dev == 2)
-    yield();
+  {
+    struct cpu *c = mycpu();
+    if (c->ticks != -1 && (--(c->ticks)) == 0)
+    {
+      // The process's execution time expired
+      yield();
+    }
+    else
+    {
+      acquire(&p->lock);
+      ++p->cpu_burst_ticks;
+      release(&p->lock);
+    }
+  }
 
   usertrapret();
 }
@@ -150,8 +163,24 @@ kerneltrap()
   }
 
   // give up the CPU if this is a timer interrupt.
-  if(which_dev == 2 && myproc() != 0 && myproc()->state == RUNNING)
-    yield();
+  if(which_dev == 2)
+  {
+    struct cpu *c = mycpu();
+    struct proc *p = c->proc;
+    if (p != 0 && p->state == RUNNING)
+    {
+      if (c->ticks != -1 && (--(c->ticks)) == 0)
+      {
+        yield();
+      }
+      else
+      {
+        acquire(&p->lock);
+        ++p->cpu_burst_ticks;
+        release(&p->lock);
+      }
+    }
+  }
 
   // the yield() may have caused some traps to occur,
   // so restore trap registers for use by kernelvec.S's sepc instruction.
@@ -207,7 +236,7 @@ devintr()
     if(cpuid() == 0){
       clockintr();
     }
-    
+
     // acknowledge the software interrupt by clearing
     // the SSIP bit in sip.
     w_sip(r_sip() & ~2);

@@ -3,8 +3,9 @@
 #include "memlayout.h"
 #include "riscv.h"
 #include "defs.h"
+#include "scheduler.h"
 
-volatile static int started = 0;
+static volatile int started = 0;
 
 // start() jumps here in supervisor mode on all CPUs.
 void
@@ -16,6 +17,7 @@ main()
     printf("\n");
     printf("xv6 kernel is booting\n");
     printf("\n");
+    scheduler_init();// scheduler
     kinit();         // physical page allocator
     kvminit();       // create kernel page table
     kvminithart();   // turn on paging

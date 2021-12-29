@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "scheduler.h"
 
 struct cpu cpus[NCPU];
 
@@ -119,6 +120,10 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->quant = 0;
+  p->scheduler_entry_ticks = 0;
+  p->cpu_burst_ticks = 0;
+  p->tau = 5;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -163,6 +168,10 @@ freeproc(struct proc *p)
   p->chan = 0;
   p->killed = 0;
   p->xstate = 0;
+  if (p->state == RUNNABLE)
+  {
+    panic("freeproc on a runnable process");
+  }
   p->state = UNUSED;
 }
 
@@ -243,6 +252,12 @@ userinit(void)
   p->cwd = namei("/");
 
   p->state = RUNNABLE;
+  if (scheduler_put(p, 1) < 0)
+  {
+    panic("scheduler put userinit failed");
+    freeproc(p);
+    release(&p->lock);
+  }
 
   release(&p->lock);
 }
@@ -313,6 +328,12 @@ fork(void)
 
   acquire(&np->lock);
   np->state = RUNNABLE;
+  if (scheduler_put(np, 1) < 0)
+  {
+    freeproc(np);
+    release(&np->lock);
+    return -1;
+  }
   release(&np->lock);
 
   return pid;
@@ -444,21 +465,36 @@ scheduler(void)
   for(;;){
     // Avoid deadlock by ensuring that devices can interrupt.
     intr_on();
-
-    for(p = proc; p < &proc[NPROC]; p++) {
+    p = scheduler_get();
+    if (p == 0)
+    {
+      // TODO: Idle thread?
+      //panic("PANIK");
+    }
+    else
+    {
       acquire(&p->lock);
-      if(p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
 
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
+      if (p->state != RUNNABLE)
+      {
+        panic("scheduler returned a not runabble process");
+        continue;
       }
+      // Switch to chosen process.  It is the process's job
+      // to release its lock and then reacquire it
+      // before jumping back to us.
+      p->state = RUNNING;
+      c->proc = p;
+      c->ticks = p->quant;
+      if (c->ticks == 0)
+      {
+        c->ticks = -1;
+      }
+      swtch(&c->context, &p->context);
+      // Process is done running for now.
+      // It should have changed its p->state before coming back.
+      c->proc = 0;
+
       release(&p->lock);
     }
   }
@@ -498,6 +534,10 @@ yield(void)
   struct proc *p = myproc();
   acquire(&p->lock);
   p->state = RUNNABLE;
+  if (scheduler_put(p, 0) < 0)
+  {
+    panic("scheduler put yield failed");
+  }
   sched();
   release(&p->lock);
 }
@@ -566,6 +606,10 @@ wakeup(void *chan)
       acquire(&p->lock);
       if(p->state == SLEEPING && p->chan == chan) {
         p->state = RUNNABLE;
+        if (scheduler_put(p, 1) < 0)
+        {
+          panic("scheduler put wakeup failed");
+        }
       }
       release(&p->lock);
     }
@@ -587,6 +631,10 @@ kill(int pid)
       if(p->state == SLEEPING){
         // Wake process from sleep().
         p->state = RUNNABLE;
+        if (scheduler_put(p, 1) < 0)
+        {
+          panic("scheduler put kill failed");
+        }
       }
       release(&p->lock);
       return 0;

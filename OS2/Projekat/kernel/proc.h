@@ -24,6 +24,7 @@ struct cpu {
   struct context context;     // swtch() here to enter scheduler().
   int noff;                   // Depth of push_off() nesting.
   int intena;                 // Were interrupts enabled before push_off()?
+  int ticks;                  // Ticks left for the current process.
 };
 
 extern struct cpu cpus[NCPU];
@@ -92,6 +93,12 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
+  int quant;                   // Time quant assigned to this process
+  uint scheduler_entry_ticks;  // Ticks at the time the process entered the scheduler
+
+  // scheduled_procs->lock must be held when using these:
+  uint cpu_burst_ticks;        // Duration of the current CPU burst in ticks
+  uint tau;                    // Execution time prediction
 
   // wait_lock must be held when using this:
   struct proc *parent;         // Parent process

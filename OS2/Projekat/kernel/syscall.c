@@ -100,6 +100,7 @@ extern uint64 sys_pipe(void);
 extern uint64 sys_read(void);
 extern uint64 sys_sbrk(void);
 extern uint64 sys_sleep(void);
+extern uint64 sys_sscalg(void);
 extern uint64 sys_unlink(void);
 extern uint64 sys_wait(void);
 extern uint64 sys_write(void);
@@ -132,7 +133,7 @@ static uint64 (*syscalls[])(void) = {
 void
 syscall(void)
 {
-  int num;
+  uint64 num;
   struct proc *p = myproc();
 
   num = p->trapframe->a7;

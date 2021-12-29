@@ -4,6 +4,7 @@
 #include "date.h"
 #include "param.h"
 #include "memlayout.h"
+#include "scheduler.h"
 #include "spinlock.h"
 #include "proc.h"
 
@@ -62,7 +63,7 @@ sys_sleep(void)
     return -1;
   acquire(&tickslock);
   ticks0 = ticks;
-  while(ticks - ticks0 < n){
+  while(ticks - ticks0 < (uint)n){
     if(myproc()->killed){
       release(&tickslock);
       return -1;
@@ -94,4 +95,21 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+uint64
+sys_sscalg(void)
+{
+  int alg;
+  int alpha;
+
+  if (argint(0, &alg) < 0)
+    return -1;
+  argint(1, &alpha);
+  if (alpha < 0 || alpha > 100)
+    alpha = SCHED_DEFAULT_ALPHA;
+  if (alg <= SCHED_ALG_START || alg >= SCHED_ALG_END)
+    return -1;
+  scheduler_set_algorithm(alg, alpha);
+  return 0;
 }
