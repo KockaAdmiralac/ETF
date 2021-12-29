@@ -2,6 +2,7 @@
 **/Materijali/**/*.doc
 **/Materijali/**/*.pdf
 **/Materijali/**/*.vmdk
+**/Materijali/**/*.qcow2
 **/Materijali/**/*.bin
 __pycache__
 a.out
