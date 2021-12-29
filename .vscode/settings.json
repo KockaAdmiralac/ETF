@@ -92,6 +92,20 @@
         "scoped_allocator": "cpp",
         "shared_mutex": "cpp",
         "span": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "types.h": "c",
+        "param.h": "c",
+        "spinlock.h": "c",
+        "sleeplock.h": "c",
+        "fs.h": "c",
+        "defs.h": "c",
+        "riscv.h": "c",
+        "scheduler.h": "c",
+        "printf.h": "c",
+        "user.h": "c",
+        "*.cp": "c",
+        "memlayout.h": "c",
+        "procheap.h": "c",
+        "proc.h": "c"
     }
 }
