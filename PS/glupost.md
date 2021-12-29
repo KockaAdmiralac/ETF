@@ -137,6 +137,15 @@
 - Opisuju fizički i statički aspekt modela
 - Veze su primerci asocijacija, multiplikativnost je uvek 1
 
+## Dijagrami interakcije
+- Vrste:
+    - Dijagrami sekvence: vremensko uređenje
+        - uloge: instance asocijacija, `{association}`, `{self}`, `{global}`, `{local}`, `{parameter}`
+        - `{new}`, `{destroyed}`, `{transient}` za opis životnog veka tokom interakcije u UML 1
+    - Dijagrami komunikacije: struktura veza
+    - Dijagrami pregleda interakcije: aktivnost + sekvenca
+    - Vremenski dijagrami: promena stanja u vremenu
+
 ## Projektni uzorci
 - Namena:
     - kreiranje: Unikat, prototip, fabrički metod, graditelj, apstraktna fabrika
