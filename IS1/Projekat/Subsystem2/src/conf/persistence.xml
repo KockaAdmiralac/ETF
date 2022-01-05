@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="Subsystem2PU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>rs.ac.bg.etf.is1.projekat.tables.Client</class>
+        <class>rs.ac.bg.etf.is1.projekat.tables.Transaction</class>
+        <class>rs.ac.bg.etf.is1.projekat.tables.Account</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/is1-s2?zeroDateTimeBehavior=CONVERT_TO_NULL" />
+            <property name="javax.persistence.jdbc.user" value="is1" />
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.password" value="tubic" />
+        </properties>
+    </persistence-unit>
+</persistence>
