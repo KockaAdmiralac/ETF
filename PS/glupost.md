@@ -1,8 +1,19 @@
 ## Uvod
+- Po RUP faze razvoja su započinjanje, razrada, konstrukcija, tranzicija i u njima se odvijaju modeliranje, specifikacija, analiza (projektovanje), implementacija, testiranje i isporuka.
+- OOA kao proizvod daje konceptualni model, OOD model projektovanog sistema a OOP gotovi proizvod
 - Jezik je objektno orijentisan ako podržava objekte koji apstrahuju podatke, interfejs i sakrivanje stanja, pridruživanje tipa objektu i nasleđivanje
 - OOA&D principi
-    - Obavezni: apstrakcija, kapsulacija, modularnost, hijerarhija, (polimorfizam)
-    - Dodatni: (tipizacija), konkurentnost, perzistencija
+    - Obavezni: apstrakcija (isticanje bitnih osobina), kapsulacija (razdvajanje ugovora od implementacije), modularnost (razlaganje), hijerarhija (rangiranje), (polimorfizam (objekat kome se pristupa se ponaša različito u zavisnosti od klase))
+    - Dodatni: (tipizacija (ograničavanje načina zamene objekata klasa)), konkurentnost (razlikuje aktivne objekte od pasivnih), perzistencija (postojanje objekta se proteže kroz vreme i prostor)
+- Model:
+    - vizuelizuje
+    - specificira strukturu i ponašanje
+    - usmerava konstrukciju
+    - dokumentuje projektne odluke
+    - smanjuje cenu razvoja
+- Dijagrami su pogledi na model
+- Logički model opisuje ključne apstrakcije, strukturu, relacije i interakcije a fizički konkretnu kompoziciju i arhitekturu
+- Statički aspekti opisuju strukturu dok dinamički opisuju ponašanje
 
 ## UML
 - Gradivni blokovi:
@@ -26,8 +37,8 @@
         - anotacije
             - Napomena: simbol za prikazivanje komentara pridruženi elementu ili više elemenata
     - Relacije
-        - Zavisnost
-        - Asocijacija (npr. sadržanje): može da prikazuje multiplikativnost i uloge
+        - Zavisnost: jedna stvar može da utiče na drugu stvar
+        - Asocijacija (npr. sadržanje): može da prikazuje multiplikativnost, uloge i pravo pristupa
         - Generalizacija: izvođenje
         - Realizacija: implementiranje interfejsa
     - Dijagrami (prikaz strukture ili ponašanja):
@@ -46,19 +57,30 @@
         - stanja
         - aktivnosti (ne postoji u UML2)
 - Opšti mehanizmi:
-    - specifikacije: stoje iza grafičkih elemenata, potpune su iako mogu delovi da se ne prikazuju, može postojati više pogleda na istu klasu
+    - specifikacije:
+        - stoje iza grafičkih elemenata
+        - potpune su iako mogu delovi da se ne prikazuju
+        - može postojati više pogleda na istu klasu
+        - mogu da se prave direktnim ili reverznim inženjeringom
     - ukrasi: stilski, simbolički, grafički, tekstualni ukras osnovnog elementa:
         - italic naziv klase ili metode: apstraktna (može i ograničenje `{abstract}`)
         - vidljivost sa `+`, `#`, `~`, `-`
         - agregacija je simbol sa strane celine i ne govori ništa o životnim vekovima
         - kompozicija je popunjeni dijamant i govori da su životni vekovi koincidentni
         - ugnežđenje je oznaka kao xor
+        - kvalifikacija: kada označavamo ključ koji se koristi za biranje elementa iz neke strukture
+            - Kada kvalifikator ima atribute, to su atributi asocijacije
+        - vlasništvo kraja asocijacije:
+            - podrazumevano je asocijacija
+            - označava se tačkom suprotno od vlasnika
+            - kraj asocijacije predstavlja atribut klase sa druge strane
+            - dozvoljena je redundansa
     - opšte podele
-        - apstrakcije (klase, slučajevi korišćenja, čvorovi) i primerci (objekti, primerci slučajeva korišćenja, primerci čvorova)
+        - apstrakcije (klase, slučajevi korišćenja, čvorovi) i primerci (objekti, scenariji, primerci čvorova): uspostavlja se veza relacijom realizacije
         - interfejs (interfejsi, slučajevi korišćenja, operacije) i implementacija (komponente, saradnje, metodi): imena primeraka se podvlače, relacija između njih je relacija realizacije
     - mehanizmi proširivosti
-        - stereotipi: dopušta kreiranje novih vrsta gradivnih blokova specifičnih za problem `<<>>`
-        - obeležene vrednosti: dopušta dodavanje novih informacija `{info1=value1, info2, value2...}`
+        - stereotipi: dopušta kreiranje novih vrsta gradivnih blokova specifičnih za problem `<<>>` (`<<interface>>` više nije stereotip nego ključna reč)
+        - obeležene vrednosti: dopušta dodavanje novih informacija `{info1=value1, info2=value2...}`
         - ograničenja: proširuje semantiku gradivnog bloka, piše se ili kao slobodan tekst ili na OCL
 
 ## Dijagrami klasa
@@ -70,6 +92,7 @@
     - tip koji može da bude generalizacija ili specijalizacija drugog
     - može da bude ugnežđen
 - Odgovornosti klase imaju naziv odeljka `responsibilities` i neformalno su opisane
+- Operacije su samo deklaracije, ne i definicije
 - Prazan odeljak ne znači da ih klasa nema nego da nisu relevantni, može se koristiti `(...)` da naznači još članova
 - Tipovi podataka: tipovi čiji podaci nemaju identitet
     - apstraktni tipovi podataka (`<<dataType>>`) imaju samo vrednost (`Datum`)
@@ -83,20 +106,29 @@
 - Sintaksa atributa: `[pravo_pristupa] [/] ime [:tip] [multiplikativnost] [=inicijalna_vrednost][{osobine}]`
     - `/` je ako je atribut izveden
     - Multiplikativnost se piše u `[]`
-    - Osobine atributa: `readOnly`, `ordered`, `unique`, `bag`, `seq`/`sequence`, `composite`, `redefines [...]`, `subsets [...]`
+    - Osobine atributa:
+        - `readOnly`: ne može se menjati nakon inicijalizacije
+        - `ordered`: vrednosti su uređene
+        - `unique`: vrednosti su jedinstvene
+        - `bag`: `unordered` + `nonunique`
+        - `seq`/`sequence`: `ordered` + `nonunique`
+        - `composite`: atribut složene strukture
+        - `redefines [...]`: redefiniše zadati nasleđeni atribut
+        - `subsets [...]`: podskup skupa vrednosti zadatog atributa
 - Sintaksa operacije: `[pravo_pristupa] ime ([lista_parametara]) [: tip_rezultata] [{osobina}]`
     - Sintaksa parametra: `[smer] ime : tip [multiplikativnost] [ = podrazumevana_vrednost] [{osobina}]`
-    - Smer je `in`, `out`, `inout`, `return`
+    - Smer je `in` (podrazumevano), `out`, `inout`, `return`
     - Osobine su `query`, `exception [...]`, `leaf`, `concurrency = (sequential|guarded|concurrent)`
 - Aktivne klase:
-    - Poseban odeljak za primljene signale
+    - Poseban odeljak za primljene signale u UML1 (`Signals`)
+    - `<<thread>>` i `<<process>>` stereotipi
     - Proces ima neku ikonicu u sebi
 - Šabloni:
     - Iskače kvadrat sa imenima parametara
     - Za eksplicitno generisanje se koristi `<<bind>><...>` a za implicitno se stavi u ime klase
 - Izuzeci:
-    - Vrste signala, bacaju se sa `<<send>>`
-    - Modeliraju se stereotipom `<<exception>>`
+    - Vrste signala, bacaju se sa `<<send>>` i ubacuju se u `exception` osobinu operacije
+    - Modeliraju se stereotipom `<<exception>>` (nestandardno)
 - Ukrasi:
     - naziv
     - smer čitanja
@@ -106,6 +138,50 @@
     - sadržanje
     - pravo pristupa
     - vlasništvo kraja
+    - ugnežđivanje je označeno kao XOR
+- Klasa asocijacije: kada asocijacija ima svoje atribute
+- N-arna asocijacija: kada asocijacija povezuje više od dve klase
+- Specifikator interfejsa:
+    - ukinut u UML2
+    - na kraju asocijacije se naznačava koji interfejs klasa ispoljava prema drugom kraju
+- Generalizacioni skupovi:
+    - skup generalizacija koji opisuje na koji način se natklasa specijalizuje
+    - opisuje se kriterijum specijalizacije
+    - `{disjoint}`/`{overlapping}`: da li objekti podtipova mogu pripadati samo jednom podtipu
+    - `{complete}`/`{incomplete}`: da li podtipovi predstavljaju potpun skup podtipova
+- Metaklasa (`<<Metaclass>`):
+    - klasifikator čiji su primerci klase
+    - `<<instanceOf>>` relacija prema klasama
+- *Powertype* (`<<powertype>>`):
+    - klasifikator čiji su svi primerci potklase neke klase
+    - korisnički metatip
+    - u UML1 `<<instanceOf>>` relacija od klase ka metatipu
+    - u UML2 generalizacija ima `:Tip` a natklasa asocijaciju
+- Standardni stereotipi:
+    - klasifikatora:
+        - `Utility`: "uslužna klasa"
+        - `Focus`: implementira glavnu poslovnu logiku
+        - `Auxiliary`: pomaže fokus klasi u implementaciji
+        - `Stereotype` (ključna reč u UML2): stereotip koji se može primeniti na druge elemente
+        - `Metaclass`
+        - `powertype` (zastareo u UML2)
+        - `thread` (zastareo u UML2)
+        - `Process`: **komponenta** čiji primerci imaju vlastite procese (`process` je zastareli stereotip klase)
+    - relacije zavisnosti:
+        - `<<Instantiate>>`
+            - Postoji i `<<Create>>` kada se objekti stvaraju kao lokalne
+        - `<<instanceOf>>` (Tartalja kaže zastareo iako tako ne piše)
+        - `<<Send>>`
+        - `<<Derive>>`: izvor se može izračunati na osnovu odredišta (između atributa ili asocijacija)
+        - `<<Refine>>`: izvor je finiji stepen apstrakcije od odredišta
+        - `<<bind>>` (ključna reč): generisan iz parametrizovanog šablona
+        - `<<permit>>` (Tartalja kaže ukinut): kao `friend` u C++
+        - `<<friend>>` (zastareo): kao iznad ali zastareo
+        - `<<powertype>>` (zastareo)
+        - `<<access>>` (ključna reč)
+        - `<<import>>` (ključna reč)
+    - relacije generalizacije:
+        - `<<implementation>>` (izbačen valjda): dete nasleđuje implementaciju roditelja ali privatnom i ne ispunjava interfejs
 
 ## Dijagrami paketa
 - Kvalifikacija se vrši preko `::`
@@ -134,10 +210,21 @@
     - `<<Subsystem>>`: od UML2 više nije stereotip paketa
 
 ## Dijagrami objekata
+- Prikazuje stanje u jednom trenutku
 - Opisuju fizički i statički aspekt modela
 - Veze su primerci asocijacija, multiplikativnost je uvek 1
 
 ## Dijagrami interakcije
+- Poruka:
+    - specifikacija komunikacije između objekata koja prenosi informaciju iza koje se očekuje da sledi aktivnost
+    - Vrste:
+        - poziv: pokreće operaciju
+        - povratak: vraća vrednost
+        - slanje: asinhrono šalje signal
+        - kreiranje: kreira primerak uloge
+        - uništavanje: uništava se objekat
+        - pronađena poruka: poznat primalac, slanje nije opisano (primer: spam mejl)
+        - izgubljena poruka: poznat pošiljalac, prijem neodređen (primer: broadcast)
 - Vrste:
     - Dijagrami sekvence: vremensko uređenje
         - uloge: instance asocijacija, `{association}`, `{self}`, `{global}`, `{local}`, `{parameter}`
@@ -145,8 +232,197 @@
     - Dijagrami komunikacije: struktura veza
     - Dijagrami pregleda interakcije: aktivnost + sekvenca
     - Vremenski dijagrami: promena stanja u vremenu
+- U UML1 su se uloge podvlačile a u UML2 ne, jer to nisu konkretni objekti nego uloge
+- Konektori:
+    - Putanje između uloga, za razliku od veza
+    - Ukrasi načina pristupa:
+        - `{association}`: preko veze
+        - `{self}`: samom sebi
+        - `{global}`: iz okružujućeg dosega (ne mora nužno globalna)
+        - `{local}`: iz lokalnog dosega
+        - `{parameter}`: argument operacije
+- Sekvenciranje poruka:
+    - proceduralni tok kontrole:
+        - strelice imaju popunjenu glavu
+        - na različitim nivoima hijerarhije poruke se razdvajaju tačkom
+        - nakon rednog broja poruke koja se konkurentno grana dolazi identifikator niti
+        - iza broja za sekvenciranje piše se
+            - sekvencijalne iteracije: brojač ponavljanja `*[i:=1..n]`, uslov `*[a>b]` ili samo `*`
+            - paralelne iteracije: `*||`
+            - grananje: `[x>0]`, u tom slučaju se može koristiti dva puta isti broj ukoliko je različit uslov
+    - ravni tok kontrole:
+        - samo se broje poruke
+- Sintaksa poruke: `broj: povratnaPromenljiva = operacija(arg1, arg2="Vrednost"): tipPovratne`
+- Ograničenja objekata i veza:
+    - `{new}`: stvara se za vreme interakcije
+    - `{destroyed}`: uništava se za vreme interakcije
+    - `{transient}`: stvara se i uništava za vreme interakcije
+    - imaju smisla samo na dijagramu komunikacije
+- U UML1 postojao je `<<become>>`, kada je pošiljalac i primalac zapravo isti objekat ali sa izmenjenim stanjem
+- Fokus kontrole (događanje izvršenja): pravougaonik na dijagramu sekvence koji prikazuje trajanje operacije
+- Fragmenti interakcije:
+    - `sd`: sequence diagram
+    - `neg`: neželjeni scenario
+    - `ref`: referenca na drugi dijagram
+    - `opt`: izvršava se ako je ispunjen uslov
+    - `alt`: izbor među više fragmenata
+    - `loop`: izvršavanje fragmenta više puta
+    - `break`: izvršavanje umesto ostatka okružujućeg fragmenta
+    - `par`: paralelno se izvršavaju fragmenti
+    - `region`: kritična sekcija
+- Višestruki primerci uloga su postojali u UML1
+- Dijagrami pregleda interakcije:
+    - sadrže interakcije i događanja interakcije
+    - služe više kao pregled i na njima se interakcije ne pojavljuju toliko
+    - nalaze se `sd` i `ref` okviri
+    - nema objekata
+- Vremenski dijagrami:
+    - podeljen je na odeljke po ulogama
+    - može da se prikazuje linijom koja vertikalno prelazi između stanja ili vrednosnom trakom
+    - vremenska ograničenja:
+        - `{<5*d}`, `{d..3*d}` ako je `d` interval
+        - `{t..t+3}` ako je `t` trenutak
+
+## Dijagrami slučajeva korišćenja
+- Ponašanje slučaja korišćenja opisano tokom događaja:
+    - neformalan tekst
+    - struktuirani tekst sa pred- i post-uslovima, alternativnim tokovima
+    - pseudokod
+    - dijagram interakcije
+    - dijagram stanja subjekta
+    - dijagram aktivnosti
+- Saradnja je strukturni aspekt slučaja korišćenja u kom učestvuju i akteri
+- Akter je koherentan skup uloga, može da se označava čičaglišom ili sa `<<actor>>`
+- Relacija komunikacije je dozvoljena između aktera i SK ili između dva SK koja se ne odnose na isti subjekat i mogu imati multiplikativnost >1 na strani aktera
+- Relacija uključivanja od A do B ukazuje da će A uključiti ponašanje B
+- Relacija proširivanja od A do B ukazuje da B može uključiti ponašanje A
+    - Kada se navodi `<<extend>>`, mogu da se navedu tačke proširenja (`extension points`) koje navode u kojim se tačno trenucima može desiti proširenje
+    - mogu da budu u formatu `ime: objašnjenje`
+- Relacija generalizacije od A do B ukazuje da je A specifičan slučaj B, a može biti i između aktera
+- Slučajevi korišćenja su unutar a akteri van okvira subjekta, kojih može biti više, i oni nisu vlasnik svojih slučajeva korišćenja
+
+## Dijagrami stanja
+- Kontekst primene može biti:
+    - objekat
+    - slučaj korišćenja
+    - akter
+    - podsistem
+    - operacija
+- Automat stanja uspešno modelira reaktivne sisteme
+- U jednom stanju entitet zadovoljava uslov, obavlja aktivnost ili čeka događaj
+- Elementi stanja:
+    - ime (može da ga nema)
+    - ulazni efekat (`entry`)
+    - izlazni efekat (`exit`)
+    - aktivnost u stanju (`do`)
+    - odloženi događaji (`defer`): stavljaju se u red čekanja
+    - unutrašnje tranzicije: obrađuju događaj i ostaju u istom stanju
+        - dok samo-tranzicije izazivaju izlaznu pa ulaznu akciju
+    - podstanja
+- Elementi prelaza:
+    - događaj
+    - uslov
+    - akcija:
+        - poziv operacije
+        - slanje signala
+        - kreiranje ili uništavanje objekta
+- Pseudostanja su stanja u kojem automat ne boravi, pa je završno stanje specijalno stanje
+- Prelaz u konkurentno podstanje predstavlja fork a izlaz join
+- Može se prikazati objekat kome se šalje signal na dijagramu
+
+## Dijagrami aktivnosti
+- Aktivnost je specifikacija parametrizovanog ponašanja koje se izražava kroz tok izvršenja preko sekvenciranja i konkurisanja podaktivnosti
+- Akcija je osnovna jedinica specifikacije ponašanja koja reprezentuje neku transformaciju ili obradu u modeliranom sistemu
+    - pokretanje aktivnosti
+    - čitanje ili upis podataka
+    - izračunavanje
+- Akcija nije nužno atomična
+- Akcija/aktivnost neće početi izvršavanje dok:
+    - nisu završene sve akcije/aktivnosti koje prethode po ulaznim granama
+    - nisu svi objekti na ulaznim granama raspoloživi
+    - nisu poslati svi signali prethodnih akcija/aktivnosti na ulaznim granama
+    - nisu svi ulazni uslovi ispunjeni
+    - nisu se desili svi čekani događaji i vremenski događaji na ulaznim granama
+- Kada akcija/aktivnost počne konzumiraju se žetoni po ulaznim granama a kada završi pojave se na izlaznim
+- `{weight=n}` po jednoj grani znači da toliko objektnih tokena mora da dođe na ulazu da bi akcija/aktivnost počela
+- Konektori sa istim imenom predstavljaju jednu tranziciju
+- Plivačke staze nemaju neku duboku semantiku, specificiraju odgovornosti za delove celokupne aktivnosti i predstavljaju subjekte
+- Bacanje i obrada izuzetaka označava se prelomljenom strelicom ili pravom strelicom sa ikonicom i ulaznim pinom
+- Centralni bafer (`<<centralBuffer>>`) je objektni čvor u koji može da ulazi više grana i iz kog može da izlazi više grana
+- Pored bafera postoji i skladište (`<<datastore>>`), u kom su za razliku od bafera podaci stalni, jer se pri uzimanju samo dohvata objekat a ne uzima
+
+## Dijagrami složene strukture
+- Omogućavaju:
+    - hijerarhijsku dekompoziciju klasifikatora na delove
+    - korišćenje saradnji
+- Struktura je kompozicija povezanih elemenata
+    - Unutrašnja struktura je struktura unutar pojave klasifikatora ili saradnje
+        - Mogu da je imaju klase, komponente i saradnje
+- Port:
+    - tačka interakcije sa okruženjem
+    - povezuju se sa zahtevanim i realizovanim interfejsima i unutrašnjim delovima
+- Struktuirana klasa ima portove i unutrašnju strukturu
+- Delovi:
+    - koriste se da označe povezane atribute
+    - mogu da imaju naznačeno ime, tip i multiplikativnost
+    - pravougaonik dela se crta punom linijom ukoliko se radi o kompoziciji ili isprekidanom ukoliko se radi o agregaciji
+- Konektori:
+    - povezuju delove sa portovima i međusobno
+    - kada povezuju delove mogu to da rade direktno (komunikacija) ili preko loptice na postolju (realizovani i zahtevani interfejs)
+    - kada povezuju sa portovima mogu to da rade u oba smera (deo -> port ili port -> deo)
+    - multiplikativnost na krajevima konektora se tumači kao na krajevima asocijacije
+- Saradnja opisuje strukturu elemenata koji sarađuju (uloga) kako bi zajedno postigli neku funkcionalnost
+- Korišćenje saradnje može da koristi i `<<occurrence>>` pri povezivanju saradnji
+
+## Dijagrami komponenata
+- Komponenta je zamenjivi deo sistema koji realizuje skup interfejsa, nema atribute i može da se koristi iznova
+- Statički logički pogled na implementaciju
+- Služe za modeliranje:
+    - izvornog koda
+    - prevedenog koda
+    - izdanja za isporuku
+    - izvršnih izdanja i okruženja
+    - fizičkih baza podataka
+- Komponenta može sadržati odeljak klasa koje realizuje (`realizations`)
+- Artefakti:
+    - vrste:
+        - iz razvojnog procesa
+        - za isporuku
+        - izvršni
+    - stereotipi:
+        - `Executable`: može se izvršavati na čvoru
+        - `Library`: objektna biblioteka
+        - `File`: datoteka sa proizvoljnim sadržajem
+        - `Document`
+        - `Script`
+        - `Source`: izvorni kod
+- Port:
+    - `imePorta: TipPorta`
+    - može da ima interfejse pridružene, i to onda opisuje prirodu interakcija preko porta
+    - ako je na ivici klasifikatora onda je javan, u suprotnom je zaštićen
+    - može imati multiplikativnost
+- Postolje i loptica = assembly connector
+- Kada paketi na dijagramima komponenata sadrže artefakte, obično su reprezentacija kataloga
+
+## Dijagrami raspoređivanja
+- Fizički i statički aspekti sistema
+- Čvorovi mogu imati multiplikativnost i odeljke za atribute, operacije i artefakte i mogu se organizovati u pakete po logičkoj srodnosti
+- Čvorovi su fizičko odredište za raspoređivanje artefakata
+    - procesori su čvorovi koji izvršavaju izvršne artefakte
+    - grafička notacija: `<<deploy>>`, `artifacts` odeljak ili ugnežđavanje
+    - mogu biti fizički uređaji (`<<device>>`, podrazumevano) ili izvršno okruženje (`<<executionEnvironment>>`)
+        - zbog ovoga se mogu gnezditi
+- Veze između čvorova su komunikacioni putevi
+    - mogu biti direktni ili indirektni (satelit)
+    - obično su bidirekcionalne
+    - mogu se označavati kao `<<RS232>>` ili `http/Internet`
 
 ## Projektni uzorci
+- Elementi projektnog uzorka:
+    - naziv
+    - postavka problema
+    - opis rešenja
+    - diskusija posledica
 - Namena:
     - kreiranje: Unikat, prototip, fabrički metod, graditelj, apstraktna fabrika
     - struktura: Sastav, dekorater, fasada, muva, zastupnik, adapter, most
@@ -155,13 +431,88 @@
     - klasni: Fabrički metod, adapter, interpreter, šablonski metod
     - objektni: sve ostalo
 - Unikat:
+    - Singleton
     - treba koristiti kada klasa treba da bude proširljiva izvođenjem (iz nekog razloga)
     - Uloge: Unikat
 - Šablonski metod:
+    - Template Method
     - Uloge: Apstraktna i konkretna klasa
 - Prototip:
+    - Polimorfna kopija, Prototype
     - Uloge: Klijent, prototip, konkretan prototip
+    - Loša strana je što sve potklase moraju da implementiraju kopija() i podržavaju kloniranje
 - Sastav:
+    - Sklop, Kompozicija, Composite
     - Uloge: Element, list, sastav, klijent
+    - Nije jednostavno ograničiti koje vrste elemenata neki sastavi sadrže
+    - Kada se koristi sa Dekoraterom obično imaju zajedničku natklasu
 - Dekorater:
+    - Decorator, Wrapper, Omotač, Dopuna
     - Uloge: Komponenta, subjekat, dopuna, konkretna dopuna
+    - Dekorater ima isti interfejs kao komponenta pa je pristup transparentan
+    - Komponenta bi trebalo da bude čist interfejs jer će inače da se atributi nasleđuju u svakoj dopuni
+- Posmatrač:
+    - Observer, Zavisni objekti, Objavljivanje-pretplata
+    - Uloge: Subjekat, konkretan subjekat, posmatrač, konkretan posmatrač
+    - Push model: subjekat šalje signal da se desila promena i informaciju o izmenama
+    - Pull model: subjekat šalje samo signal, a posmatrač vuče stanje
+    - nije broadcast jer je kod broadcast nepoznat broj posmatrača
+    - nepoznata je cena promene subjekta
+- Iterator
+    - Uloge: agregat, klijent, iterator, konkretan agregat, konkretan iterator
+    - polimorfni iterator: generalizacija koncepta iteratora za obilazak više vrsta lista
+    - operacija koja stvara iterator je primer fabričkog metoda
+    - spoljašnji iterator: klijent kontroliše iteraciju, fleksibilniji
+    - unutrašnji iterator: iterator kontroliše iteraciju
+    - politiku obilaska može da definiše iterator ili agregat, pa se tada iterator zove Kurzor jer samo čuva stanje iteracije
+    - iterator može da bude robustan, tako da se njegovo stanje ne poremeti pri promeni agregata, a pritom agregat mora da zna za iteratore
+    - operacije su generalno `naPrvi()`, `naSledeci()`, `dohvTrenutni()` i `kraj()`, ali može da bude i `naPrethodni()` i `na(int)`
+    - polimorfni iterator u C++ ima problem što iterator mora da dealocira klijent
+    - mogu imati privilegovani pristup ali onda će agregat morati da se menja pri dodavanju iteratora
+    - iteratori za obilazak sastava mogu da budu komplikovani ako su spoljašnji
+    - NullIterator: iterator koji ne obilazi ništa
+- Strategija:
+    - Policy
+    - Uloge: kontekst, strategija, konkretna strategija
+    - Klijent upravlja promenom strategije
+- Stanje:
+    - Objekti za stanja
+    - Uloge: Kontekst, stanje, konkretno stanje
+    - Promenu stanja može da radi klijent (na početku), kontekst ili samo stanje
+- Podsetnik:
+    - Memento, oznaka
+    - Uloge: Subjekat, čuvar, podsetnik
+    - Koristiti kada bi direktan interfejs za dohvatanje stanja subjekta eksponirao njegove implementacione detalje
+- Muva:
+    - Uloge: Fabrika muva, muva, konkretna muva, nedeljena konkretna muva
+- Adapter:
+    - Wrapper
+    - Uloge: Cilj, klijent, adaptirani, adapter
+    - Može biti klasni (nasleđivanje), objektni (agregacija) i dvosmerni
+- Fasada:
+    - Uloge: Fasada, podsistem
+    - Ne brani pristup klasama podsistema
+- Fabrički metod:
+    - Virtuelni konstruktor
+    - Uloge: Proizvod, konkretan proizvod, fabrika, konkretna fabrika
+    - Delegiranje stvaranje objekata potklasi
+- Apstraktna fabrika:
+    - Uloge: Apstraktna fabrika, konkretna fabrika, apstraktan proizvod, konkretan proizvod, klijent
+- Most:
+    - Uloge: Apstrakcija, finija apstrakcija, implementacija, konkretna implementacija
+- Komanda
+    - Uloge: Klijent, pokretač, primalac, komanda, konkretna komanda
+- Zastupnik:
+    - Uloge: Klijent, subjekat, original, zastupnik
+    - Vrste zastupnika: udaljeni (ambasador, lokalni predstavnik udaljenog objekta), virtuelni (kreira skup objekat), zaštitni (kontroliše pravo pristupa)
+    - Može da služi za copy-on-write
+- Posrednik:
+    - Uloge: Posrednik, kolega, konkretan posrednik, konkretni kolega
+    - Centralizacija samo interakcije, a ne i logike
+- Lanac odgovornosti:
+    - Uloge: Obrađivač, konkretan obrađivač, klijent
+- Graditelj:
+    - Uloge: Upravljač, graditelj, konkretan graditelj, proizvod
+    - Algoritam za kreiranje složenog objekta je nezavisan od delova i načina na koji se delovi sklapaju u celinu
+- MVC sadrži Strategiju (promena načina odgovora na interakciju), Sastav (kompozicija korisničkih interfejsa) i Posmatrač (signaliziranje pri promeni modela)
+
