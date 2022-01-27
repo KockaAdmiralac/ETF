@@ -1,0 +1,507 @@
+{
+	"info": {
+		"_postman_id": "3e706f1c-bddc-49dd-9f6b-c0273e7c8f16",
+		"name": "Projekat",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Kreiranje mesta",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "postalCode",
+							"value": "11070",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Novi Beograd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/place",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Kreiranje filijale u mestu",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Rajka",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "Rajkovačka 7, Kragujevac",
+							"type": "text"
+						},
+						{
+							"key": "placeId",
+							"value": "11",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/office",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"office"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Kreiranje komitenta",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Stefan Tubić",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "Ive Senjanina 8, Kragujevac",
+							"type": "text"
+						},
+						{
+							"key": "placeId",
+							"value": "10",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/client",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Promena sedišta za zadatog komitenta",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "placeId",
+							"value": "11",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/client/101",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"client",
+						"101"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Otvaranje računa",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "clientId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "placeId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "overdraft",
+							"value": "10000",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. Zatvaranje računa",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/account/121",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"account",
+						"121"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7. Kreiranje transakcije (prenos)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "amount",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "accountIdFrom",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "accountIdTo",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "purpose",
+							"value": "lol",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/transaction/internal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"transaction",
+						"internal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8. Kreiranje transakcije (uplata)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "amount",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "accountIdFrom",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "accountIdTo",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "purpose",
+							"value": "lol2",
+							"type": "text"
+						},
+						{
+							"key": "officeId",
+							"value": "1000",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/transaction/incoming",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"transaction",
+						"incoming"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9. Kreiranje transkacije (isplata)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "amount",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "accountIdFrom",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "accountIdTo",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "purpose",
+							"value": "lol3",
+							"type": "text"
+						},
+						{
+							"key": "officeId",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/Server/transaction/outgoing",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"transaction",
+						"outgoing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10. Dohvatanje svih mesta",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/place",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11. Dohvatanje svih filijala",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/office",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"office"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12. Dohvatanje svih komitenata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/client",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13. Dohvatanje računa komitenta",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/account/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"account",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "14. Dohvatanje transakcija za račun",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/transaction/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"transaction",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15. Dohvatanje rezervne kopije",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/backup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"backup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "16. Dohvatanje razlike u podacima",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/Server/backup/diff",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Server",
+						"backup",
+						"diff"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
