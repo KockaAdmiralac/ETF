@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "scheduler.h"
 
 struct spinlock tickslock;
 uint ticks;
@@ -80,16 +81,10 @@ usertrap(void)
   if(which_dev == 2)
   {
     struct cpu *c = mycpu();
-    if (c->ticks != -1 && (--(c->ticks)) == 0)
+    if ((c->ticks != -1 && (--(c->ticks)) == 0) || scheduler_can_preempt(myproc()))
     {
       // The process's execution time expired
       yield();
-    }
-    else
-    {
-      acquire(&p->lock);
-      ++p->cpu_burst_ticks;
-      release(&p->lock);
     }
   }
 
@@ -169,15 +164,9 @@ kerneltrap()
     struct proc *p = c->proc;
     if (p != 0 && p->state == RUNNING)
     {
-      if (c->ticks != -1 && (--(c->ticks)) == 0)
+      if ((c->ticks != -1 && (--(c->ticks)) == 0) || scheduler_can_preempt(p))
       {
         yield();
-      }
-      else
-      {
-        acquire(&p->lock);
-        ++p->cpu_burst_ticks;
-        release(&p->lock);
       }
     }
   }

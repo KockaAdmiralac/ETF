@@ -94,9 +94,9 @@ struct proc {
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
   int quant;                   // Time quant assigned to this process
-  uint scheduler_entry_ticks;  // Ticks at the time the process entered the scheduler
 
   // scheduled_procs->lock must be held when using these:
+  uint last_scheduler_ticks;   // Ticks at the time the process last time interacted with scheduler (get or put)
   uint cpu_burst_ticks;        // Duration of the current CPU burst in ticks
   uint tau;                    // Execution time prediction
 

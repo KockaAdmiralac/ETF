@@ -121,9 +121,9 @@ found:
   p->pid = allocpid();
   p->state = USED;
   p->quant = 0;
-  p->scheduler_entry_ticks = 0;
+  p->last_scheduler_ticks = 0;
   p->cpu_burst_ticks = 0;
-  p->tau = 5;
+  p->tau = 0;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -328,13 +328,13 @@ fork(void)
 
   acquire(&np->lock);
   np->state = RUNNABLE;
+  release(&np->lock);
+  // There is a possible deadlock here if holding p->lock.
   if (scheduler_put(np, 1) < 0)
   {
     freeproc(np);
-    release(&np->lock);
     return -1;
   }
-  release(&np->lock);
 
   return pid;
 }
@@ -477,7 +477,7 @@ scheduler(void)
 
       if (p->state != RUNNABLE)
       {
-        panic("scheduler returned a not runabble process");
+        panic("scheduler returned a not runnable process");
         continue;
       }
       // Switch to chosen process.  It is the process's job
@@ -606,12 +606,17 @@ wakeup(void *chan)
       acquire(&p->lock);
       if(p->state == SLEEPING && p->chan == chan) {
         p->state = RUNNABLE;
+        // Deadlock prevention - we will be locking tickslock within scheduler_put()
+        release(&p->lock);
         if (scheduler_put(p, 1) < 0)
         {
           panic("scheduler put wakeup failed");
         }
       }
-      release(&p->lock);
+      else
+      {
+        release(&p->lock);
+      }
     }
   }
 }

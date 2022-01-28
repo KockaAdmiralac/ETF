@@ -34,7 +34,7 @@ parent(int child)
 }
 
 struct proc*
-heap_pop(struct proc_heap* heap)
+heap_pop(struct proc_heap* heap, uint t)
 {
   acquire(&heap->lock);
   if (heap->size == 0)
@@ -79,6 +79,7 @@ heap_pop(struct proc_heap* heap)
       break;
     }
   }
+  ret->last_scheduler_ticks = t;
   release(&heap->lock);
   return ret;
 }
@@ -93,7 +94,7 @@ heap_top(struct proc_heap* heap)
 }
 
 int
-heap_insert(struct proc_heap* heap, struct proc* p)
+heap_insert(struct proc_heap* heap, struct proc* p, uint t)
 {
   acquire(&heap->lock);
   if (heap->size == NPROC)
@@ -101,14 +102,7 @@ heap_insert(struct proc_heap* heap, struct proc* p)
     release(&heap->lock);
     return -1;
   }
-  int was_holding_ticks = holding(&tickslock);
-  // It is possible that we are waking up on ticks,
-  // so the tickslock is already locked
-  if (!was_holding_ticks)
-    acquire(&tickslock);
-  p->scheduler_entry_ticks = ticks;
-  if (!was_holding_ticks)
-    release(&tickslock);
+  p->last_scheduler_ticks = t;
   heap->data[heap->size] = p;
   int curr_index = heap->size;
   ++heap->size;
@@ -139,7 +133,7 @@ heap_reprioritize(struct proc_heap* heap, prioritize_func prioritize)
   heap->size = 0;
   for (int i = 0; i < old_size; ++i)
   {
-    if (heap_insert(heap, heap->data[i]) < 0)
+    if (heap_insert(heap, heap->data[i], heap->data[i]->last_scheduler_ticks) < 0)
     {
       release(&heap->lock);
       return -1;

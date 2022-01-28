@@ -14,7 +14,7 @@ struct proc_heap
 };
 
 void heap_init(struct proc_heap*, prioritize_func);
-struct proc* heap_pop(struct proc_heap*);
+struct proc* heap_pop(struct proc_heap*, uint);
 struct proc* heap_top(struct proc_heap*);
-int heap_insert(struct proc_heap*, struct proc*);
+int heap_insert(struct proc_heap*, struct proc*, uint);
 int heap_reprioritize(struct proc_heap*, prioritize_func);
