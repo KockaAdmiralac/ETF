@@ -19,7 +19,7 @@ prioritize_shortest_job_first(struct proc* proc1, struct proc* proc2)
 int
 prioritize_completely_fair_scheduler(struct proc* proc1, struct proc* proc2)
 {
-  return proc1->last_scheduler_ticks < proc2->last_scheduler_ticks;
+  return proc1->execution_time < proc2->execution_time;
 }
 
 static prioritize_func prioritization_algorithms[] = {
@@ -35,9 +35,11 @@ void update_shortest_job_first(struct proc* p, __attribute__((unused)) uint t)
 
 void update_completely_fair_scheduler(struct proc* p, uint t)
 {
-  p->quant = (p->last_scheduler_ticks - t - p->cpu_burst_ticks) / (scheduled_procs.size + 1);
+  p->quant = (t - p->old_last_scheduler_ticks) / (scheduled_procs.size + 1);
   if (p->quant <= 0) {
     p->quant = 1;
+  } else {
+    int a = 0;
   }
 }
 
@@ -122,6 +124,7 @@ scheduler_put(struct proc* proc, int was_blocked)
   if (was_blocked)
   {
     proc->tau = ((100 - alpha) * proc->tau + alpha * proc->cpu_burst_ticks) / 100;
+    proc->execution_time += proc->cpu_burst_ticks;
     proc->cpu_burst_ticks = 0;
   }
 #ifdef SCHEDULER_MULTICORE

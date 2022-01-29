@@ -99,6 +99,8 @@ struct proc {
   uint last_scheduler_ticks;   // Ticks at the time the process last time interacted with scheduler (get or put)
   uint cpu_burst_ticks;        // Duration of the current CPU burst in ticks
   uint tau;                    // Execution time prediction
+  uint execution_time;
+  uint old_last_scheduler_ticks;
 
   // wait_lock must be held when using this:
   struct proc *parent;         // Parent process

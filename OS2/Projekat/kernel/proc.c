@@ -123,6 +123,7 @@ found:
   p->quant = 0;
   p->last_scheduler_ticks = 0;
   p->cpu_burst_ticks = 0;
+  p->execution_time = 0;
   p->tau = 0;
 
   // Allocate a trapframe page.

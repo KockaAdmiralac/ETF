@@ -61,6 +61,10 @@ heap_pop(struct proc_heap* heap, uint t)
       {
         bigger_right = 0;
       }
+      else
+      {
+        bigger_left = 0;
+      }
     }
     if (bigger_left)
     {
@@ -79,6 +83,7 @@ heap_pop(struct proc_heap* heap, uint t)
       break;
     }
   }
+  ret->old_last_scheduler_ticks = ret->last_scheduler_ticks;
   ret->last_scheduler_ticks = t;
   release(&heap->lock);
   return ret;
