@@ -41,8 +41,9 @@ public class TransactionResource {
     public Response createInternalTransaction(
             @FormParam("amount") int amount,
             @FormParam("accountId") int accountId,
+            @FormParam("accountIdTo") int accountIdTo,
             @FormParam("purpose") String purpose) {
-        JMSResponse r = communicator.exchange(new CreateInternalTransactionCommand(amount, accountId, purpose));
+        JMSResponse r = communicator.exchange(new CreateInternalTransactionCommand(amount, accountId, purpose, accountIdTo));
         if (!r.isSuccessful()) {
             return Response
                 .status(Response.Status.BAD_REQUEST)

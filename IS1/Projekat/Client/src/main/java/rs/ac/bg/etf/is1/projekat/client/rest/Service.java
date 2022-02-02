@@ -72,7 +72,8 @@ public interface Service {
     Call<DataResponse<Transaction>> createInternalTransaction(
             @Field("amount") int amount,
             @Field("accountId") int accountId,
-            @Field("purpose") String purpose);
+            @Field("purpose") String purpose,
+            @Field("accountIdTo") int accountIdTo);
 
     @POST("transaction/incoming")
     @FormUrlEncoded

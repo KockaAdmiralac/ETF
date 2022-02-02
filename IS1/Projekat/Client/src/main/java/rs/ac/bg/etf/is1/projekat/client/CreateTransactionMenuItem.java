@@ -19,12 +19,15 @@ public class CreateTransactionMenuItem extends MenuItem {
         int accountId = readInt(scanner, "Account ID");
         String purpose = readString(scanner, "Purpose");
         int officeId = 0;
-        if (!type.equals("internal")) {
+        int accountIdTo = 0;
+        if (type.equals("internal")) {
+            accountIdTo = readInt(scanner, "Account ID to");
+        } else {
             officeId = readInt(scanner, "Office ID");
         }
         switch (type) {
             case "internal":
-                return service.createInternalTransaction(amount, accountId, purpose);
+                return service.createInternalTransaction(amount, accountId, purpose, accountIdTo);
             case "incoming":
                 return service.createIncomingTransaction(amount, accountId, purpose, officeId);
             case "outgoing":
