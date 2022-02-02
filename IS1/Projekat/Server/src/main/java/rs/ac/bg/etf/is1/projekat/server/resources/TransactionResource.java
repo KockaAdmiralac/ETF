@@ -1,10 +1,9 @@
 package rs.ac.bg.etf.is1.projekat.server.resources;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,11 +16,10 @@ import rs.ac.bg.etf.is1.projekat.commands.GetTransactionsForAccountCommand;
 import rs.ac.bg.etf.is1.projekat.responses.JMSResponse;
 import rs.ac.bg.etf.is1.projekat.server.JMSCommunicator;
 
-@Stateless
 @Path("transaction")
 @Produces(MediaType.APPLICATION_JSON)
 public class TransactionResource {
-    @EJB
+    @Inject
     JMSCommunicator communicator;
 
     @GET
@@ -38,14 +36,13 @@ public class TransactionResource {
             .ok(r)
             .build();
     }
-    @PUT
+    @POST
     @Path("internal")
     public Response createInternalTransaction(
             @FormParam("amount") int amount,
-            @FormParam("accountIdFrom") int accountIdFrom,
-            @FormParam("accountIdTo") int accountIdTo,
+            @FormParam("accountId") int accountId,
             @FormParam("purpose") String purpose) {
-        JMSResponse r = communicator.exchange(new CreateInternalTransactionCommand(amount, accountIdFrom, accountIdTo, purpose));
+        JMSResponse r = communicator.exchange(new CreateInternalTransactionCommand(amount, accountId, purpose));
         if (!r.isSuccessful()) {
             return Response
                 .status(Response.Status.BAD_REQUEST)
@@ -56,15 +53,14 @@ public class TransactionResource {
             .ok(r)
             .build();
     }
-    @PUT
+    @POST
     @Path("incoming")
     public Response createIncomingTransaction(
             @FormParam("amount") int amount,
-            @FormParam("accountIdFrom") int accountIdFrom,
-            @FormParam("accountIdTo") int accountIdTo,
+            @FormParam("accountId") int accountId,
             @FormParam("purpose") String purpose,
             @FormParam("officeId") int officeId) {
-        JMSResponse r = communicator.exchange(new CreateIncomingTransactionCommand(amount, accountIdFrom, accountIdTo, purpose, officeId));
+        JMSResponse r = communicator.exchange(new CreateIncomingTransactionCommand(amount, accountId, purpose, officeId));
         if (!r.isSuccessful()) {
             return Response
                 .status(Response.Status.BAD_REQUEST)
@@ -75,15 +71,14 @@ public class TransactionResource {
             .ok(r)
             .build();
     }
-    @PUT
+    @POST
     @Path("outgoing")
     public Response createOutgoingTransaction(
             @FormParam("amount") int amount,
-            @FormParam("accountIdFrom") int accountIdFrom,
-            @FormParam("accountIdTo") int accountIdTo,
+            @FormParam("accountId") int accountId,
             @FormParam("purpose") String purpose,
             @FormParam("officeId") int officeId) {
-        JMSResponse r = communicator.exchange(new CreateOutgoingTransactionCommand(amount, accountIdFrom, accountIdTo, purpose, officeId));
+        JMSResponse r = communicator.exchange(new CreateOutgoingTransactionCommand(amount, accountId, purpose, officeId));
         if (!r.isSuccessful()) {
             return Response
                 .status(Response.Status.BAD_REQUEST)

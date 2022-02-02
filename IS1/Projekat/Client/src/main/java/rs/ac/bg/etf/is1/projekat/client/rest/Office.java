@@ -4,13 +4,13 @@ public class Office {
     public int id;
     public String name;
     public String address;
-    public Place placeId;
+    public Place place;
     @Override
     public String toString() {
         return "Office:" +
                 "\n\tID: " + id +
                 "\n\tName: " + name +
                 "\n\tAddress: " + address +
-                "\n\tPlace: " + placeId;
+                "\n\tPlace: " + place;
     }
 }

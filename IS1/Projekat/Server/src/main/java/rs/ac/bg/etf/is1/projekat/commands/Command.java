@@ -17,7 +17,8 @@ public abstract class Command implements Serializable {
         GET_CLIENTS,
         GET_ACCOUNTS_FOR_CLIENT,
         GET_TRANSACTIONS_FOR_ACCOUNT,
-        GET_BACKUP
+        GET_BACKUP,
+        SYNC_CLIENT
     };
     public enum Destination {
         S1,

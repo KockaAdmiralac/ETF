@@ -7,7 +7,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
-import retrofit2.http.PUT;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface Service {
@@ -15,7 +15,7 @@ public interface Service {
     @GET("account/{clientId}")
     Call<DataResponse<List<Account>>> accounts(@Path("clientId") int clientId);
 
-    @PUT("account")
+    @POST("account")
     @FormUrlEncoded
     Call<DataResponse<Account>> createAccount(@Field("clientId") int clientId,
             @Field("placeId") int placeId, @Field("overdraft") int overdraft);
@@ -34,7 +34,7 @@ public interface Service {
     @GET("client")
     Call<DataResponse<List<Client>>> clients();
 
-    @PUT("client")
+    @POST("client")
     @FormUrlEncoded
     Call<DataResponse<Client>> createClient(@Field("name") String name,
             @Field("address") String address, @Field("placeId") int placeId);
@@ -48,7 +48,7 @@ public interface Service {
     @GET("office")
     Call<DataResponse<List<Office>>> offices();
 
-    @PUT("office")
+    @POST("office")
     @FormUrlEncoded
     Call<DataResponse<Office>> createOffice(@Field("name") String name,
             @Field("address") String address, @Field("placeId") int placeId);
@@ -57,7 +57,7 @@ public interface Service {
     @GET("place")
     Call<DataResponse<List<Place>>> places();
     
-    @PUT("place")
+    @POST("place")
     @FormUrlEncoded
     Call<DataResponse<Place>> createPlace(@Field("postalCode") int postalCode,
             @Field("name") String name);
@@ -67,27 +67,24 @@ public interface Service {
     Call<DataResponse<List<Transaction>>> transactions(
             @Path("accountId") int accountId);
     
-    @PUT("transaction/internal")
+    @POST("transaction/internal")
     @FormUrlEncoded
     Call<DataResponse<Transaction>> createInternalTransaction(
             @Field("amount") int amount,
-            @Field("accountIdFrom") int accountIdFrom,
-            @Field("accountIdTo") int accountIdTo,
+            @Field("accountId") int accountId,
             @Field("purpose") String purpose);
 
-    @PUT("transaction/incoming")
+    @POST("transaction/incoming")
     @FormUrlEncoded
     Call<DataResponse<Transaction>> createIncomingTransaction(
             @Field("amount") int amount,
-            @Field("accountIdFrom") int accountIdFrom,
-            @Field("accountIdTo") int accountIdTo,
+            @Field("accountId") int accountId,
             @Field("purpose") String purpose, @Field("officeId") int officeId);
 
-    @PUT("transaction/outgoing")
+    @POST("transaction/outgoing")
     @FormUrlEncoded
     Call<DataResponse<Transaction>> createOutgoingTransaction(
             @Field("amount") int amount,
-            @Field("accountIdFrom") int accountIdFrom,
-            @Field("accountIdTo") int accountIdTo,
+            @Field("accountId") int accountId,
             @Field("purpose") String purpose, @Field("officeId") int officeId);
 }

@@ -1,8 +1,7 @@
 package rs.ac.bg.etf.is1.projekat.server.resources;
 
 import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,13 +17,12 @@ import rs.ac.bg.etf.is1.projekat.responses.S3BackupResponse;
 import rs.ac.bg.etf.is1.projekat.server.EntityComparator;
 import rs.ac.bg.etf.is1.projekat.server.JMSCommunicator;
 
-@Stateless
 @Path("backup")
 @Produces(MediaType.APPLICATION_JSON)
 public class BackupResource {
-    @EJB
+    @Inject
     EntityComparator comparator;
-    @EJB
+    @Inject
     JMSCommunicator communicator;
 
     @GET
@@ -84,15 +82,14 @@ public class BackupResource {
             comparator.compare(r3.getOffices(), r1.getOffices(), (e1, e2) -> {
                 return e1.getAddress().equals(e2.getAddress()) &&
                        e1.getName().equals(e2.getName()) &&
-                       e1.getPlaceId().equals(e2.getPlaceId());
+                       e1.getPlace().equals(e2.getPlace());
             }),
             comparator.compare(r3.getPlaces(), r1.getPlaces(), (e1, e2) -> {
                 return e1.getName().equals(e2.getName()) &&
                        e1.getPostalCode() == e2.getPostalCode();
             }),
             comparator.compare(r3.getTransactions(), r2.getTransactions(), (e1, e2) -> {
-                return // e1.getAccountIdFrom().equals(e2.getAccountIdFrom()) &&
-                       // e1.getAccountIdTo().equals(e2.getAccountIdFrom()) &&
+                return // e1.getAccount().equals(e2.getAccount()) &&
                        e1.getAmount() == e2.getAmount() &&
                        // e1.getOfficeId().equals(e2.getOfficeId()) &&
                        e1.getProcessingDate().equals(e2.getProcessingDate()) &&

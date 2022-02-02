@@ -1,11 +1,10 @@
 package rs.ac.bg.etf.is1.projekat.tables;
 
-import rs.ac.bg.etf.is1.projekat.tables.Place;
 import java.io.Serializable;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,12 +15,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "office")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Office.findAll", query = "SELECT o FROM Office o"),
     @NamedQuery(name = "Office.findById", query = "SELECT o FROM Office o WHERE o.id = :id"),
@@ -46,10 +42,8 @@ public class Office implements Serializable {
     @Column(name = "address")
     private String address;
     @JoinColumn(name = "place_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    @XmlTransient
-    @JsonbTransient
-    private Place placeId;
+    @ManyToOne(optional = false, fetch=FetchType.EAGER)
+    private Place place;
 
     public Office() {
     }
@@ -88,14 +82,12 @@ public class Office implements Serializable {
         this.address = address;
     }
 
-    @XmlTransient
-    @JsonbTransient
-    public Place getPlaceId() {
-        return placeId;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setPlaceId(Place placeId) {
-        this.placeId = placeId;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     @Override

@@ -22,7 +22,6 @@ public class CreateAccountHandler extends CommandHandler {
             return new FailureResponse(cmd, "Client with given ID not found.");
         }
         Account account = new Account();
-        // Not a foreign key here
         account.setClientId(client.getId());
         account.setPlaceId(data.getPlaceId());
         account.setOverdraft(data.getOverdraft());

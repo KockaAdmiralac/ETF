@@ -40,6 +40,7 @@ public class Subsystem2 {
         map.put(Command.Type.GET_ACCOUNTS_FOR_CLIENT, new GetAccountsForClientHandler(em));
         map.put(Command.Type.GET_TRANSACTIONS_FOR_ACCOUNT, new GetTransactionsForAccountHandler(em));
         map.put(Command.Type.GET_BACKUP, new GetBackupHandler(em));
+        map.put(Command.Type.SYNC_CLIENT, new SyncClientHandler(em));
         return map;
     }
     

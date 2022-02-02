@@ -1,7 +1,6 @@
 package rs.ac.bg.etf.is1.projekat.subsystem2;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import rs.ac.bg.etf.is1.projekat.commands.Command;
 import rs.ac.bg.etf.is1.projekat.commands.CreateIncomingTransactionCommand;
 import rs.ac.bg.etf.is1.projekat.commands.CreateOutgoingTransactionCommand;
@@ -20,36 +19,41 @@ public class CreateTransactionHandler extends CommandHandler {
     @Override
     public JMSResponse handle(Command cmd) {
         CreateTransactionCommand data = (CreateTransactionCommand)cmd;
-        Account accountFrom = em.find(Account.class, data.getAccountIdFrom());
-        if (accountFrom == null) {
-            return new FailureResponse(cmd, "Source account with specified ID does not exist.");
+        Account account = em.find(Account.class, data.getAccountId());
+        if (account == null || account.getStatus().equals("closed")) {
+            return new FailureResponse(cmd, "Account with specified ID does not exist.");
         }
-        if (accountFrom.getStatus() == Account.Status.BLOCKED) {
-            return new FailureResponse(cmd, "Source account is blocked.");
+        if (account.getStatus().equals("blocked") && !data.getTransactionType().equals("incoming")) {
+            return new FailureResponse(cmd, "Account is not active.");
         }
-        Account accountTo = em.find(Account.class, data.getAccountIdTo());
-        if (accountTo == null) {
-            return new FailureResponse(cmd, "Destination account with specified ID does not exist.");
+        int transactionNumber = account.getTransactionCount() + 1;
+        account.setTransactionCount(transactionNumber);
+        int newBalance = account.getBalance();
+        if (data.getTransactionType().equals("incoming")) {
+            newBalance += data.getAmount();
+        } else {
+            newBalance -= data.getAmount();
         }
-        // This is not efficient...
-        TypedQuery<Transaction> query = em.createNamedQuery("Transaction.findByAccountId", Transaction.class);
-        query.setParameter("accountId", accountFrom);
-        int transactionNumber = query.getResultList().size();
-
+        account.setBalance(newBalance);
+        if (newBalance < -account.getOverdraft()) {
+            account.setStatus("blocked");
+        } else {
+            account.setStatus("active");
+        }
         Transaction transaction = new Transaction();
         transaction.setType(data.getTransactionType());
         transaction.setAmount(data.getAmount());
         transaction.setTransactionNumber(transactionNumber);
         transaction.setPurpose(data.getPurpose());
-        transaction.setAccountIdFrom(accountFrom);
-        transaction.setAccountIdTo(accountTo);
+        transaction.setAccount(account);
         if (data.getTransactionType().equals("incoming")) {
-            transaction.setOfficeId(((CreateIncomingTransactionCommand)data).getOfficeId());
+            transaction.setOffice(((CreateIncomingTransactionCommand)data).getOfficeId());
         } else if (data.getTransactionType().equals("outgoing")) {
-            transaction.setOfficeId(((CreateOutgoingTransactionCommand)data).getOfficeId());
+            transaction.setOffice(((CreateOutgoingTransactionCommand)data).getOfficeId());
         }
         em.getTransaction().begin();
         em.persist(transaction);
+        em.persist(account);
         em.getTransaction().commit();
         em.clear();
         return new DataResponse<>(cmd, transaction);

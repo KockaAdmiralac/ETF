@@ -24,7 +24,6 @@ public class CreateClientHandler extends CommandHandler {
         Client client = new Client();
         client.setAddress(data.getAddress());
         client.setName(data.getName());
-        // Not a foreign key here
         client.setPlaceId(place.getId());
         em.getTransaction().begin();
         em.persist(client);

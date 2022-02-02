@@ -45,10 +45,9 @@ public class Subsystem3 {
     private static void handleS1BackupResponse(S1BackupResponse r) {
         em.getTransaction().begin();
         r.getPlaces().forEach(p -> em.merge(p));
-        em.getTransaction().commit();
-        em.clear();
-        em.getTransaction().begin();
+        em.flush();
         r.getClients().forEach(c -> em.merge(c));
+        em.flush();
         r.getOffices().forEach(o -> em.merge(o));
         em.getTransaction().commit();
         em.clear();
@@ -57,9 +56,7 @@ public class Subsystem3 {
     private static void handleS2BackupResponse(S2BackupResponse r) {
         em.getTransaction().begin();
         r.getAccounts().forEach(a -> em.merge(a));
-        em.getTransaction().commit();
-        em.clear();
-        em.getTransaction().begin();
+        em.flush();
         r.getTransactions().forEach(t -> em.merge(t));
         em.getTransaction().commit();
         em.clear();
@@ -71,20 +68,6 @@ public class Subsystem3 {
         List<Office> offices = em.createNamedQuery("Office.findAll", Office.class).getResultList();
         List<Place> places = em.createNamedQuery("Place.findAll", Place.class).getResultList();
         List<Transaction> transactions = em.createNamedQuery("Transaction.findAll", Transaction.class).getResultList();
-        accounts.forEach(a -> {
-            em.detach(a);
-            a.setTransactionList(null);
-            a.setTransactionList1(null);
-        });
-//        clients.forEach(c -> {
-//            em.detach(c);
-//            c.setAccountList(null);
-//        });
-        places.forEach(p -> {
-            em.detach(p);
-//            p.setClientList(null);
-            p.setOfficeList(null);
-        });
         return new S3BackupResponse(cmd, accounts, clients, offices, places, transactions);
     }
     

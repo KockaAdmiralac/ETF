@@ -12,11 +12,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "client")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
     @NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c.id = :id"),
@@ -45,10 +43,6 @@ public class Client implements Serializable {
     @NotNull
     @Column(name = "place_id")
     private int placeId;
-//    @XmlTransient
-//    @JsonbTransient
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
-//    private List<Account> accountList;
 
     public Client() {
     }
@@ -95,16 +89,6 @@ public class Client implements Serializable {
     public void setPlaceId(int placeId) {
         this.placeId = placeId;
     }
-
-//    @XmlTransient
-//    @JsonbTransient
-//    public List<Account> getAccountList() {
-//        return accountList;
-//    }
-//
-//    public void setAccountList(List<Account> accountList) {
-//        this.accountList = accountList;
-//    }
 
     @Override
     public int hashCode() {

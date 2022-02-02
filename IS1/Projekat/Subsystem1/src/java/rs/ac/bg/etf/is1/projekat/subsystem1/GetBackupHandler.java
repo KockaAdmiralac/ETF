@@ -19,15 +19,6 @@ public class GetBackupHandler extends CommandHandler {
         List<Client> clients = em.createNamedQuery("Client.findAll", Client.class).getResultList();
         List<Office> offices = em.createNamedQuery("Office.findAll", Office.class).getResultList();
         List<Place> places = em.createNamedQuery("Place.findAll", Place.class).getResultList();
-//        clients.forEach(c -> {
-//            em.detach(c);
-//            c.setAccountList(null);
-//        });
-        places.forEach(p -> {
-            em.detach(p);
-//            p.setClientList(null);
-            p.setOfficeList(null);
-        });
         return new S1BackupResponse(cmd, clients, offices, places);
     }
 }

@@ -23,15 +23,9 @@ public class GetAccountsForClientHandler extends CommandHandler {
         if (client == null) {
             return new FailureResponse(cmd, "No client with given ID exists.");
         }
-        TypedQuery<Account> query = em.createNamedQuery("Account.findByClientId", Account.class);
-        query.setParameter("clientId", client.getId());
-        List<Account> results = query.getResultList();
-        results.forEach(result -> {
-            em.detach(result);
-//            result.setClientId(null);
-            result.setTransactionList(null);
-            result.setTransactionList1(null);
-        });
+        List<Account> results = em.createNamedQuery("Account.findByClientId", Account.class)
+            .setParameter("clientId", client.getId())
+            .getResultList();
         return new DataResponse<>(cmd, results);
     }
 }

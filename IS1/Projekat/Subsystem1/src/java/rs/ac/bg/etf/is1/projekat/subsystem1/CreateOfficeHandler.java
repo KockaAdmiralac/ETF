@@ -24,7 +24,7 @@ public class CreateOfficeHandler extends CommandHandler {
         Office office = new Office();
         office.setAddress(data.getAddress());
         office.setName(data.getName());
-        office.setPlaceId(place);
+        office.setPlace(place);
         em.getTransaction().begin();
         em.persist(office);
         em.getTransaction().commit();

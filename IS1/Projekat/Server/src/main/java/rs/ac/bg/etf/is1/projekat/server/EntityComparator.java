@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.ejb.Singleton;
+import javax.inject.Singleton;
 import rs.ac.bg.etf.is1.projekat.responses.BackupDiffResponse;
 
 @Singleton

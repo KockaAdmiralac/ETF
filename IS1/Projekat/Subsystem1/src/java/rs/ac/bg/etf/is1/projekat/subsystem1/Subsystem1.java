@@ -18,8 +18,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import rs.ac.bg.etf.is1.projekat.commands.Command;
+import rs.ac.bg.etf.is1.projekat.commands.SyncClientCommand;
 import rs.ac.bg.etf.is1.projekat.responses.CommandHandler;
+import rs.ac.bg.etf.is1.projekat.responses.DataResponse;
 import rs.ac.bg.etf.is1.projekat.responses.JMSResponse;
+import rs.ac.bg.etf.is1.projekat.tables.Client;
 
 public class Subsystem1 {
     @Resource(lookup="jms/__defaultConnectionFactory")
@@ -28,6 +31,9 @@ public class Subsystem1 {
     @Resource(lookup="s1Queue")
     private static Queue s1Queue;
 
+    @Resource(lookup="s2Queue")
+    private static Queue s2Queue;
+    
     private static final Map<Command.Type, CommandHandler> handlers = assignHandlers();
 
     private static Map<Command.Type, CommandHandler> assignHandlers() {
@@ -83,6 +89,22 @@ public class Subsystem1 {
                 responseMsg.setJMSCorrelationID(msg.getJMSCorrelationID());
                 System.out.println("Sending response " + response);
                 producer.send(replyTo, responseMsg);
+                if (cmd.getType() == Command.Type.CREATE_CLIENT && response instanceof DataResponse) {
+                    System.out.println("Sending created client to S2...");
+                    DataResponse<Client> dataResponseMsg = (DataResponse<Client>) response;
+                    SyncClientCommand scc = new SyncClientCommand(dataResponseMsg.getData());
+                    ObjectMessage s2Msg = context.createObjectMessage(scc);
+                    s2Msg.setJMSCorrelationID(msg.getJMSCorrelationID());
+                    s2Msg.setJMSReplyTo(s1Queue);
+                    producer.send(s2Queue, s2Msg);
+                    // Consume response
+                    Message s2Response = consumer.receive(10000);
+                    if (s2Response == null) {
+                        System.err.println("S2 did not respond!");
+                    } else {
+                        System.out.println("Client sent!");
+                    }
+                }
             } catch (Exception ex) {
                 Logger.getLogger(Subsystem1.class.getName()).log(Level.SEVERE, null, ex);
             }

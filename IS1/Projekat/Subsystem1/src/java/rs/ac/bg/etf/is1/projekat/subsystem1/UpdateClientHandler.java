@@ -25,7 +25,6 @@ public class UpdateClientHandler extends CommandHandler {
         if (place == null) {
             return new FailureResponse(cmd, "No place with given ID exists.");
         }
-        // Not a foreign key here
         client.setPlaceId(place.getId());
         em.getTransaction().begin();
         em.persist(client);

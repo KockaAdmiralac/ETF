@@ -2,10 +2,7 @@ package rs.ac.bg.etf.is1.projekat.tables;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,38 +10,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "account")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
-    @NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.id = :id"),
-    @NamedQuery(name = "Account.findByBalance", query = "SELECT a FROM Account a WHERE a.balance = :balance"),
-    @NamedQuery(name = "Account.findByOverdraft", query = "SELECT a FROM Account a WHERE a.overdraft = :overdraft"),
-    @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDate = :creationDate"),
-    @NamedQuery(name = "Account.findByTransactionCount", query = "SELECT a FROM Account a WHERE a.transactionCount = :transactionCount"),
-    @NamedQuery(name = "Account.findByPlaceId", query = "SELECT a FROM Account a WHERE a.placeId = :placeId"),
-    @NamedQuery(name = "Account.findByClientId", query = "SELECT a FROM Account a WHERE a.clientId = :clientId")})
+    @NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.id = :id AND a.status != 'closed'"),
+    @NamedQuery(name = "Account.findByBalance", query = "SELECT a FROM Account a WHERE a.balance = :balance AND a.status != 'closed'"),
+    @NamedQuery(name = "Account.findByOverdraft", query = "SELECT a FROM Account a WHERE a.overdraft = :overdraft AND a.status != 'closed'"),
+    @NamedQuery(name = "Account.findByCreationDate", query = "SELECT a FROM Account a WHERE a.creationDate = :creationDate AND a.status != 'closed'"),
+    @NamedQuery(name = "Account.findByTransactionCount", query = "SELECT a FROM Account a WHERE a.transactionCount = :transactionCount AND a.status != 'closed'"),
+    @NamedQuery(name = "Account.findByPlaceId", query = "SELECT a FROM Account a WHERE a.placeId = :placeId AND a.status != 'closed'"),
+    @NamedQuery(name = "Account.findByClientId", query = "SELECT a FROM Account a WHERE a.clientId = :clientId AND a.status != 'closed'")})
 public class Account implements Serializable {
-    public enum Status {
-        ACTIVE,
-        BLOCKED
-    };
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 7)
+    @Column(name = "status")
+    private String status = "active";
     @Basic(optional = false)
     @NotNull
     @Column(name = "balance")
@@ -70,14 +64,6 @@ public class Account implements Serializable {
     @NotNull
     @Column(name = "client_id")
     private int clientId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountIdFrom")
-    @XmlTransient
-    @JsonbTransient
-    private List<Transaction> transactionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountIdTo")
-    @XmlTransient
-    @JsonbTransient
-    private List<Transaction> transactionList1;
 
     public Account() {
     }
@@ -150,32 +136,13 @@ public class Account implements Serializable {
     public void setClientId(int clientId) {
         this.clientId = clientId;
     }
-
-    @XmlTransient
-    @JsonbTransient
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
+    
+    public String getStatus() {
+        return status;
     }
     
-    public Status getStatus() {
-        if (balance <= -overdraft) {
-            return Status.BLOCKED;
-        }
-        return Status.ACTIVE;
-    }
-
-    @XmlTransient
-    @JsonbTransient
-    public List<Transaction> getTransactionList1() {
-        return transactionList1;
-    }
-
-    public void setTransactionList1(List<Transaction> transactionList1) {
-        this.transactionList1 = transactionList1;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

@@ -1,10 +1,9 @@
 package rs.ac.bg.etf.is1.projekat.server.resources;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -14,11 +13,10 @@ import rs.ac.bg.etf.is1.projekat.commands.GetPlacesCommand;
 import rs.ac.bg.etf.is1.projekat.responses.JMSResponse;
 import rs.ac.bg.etf.is1.projekat.server.JMSCommunicator;
 
-@Stateless
 @Path("place")
 @Produces(MediaType.APPLICATION_JSON)
 public class PlaceResource {
-    @EJB
+    @Inject
     JMSCommunicator communicator;
     
     @GET
@@ -34,7 +32,7 @@ public class PlaceResource {
             .ok(r)
             .build();
     }
-    @PUT
+    @POST
     public Response createPlace(
             @FormParam("postalCode") int postalCode,
             @FormParam("name") String name) {

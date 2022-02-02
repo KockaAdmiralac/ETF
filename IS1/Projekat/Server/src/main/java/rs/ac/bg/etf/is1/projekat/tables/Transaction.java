@@ -2,10 +2,10 @@ package rs.ac.bg.etf.is1.projekat.tables;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,12 +18,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "transaction")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Transaction.findAll", query = "SELECT t FROM Transaction t"),
     @NamedQuery(name = "Transaction.findById", query = "SELECT t FROM Transaction t WHERE t.id = :id"),
@@ -32,8 +29,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Transaction.findByAmount", query = "SELECT t FROM Transaction t WHERE t.amount = :amount"),
     @NamedQuery(name = "Transaction.findByTransactionNumber", query = "SELECT t FROM Transaction t WHERE t.transactionNumber = :transactionNumber"),
     @NamedQuery(name = "Transaction.findByPurpose", query = "SELECT t FROM Transaction t WHERE t.purpose = :purpose"),
-    @NamedQuery(name = "Transaction.findByOfficeId", query = "SELECT t FROM Transaction t WHERE t.officeId = :officeId"),
-    @NamedQuery(name = "Transaction.findByAccountId", query = "SELECT t FROM Transaction t WHERE t.accountIdFrom = :accountId")})
+    @NamedQuery(name = "Transaction.findByOffice", query = "SELECT t FROM Transaction t WHERE t.office = :office"),
+    @NamedQuery(name = "Transaction.findByAccount", query = "SELECT t FROM Transaction t WHERE t.account = :account")})
 public class Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,17 +61,10 @@ public class Transaction implements Serializable {
     @Column(name = "purpose")
     private String purpose;
     @Column(name = "office_id")
-    private Integer officeId;
-    @JoinColumn(name = "account_id_from", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    @XmlTransient
-    @JsonbTransient
-    private Account accountIdFrom;
-    @JoinColumn(name = "account_id_to", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    @XmlTransient
-    @JsonbTransient
-    private Account accountIdTo;
+    private Integer office;
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch=FetchType.EAGER)
+    private Account account;
 
     public Transaction() {
     }
@@ -139,32 +129,20 @@ public class Transaction implements Serializable {
         this.purpose = purpose;
     }
 
-    public Integer getOfficeId() {
-        return officeId;
+    public Integer getOffice() {
+        return office;
     }
 
-    public void setOfficeId(Integer officeId) {
-        this.officeId = officeId;
+    public void setOffice(Integer office) {
+        this.office = office;
     }
 
-    @XmlTransient
-    @JsonbTransient
-    public Account getAccountIdFrom() {
-        return accountIdFrom;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountIdFrom(Account accountIdFrom) {
-        this.accountIdFrom = accountIdFrom;
-    }
-
-    @XmlTransient
-    @JsonbTransient
-    public Account getAccountIdTo() {
-        return accountIdTo;
-    }
-
-    public void setAccountIdTo(Account accountIdTo) {
-        this.accountIdTo = accountIdTo;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Override

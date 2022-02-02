@@ -2,7 +2,6 @@ package rs.ac.bg.etf.is1.projekat.subsystem1;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import rs.ac.bg.etf.is1.projekat.commands.Command;
 import rs.ac.bg.etf.is1.projekat.responses.CommandHandler;
 import rs.ac.bg.etf.is1.projekat.responses.DataResponse;
@@ -15,13 +14,7 @@ public class GetPlacesHandler extends CommandHandler {
     }
     @Override
     public JMSResponse handle(Command cmd) {
-        TypedQuery<Place> query = em.createNamedQuery("Place.findAll", Place.class);
-        List<Place> results = query.getResultList();
-        results.forEach(result -> {
-            em.detach(result);
-//            result.setClientList(null);
-            result.setOfficeList(null);
-        });
+        List<Place> results = em.createNamedQuery("Place.findAll", Place.class).getResultList();
         return new DataResponse<>(cmd, results);
     }
 }

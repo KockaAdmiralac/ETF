@@ -17,11 +17,12 @@ public class DeleteAccountHandler extends CommandHandler {
     public JMSResponse handle(Command cmd) {
         DeleteAccountCommand data = (DeleteAccountCommand)cmd;
         Account account = em.find(Account.class, data.getAccountId());
-        if (account == null) {
+        if (account == null || account.getStatus().equals("closed")) {
             return new FailureResponse(cmd, "Account with specified ID not found.");
         }
+        account.setStatus("closed");
         em.getTransaction().begin();
-        em.remove(account);
+        em.persist(account);
         em.getTransaction().commit();
         em.clear();
         return new OKResponse(cmd);

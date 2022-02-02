@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.ejb.Singleton;
+import javax.inject.Singleton;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
@@ -48,9 +48,7 @@ public class JMSCommunicator {
     }
     public JMSResponse exchange(Command cmd) {
         List<JMSResponse> responses = new ArrayList<>();
-        // I hate EJB I hate EJB I hate EJB I hate EJB
-        new Thread(() -> {
-            JMSContext context = connectionFactory.createContext();
+        try (JMSContext context = connectionFactory.createContext()) {
             for (Queue q : getQueuesForDestination(cmd.getDestination())) {
                 ObjectMessage objMsg = context.createObjectMessage(cmd);
                 try (JMSConsumer consumer = context.createConsumer(serverQueue, "JMSCorrelationID = '" + cmd.getId() + "'")) {
@@ -77,16 +75,6 @@ public class JMSCommunicator {
                     Logger.getLogger(JMSCommunicator.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            synchronized(responses) {
-                responses.notifyAll();
-            }
-        }).start();
-        try {
-            synchronized(responses) {
-                responses.wait();
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(JMSCommunicator.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (responses.isEmpty()) {
             return new FailureResponse(cmd, "No responses.");

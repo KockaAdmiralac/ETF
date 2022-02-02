@@ -2,7 +2,6 @@ package rs.ac.bg.etf.is1.projekat.subsystem1;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import rs.ac.bg.etf.is1.projekat.commands.Command;
 import rs.ac.bg.etf.is1.projekat.responses.CommandHandler;
 import rs.ac.bg.etf.is1.projekat.responses.DataResponse;
@@ -15,12 +14,7 @@ public class GetOfficesHandler extends CommandHandler {
     }
     @Override
     public JMSResponse handle(Command cmd) {
-        TypedQuery<Office> query = em.createNamedQuery("Office.findAll", Office.class);
-        List<Office> results = query.getResultList();
-        results.forEach(result -> {
-            em.detach(result);
-            result.setPlaceId(null);
-        });
+        List<Office> results = em.createNamedQuery("Office.findAll", Office.class).getResultList();
         return new DataResponse<>(cmd, results);
     }
 }

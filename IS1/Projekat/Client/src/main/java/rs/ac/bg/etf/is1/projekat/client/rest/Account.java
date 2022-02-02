@@ -9,6 +9,7 @@ public class Account {
     public Date creationDate;
     public int transactionCount;
     public int placeId;
+    public String status;
     public int clientId;
     @Override
     public String toString() {
@@ -19,6 +20,7 @@ public class Account {
                 "\n\tCreation date: " + creationDate +
                 "\n\tTransaction count: " + transactionCount +
                 "\n\tPlace ID: " + placeId +
+                "\n\tStatus: " + status +
                 "\n\tClient ID: " + clientId;
     }
 }

@@ -10,8 +10,7 @@ public class Transaction {
     public int transactionNumber;
     public String purpose;
     public int officeId;
-    public Account accountIdFrom;
-    public Account accountIdTo;
+    public Account account;
     @Override
     public String toString() {
         return "Transaction:" +
@@ -21,7 +20,6 @@ public class Transaction {
                 "\n\tTransaction number: " + transactionNumber +
                 "\n\tPurpose: " + (purpose == null ? "null" : purpose) +
                 "\n\tOffice ID: " + officeId +
-                "\n\tAccount from: " + (accountIdFrom == null ? "null" : accountIdFrom) +
-                "\n\tAccount to: " + (accountIdTo == null ? "null" : accountIdTo);
+                "\n\tAccount: " + (account == null ? "null" : account);
     }
 }

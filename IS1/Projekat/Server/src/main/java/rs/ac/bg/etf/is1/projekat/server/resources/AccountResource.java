@@ -1,11 +1,10 @@
 package rs.ac.bg.etf.is1.projekat.server.resources;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,11 +16,10 @@ import rs.ac.bg.etf.is1.projekat.commands.GetAccountsForClientCommand;
 import rs.ac.bg.etf.is1.projekat.responses.JMSResponse;
 import rs.ac.bg.etf.is1.projekat.server.JMSCommunicator;
 
-@Stateless
 @Path("account")
 @Produces(MediaType.APPLICATION_JSON)
 public class AccountResource {
-    @EJB
+    @Inject
     JMSCommunicator communicator;
 
     @GET
@@ -38,7 +36,7 @@ public class AccountResource {
             .ok(r)
             .build();
     }
-    @PUT
+    @POST
     public Response createAccount(
             @FormParam("clientId") int clientId,
             @FormParam("placeId") int placeId,

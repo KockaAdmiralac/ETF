@@ -17,11 +17,6 @@ public class GetBackupHandler extends CommandHandler {
     public JMSResponse handle(Command cmd) {
         List<Account> accounts = em.createNamedQuery("Account.findAll", Account.class).getResultList();
         List<Transaction> transactions = em.createNamedQuery("Transaction.findAll", Transaction.class).getResultList();
-        accounts.forEach(a -> {
-            em.detach(a);
-            a.setTransactionList(null);
-            a.setTransactionList1(null);
-        });
         return new S2BackupResponse(cmd, accounts, transactions);
     }
 }

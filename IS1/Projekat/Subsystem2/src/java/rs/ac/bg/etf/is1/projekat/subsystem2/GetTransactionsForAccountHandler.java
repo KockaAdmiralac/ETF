@@ -20,17 +20,12 @@ public class GetTransactionsForAccountHandler extends CommandHandler {
     public JMSResponse handle(Command cmd) {
         GetTransactionsForAccountCommand data = (GetTransactionsForAccountCommand)cmd;
         Account account = em.find(Account.class, data.getAccountId());
-        if (account == null) {
+        if (account == null || account.getStatus().equals("closed")) {
             return new FailureResponse(cmd, "No account with given ID exists.");
         }
-        TypedQuery<Transaction> query = em.createNamedQuery("Transaction.findByAccountId", Transaction.class);
-        query.setParameter("accountId", account);
-        List<Transaction> results = query.getResultList();
-        results.forEach(result -> {
-            em.detach(result);
-            result.setAccountIdFrom(null);
-            result.setAccountIdTo(null);
-        });
+        List<Transaction> results = em.createNamedQuery("Transaction.findByAccount", Transaction.class)
+            .setParameter("account", account)
+            .getResultList();
         return new DataResponse<>(cmd, results);
     }
 }

@@ -2,8 +2,8 @@ package rs.ac.bg.etf.is1.projekat.commands;
 
 public class CreateOutgoingTransactionCommand extends CreateTransactionCommand {
     private final int officeId;
-    public CreateOutgoingTransactionCommand(int amount, int accountIdFrom, int accountIdTo, String purpose, int officeId) {
-        super(amount, accountIdFrom, accountIdTo, purpose);
+    public CreateOutgoingTransactionCommand(int amount, int accountId, String purpose, int officeId) {
+        super(amount, accountId, purpose);
         this.officeId = officeId;
     }
     public int getOfficeId() {
