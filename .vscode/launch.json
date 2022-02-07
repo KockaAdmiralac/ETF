@@ -2,18 +2,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "xv6",
-            "type": "gdb",
-            "request": "attach",
-            "gdbpath": "/usr/bin/gdb-multiarch",
-            "executable": "${workspaceFolder}/OS2/Projekat/kernel/kernel",
-            "args": [],
-            "cwd": "${workspaceFolder}/OS2/Projekat",
-            "target": "localhost:26000",
+            "name": "gcc build and debug active file",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/a.out",
+            //"program": "${workspaceFolder}/ASP1/dz3/dz3",
+            //"args": [
+            //    "ulaz.txt",
+            //    "izlaz2.csv",
+            //    "-merge"
+            //],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            //"cwd": "${workspaceFolder}/PP2",
             "environment": [],
-            "remote": true,
-            "printCalls": true,
-            "valuesFormatting": "parseText"
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build",
+            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }
