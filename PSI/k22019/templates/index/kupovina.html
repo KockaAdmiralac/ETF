@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Kupovina karte:</h1>
+{% if error_message %}
+<p class="error">{{ error_message }}</p>
+{% endif %}
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>?controller=korisnik&akcija=kupovina" method="POST">
+    <input type="hidden" name="sektor" value="{{ sektor.idsek }}" />
+    <p><label>Tip karte:</label></p>
+    <table>
+        <tr>
+            <td>Tip karte:</td>
+            <td>
+                <input type="checkbox" name="kvalifikacije">kvalifikacije<br>
+                <input type="checkbox" name="gravna_trka" >gravna trka
+            </td>
+        </tr>
+        <tr> 
+            <td>Broj karata:</td>
+            <td>
+                <input type="number" name="broj" value="1"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" name="potvrda" value="Pronađi"/>
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

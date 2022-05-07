@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <ul>
+        {% for trka in trke %}
+            <li><a href="{% url 'index:sektor' trka.idtrk %}">{{ trka.naziv }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+    Molimo vas da se ulogujete.
+    {% endif %}
+{% endblock %}

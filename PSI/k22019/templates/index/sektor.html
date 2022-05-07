@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Izbor sektora:</h1> 
+<form method="POST">
+    {% csrf_token %}
+    <p>
+        {{ form }}
+    </p>
+    <p>
+        <input type="submit" value="Pronađi" />
+    </p>
+</form>
+{% endblock %}
