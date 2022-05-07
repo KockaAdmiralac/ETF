@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>e-student</title>
+    </head>
+    <body>
+        <header>
+            {% block header %}
+            {% endblock %}
+        </header>
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+        <footer>Copyright nešto</footer>
+    </body>
+</html>

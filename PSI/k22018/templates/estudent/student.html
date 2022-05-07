@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block header %}
+Dobrodošli, {{ user.first_name }} {{ user.last_name }} [{{ student.godina_upisa }}/{{ student.broj_indeksa }}]
+{% endblock %}
+
+{% block content %}
+    <form>
+        {{ search_form }}
+        <input type="submit" value="Pretraži"></input>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Šifra</th>
+                <th>Naziv</th>
+                <th>ESPB</th>
+                <th>Tip</th>
+                <th>Semestar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for predmet in predmeti %}
+            <tr>
+                <td>{{ predmet.sifra }}</td>
+                <td>{{ predmet.naziv }}</td>
+                <td>{{ predmet.espb }}</td>
+                <td>{{ predmet.get_tip }}</td>
+                <td>{{ predmet.semestar }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
