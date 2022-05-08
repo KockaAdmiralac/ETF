@@ -1,3 +1,6 @@
+#define region(state)
+#define await(condition)
+
 struct sem {
     sem(int);
     void wait();
