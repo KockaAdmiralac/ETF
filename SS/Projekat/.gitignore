@@ -1,0 +1,7 @@
+/assembler
+/linker
+/emulator
+/syntax
+syntax.tab.cpp
+syntax.tab.hpp
+lex.yy.c
