@@ -75,6 +75,7 @@ void passenger() {
                 if (stationFrom.busPassengers < K) {
                     // Успели смо да уђемо у аутобус
                     ++stationFrom.busPassengers;
+                    --stationFrom.numPassengers;
                     entranceSuccessful = true;
                 }
             }
