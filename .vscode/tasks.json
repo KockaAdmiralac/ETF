@@ -9,28 +9,28 @@
     "tasks": [
         {
             "label": "clean",
-            "command": "rm",
+            "command": "make",
             "args": [
-                "-f",
-                "a.out"
-                //"ASP1/dz3/dz3"
-            ]
+                "clean"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/SS/Projekat"
+            }
         },
         {
             "label": "build",
-            "command": "g++",
-            "args": [
-                "${file}",
-                "-Wall",
-                "-Wextra",
-                "-g",
-                "-std=c++17"
-            ],
-            //"command": "./ASP1/dz3/build.sh",
+            "command": "make",
             "dependsOn": [
+                "cd",
                 "clean"
             ],
-            "dependsOrder": "sequence"
+            "dependsOrder": "sequence",
+            "options": {
+                "cwd": "${workspaceFolder}/SS/Projekat",
+                "env": {
+                    "DEBUG": 1
+                }
+            }
         }
     ]
 }

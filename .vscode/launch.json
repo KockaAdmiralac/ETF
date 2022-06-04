@@ -5,16 +5,19 @@
             "name": "gcc build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/a.out",
-            //"program": "${workspaceFolder}/ASP1/dz3/dz3",
-            //"args": [
-            //    "ulaz.txt",
-            //    "izlaz2.csv",
-            //    "-merge"
-            //],
+            "program": "${workspaceFolder}/SS/Projekat/linker",
+            "args": [
+                "-hex",
+                // "-relocatable",
+                "-place=ivt@0x0000",
+                "-o",
+                "program.hex",
+                // "program.o",
+                "interrupts.o",
+                "main.o"
+            ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            //"cwd": "${workspaceFolder}/PP2",
+            "cwd": "${workspaceFolder}/SS/Projekat",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
