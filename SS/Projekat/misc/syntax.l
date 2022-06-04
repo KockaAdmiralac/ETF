@@ -50,7 +50,7 @@ str                                 { return INSTRUCTION_STR; }
 ".ascii"                            { return DIRECTIVE_ASCII; }
 ".equ"                              { return DIRECTIVE_EQU; }
 ".end"                              { return DIRECTIVE_END; }
-[a-zA-Z][a-zA-Z0-9]*[ \t]*:         {
+[a-zA-Z_][a-zA-Z0-9_]*[ \t]*:       {
     yylval.label = strdup(yytext);
     if (yylval.label == NULL) {
         return YYerror;
@@ -70,8 +70,12 @@ r[0-7]                              { yylval.reg = atoi(yytext + 1); return REG;
 sp                                  { yylval.reg = 6; return REG; }
 pc                                  { yylval.reg = 7; return REG; }
 psw                                 { yylval.reg = 8; return REG; }
-[0-9]+                              { yylval.num = atoi(yytext); return NUM; }
-[a-zA-Z][a-zA-Z0-9]*                { yylval.sym = strdup(yytext); if (yylval.sym == NULL) return YYerror; return SYM; }
+0                                   { yylval.num = 0; return NUM; }
+[1-9][0-9]*                         { yylval.num = atoi(yytext); return NUM; }
+0[0-9]+                             { yylval.num = strtol(yytext + 1, NULL, 8); return NUM; }
+0x[0-9a-fA-F]+                      { yylval.num = strtol(yytext + 2, NULL, 16); return NUM; }
+\"[^"]+\"                           { yytext[strlen(yytext)-1] = '\0'; yylval.sym = strdup(yytext + 1); return STRING; }
+[a-zA-Z_][a-zA-Z0-9_]*              { yylval.sym = strdup(yytext); if (yylval.sym == NULL) return YYerror; return SYM; }
 \n                                  { ++lineNumber; BEGIN(INITIAL); return ENDL; }
 .                                   ;
 %%

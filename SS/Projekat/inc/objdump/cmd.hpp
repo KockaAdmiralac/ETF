@@ -3,7 +3,6 @@
 #include <string>
 
 struct CommandLineArgs {
-    std::string outputFilename;
     std::string inputFilename;
     CommandLineArgs(int argc, char* argv[]);
 };

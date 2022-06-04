@@ -81,79 +81,79 @@
 %%
 lines: lines line | line;
 line:
-      LABEL ENDL                                { Line l; l.type = L_INS; l.data.ins.type = INS_NONE; l.label = $1; lines.push_back(l);     }
-    | LABEL instruction ENDL                    { Line l; l.type = L_INS; l.label = $1; l.data.ins = $2; lines.push_back(l);                }
-    | LABEL directive ENDL                      { Line l; l.type = L_DIR; l.label = $1; l.data.dir = $2; lines.push_back(l);                }
-    | LABEL instruction COMMENT ENDL            { Line l; l.type = L_INS; l.label = $1; l.data.ins = $2; lines.push_back(l);                }
-    | LABEL directive COMMENT ENDL              { Line l; l.type = L_DIR; l.label = $1; l.data.dir = $2; lines.push_back(l);                }
-    | LABEL COMMENT ENDL                        { Line l; l.type = L_INS; l.label = $1; l.data.ins.type = INS_NONE; lines.push_back(l);     }
-    | instruction ENDL                          { Line l; l.type = L_INS; l.label = nullptr; l.data.ins = $1; lines.push_back(l);           }
-    | directive ENDL                            { Line l; l.type = L_DIR; l.label = nullptr; l.data.dir = $1; lines.push_back(l);           }
-    | instruction COMMENT ENDL                  { Line l; l.type = L_INS; l.label = nullptr; l.data.ins = $1; lines.push_back(l);           }
-    | directive COMMENT ENDL                    { Line l; l.type = L_DIR; l.label = nullptr; l.data.dir = $1; lines.push_back(l);           }
+      LABEL ENDL                                { Line l; l.type = L_NONE; l.label = $1; lines.push_back(l);                        }
+    | LABEL instruction ENDL                    { Line l; l.type = L_INS; l.label = $1; l.data.ins = $2; lines.push_back(l);        }
+    | LABEL directive ENDL                      { Line l; l.type = L_DIR; l.label = $1; l.data.dir = $2; lines.push_back(l);        }
+    | LABEL instruction COMMENT ENDL            { Line l; l.type = L_INS; l.label = $1; l.data.ins = $2; lines.push_back(l);        }
+    | LABEL directive COMMENT ENDL              { Line l; l.type = L_DIR; l.label = $1; l.data.dir = $2; lines.push_back(l);        }
+    | LABEL COMMENT ENDL                        { Line l; l.type = L_NONE; l.label = $1; lines.push_back(l);                        }
+    | instruction ENDL                          { Line l; l.type = L_INS; l.label = nullptr; l.data.ins = $1; lines.push_back(l);   }
+    | directive ENDL                            { Line l; l.type = L_DIR; l.label = nullptr; l.data.dir = $1; lines.push_back(l);   }
+    | instruction COMMENT ENDL                  { Line l; l.type = L_INS; l.label = nullptr; l.data.ins = $1; lines.push_back(l);   }
+    | directive COMMENT ENDL                    { Line l; l.type = L_DIR; l.label = nullptr; l.data.dir = $1; lines.push_back(l);   }
     | COMMENT ENDL                              ;
     | ENDL                                      ;
     ;
 directive:
-      DIRECTIVE_GLOBAL syms                     { $$.type = DIR_GLOBAL; $$.syms = $2;               }
-    | DIRECTIVE_EXTERN syms                     { $$.type = DIR_EXTERN; $$.syms = $2;               }
-    | DIRECTIVE_SECTION SYM                     { $$.type = DIR_SECTION; $$.sym = $2;               }
-    | DIRECTIVE_WORD NUM                        { $$.type = DIR_WORD; $$.num = $2;                  }
-    | DIRECTIVE_WORD syms                       { $$.type = DIR_WORD; $$.syms = $2;                 }
-    | DIRECTIVE_SKIP NUM                        { $$.type = DIR_SKIP; $$.num = $2;                  }
-    | DIRECTIVE_ASCII STRING                    { $$.type = DIR_ASCII; $$.sym = $2;                 }
-    | DIRECTIVE_EQU SYM COMMA SYM               { $$.type = DIR_EQU; $$.sym = $2; $$.sym2 = $4;     }
-    | DIRECTIVE_END                             { $$.type = DIR_END;                                }
+      DIRECTIVE_GLOBAL syms                     { $$.type = DIR_GLOBAL; $$.syms = $2;                                   }
+    | DIRECTIVE_EXTERN syms                     { $$.type = DIR_EXTERN; $$.syms = $2;                                   }
+    | DIRECTIVE_SECTION SYM                     { $$.type = DIR_SECTION; $$.sym = $2;                                   }
+    | DIRECTIVE_WORD NUM                        { $$.type = DIR_WORD; $$.num = $2; $$.syms.length = 0;                  }
+    | DIRECTIVE_WORD syms                       { $$.type = DIR_WORD; $$.syms = $2;                                     }
+    | DIRECTIVE_SKIP NUM                        { $$.type = DIR_SKIP; $$.num = $2;                                      }
+    | DIRECTIVE_ASCII STRING                    { $$.type = DIR_ASCII; $$.sym = $2;                                     }
+    | DIRECTIVE_EQU SYM COMMA SYM               { $$.type = DIR_EQU; $$.sym = $2; $$.sym2 = $4;                         }
+    | DIRECTIVE_END                             { $$.type = DIR_END;                                                    }
     ;
 instruction:
-      INSTRUCTION_HALT                          { $$.type = INS_HALT;                               }
-    | INSTRUCTION_INT REG                       { $$.type = INS_INT; $$.reg1 = $2;                  }
-    | INSTRUCTION_IRET                          { $$.type = INS_IRET;                               }
-    | INSTRUCTION_CALL operand_addr             { $$.type = INS_CALL; $$.operand = $2;              }
-    | INSTRUCTION_RET                           { $$.type = INS_RET;                                }
-    | INSTRUCTION_JMP operand_addr              { $$.type = INS_JMP; $$.operand = $2;               }
-    | INSTRUCTION_JEQ operand_addr              { $$.type = INS_JEQ; $$.operand = $2;               }
-    | INSTRUCTION_JNE operand_addr              { $$.type = INS_JNE; $$.operand = $2;               }
-    | INSTRUCTION_JGT operand_addr              { $$.type = INS_JGT; $$.operand = $2;               }
-    | INSTRUCTION_PUSH operand_addr             { $$.type = INS_PUSH; $$.operand = $2;              }
-    | INSTRUCTION_POP REG                       { $$.type = INS_POP; $$.reg1 = $2;                  }
-    | INSTRUCTION_XCHG REG COMMA REG            { $$.type = INS_XCHG; $$.reg1 = $2; $$.reg2 = $4;   }
-    | INSTRUCTION_ADD REG COMMA REG             { $$.type = INS_ADD; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_SUB REG COMMA REG             { $$.type = INS_SUB; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_MUL REG COMMA REG             { $$.type = INS_MUL; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_DIV REG COMMA REG             { $$.type = INS_DIV; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_CMP REG COMMA REG             { $$.type = INS_CMP; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_NOT REG                       { $$.type = INS_NOT; $$.reg1 = $2;                  }
-    | INSTRUCTION_AND REG COMMA REG             { $$.type = INS_AND; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_OR REG COMMA REG              { $$.type = INS_OR; $$.reg1 = $2; $$.reg2 = $4;     }
-    | INSTRUCTION_XOR REG COMMA REG             { $$.type = INS_XOR; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_TEST REG COMMA REG            { $$.type = INS_TEST; $$.reg1 = $2; $$.reg2 = $4;   }
-    | INSTRUCTION_SHL REG COMMA REG             { $$.type = INS_SHL; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_SHR REG COMMA REG             { $$.type = INS_SHR; $$.reg1 = $2; $$.reg2 = $4;    }
-    | INSTRUCTION_LDR REG COMMA operand_data    { $$.type = INS_LDR; $$.reg1 = $2; $$.operand = $4; }
-    | INSTRUCTION_STR REG COMMA operand_data    { $$.type = INS_STR; $$.reg1 = $2; $$.operand = $4; }
+      INSTRUCTION_HALT                          { $$.type = INS_HALT;                                                                           }
+    | INSTRUCTION_INT REG                       { $$.type = INS_INT;                            $$.regD = $2; $$.regS = 15;                     }
+    | INSTRUCTION_IRET                          { $$.type = INS_IRET;                                                                           }
+    | INSTRUCTION_CALL operand_addr             { $$.type = INS_CALL;                           $$.regD = 15; $$.regS = 15; $$.operand = $2;    }
+    | INSTRUCTION_RET                           { $$.type = INS_RET;                                                                            }
+    | INSTRUCTION_JMP operand_addr              { $$.type = INS_JMP;    $$.subtype = JMP_UNCND; $$.regD = 15; $$.regS = 15; $$.operand = $2;    }
+    | INSTRUCTION_JEQ operand_addr              { $$.type = INS_JMP;    $$.subtype = JMP_EQ;    $$.regD = 15; $$.regS = 15; $$.operand = $2;    }
+    | INSTRUCTION_JNE operand_addr              { $$.type = INS_JMP;    $$.subtype = JMP_NE;    $$.regD = 15; $$.regS = 15; $$.operand = $2;    }
+    | INSTRUCTION_JGT operand_addr              { $$.type = INS_JMP;    $$.subtype = JMP_GT;    $$.regD = 15; $$.regS = 15; $$.operand = $2;    }
+    | INSTRUCTION_XCHG REG COMMA REG            { $$.type = INS_XCHG;                           $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_ADD REG COMMA REG             { $$.type = INS_ARITH;  $$.subtype = AR_ADD;    $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_SUB REG COMMA REG             { $$.type = INS_ARITH;  $$.subtype = AR_SUB;    $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_MUL REG COMMA REG             { $$.type = INS_ARITH;  $$.subtype = AR_MUL;    $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_DIV REG COMMA REG             { $$.type = INS_ARITH;  $$.subtype = AR_DIV;    $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_CMP REG COMMA REG             { $$.type = INS_ARITH;  $$.subtype = AR_CMP;    $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_NOT REG                       { $$.type = INS_LOG;    $$.subtype = LOG_NOT;   $$.regD = $2; $$.regS = 15;                     }
+    | INSTRUCTION_AND REG COMMA REG             { $$.type = INS_LOG;    $$.subtype = LOG_AND;   $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_OR REG COMMA REG              { $$.type = INS_LOG;    $$.subtype = LOG_OR;    $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_XOR REG COMMA REG             { $$.type = INS_LOG;    $$.subtype = LOG_XOR;   $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_TEST REG COMMA REG            { $$.type = INS_LOG;    $$.subtype = LOG_TEST;  $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_SHL REG COMMA REG             { $$.type = INS_SH;     $$.subtype = SH_LEFT;   $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_SHR REG COMMA REG             { $$.type = INS_SH;     $$.subtype = SH_RIGHT;  $$.regD = $2; $$.regS = $4;                     }
+    | INSTRUCTION_LDR REG COMMA operand_data    { $$.type = INS_LDR;    $$.subtype = LD_REG;    $$.regD = $2; $$.regS = 15; $$.operand = $4;    }
+    | INSTRUCTION_POP REG                       { $$.type = INS_LDR;    $$.subtype = LD_POP;    $$.regD = $2; $$.regS = 15;                     }
+    | INSTRUCTION_STR REG COMMA operand_data    { $$.type = INS_STR;    $$.subtype = ST_REG;    $$.regD = $2; $$.regS = 15; $$.operand = $4;    }
+    | INSTRUCTION_PUSH REG                      { $$.type = INS_STR;    $$.subtype = ST_PUSH;   $$.regD = $2; $$.regS = 15;                     }
     ;
 operand_data:
-      DOLLAR NUM                            { $$.type = OP_DOLLAR_LITERAL; $$.num = $2;                                 }
-    | DOLLAR SYM                            { $$.type = OP_DOLLAR_SYMBOL; $$.sym = $2;                                  }
-    | PERCENT SYM                           { $$.type = OP_PERCENT_SYMBOL; $$.sym = $2;                                 }
-    | LBRACKET REG RBRACKET                 { $$.type = OP_BRACKET_REGISTER; $$.reg = $2;                               }
-    | LBRACKET REG PLUS NUM RBRACKET        { $$.type = OP_BRACKET_REGISTER_LITERAL; $$.reg = $2; $$.num = $4;          }
-    | LBRACKET REG PLUS SYM RBRACKET        { $$.type = OP_BRACKET_REGISTER_SYMBOL; $$.reg = $2; $$.sym = $4;           }
-    | SYM                                   { $$.type = OP_SYMBOL; $$.sym = $1;                                         }
-    | NUM                                   { $$.type = OP_LITERAL; $$.num = $1;                                        }
-    | REG                                   { $$.type = OP_REGISTER; $$.reg = $1;                                       }
+      DOLLAR NUM                            { $$.type = OP_IMMED; $$.num = $2; $$.sym = nullptr;                    }
+    | DOLLAR SYM                            { $$.type = OP_IMMED; $$.sym = $2;                                      }
+    | PERCENT SYM                           { $$.type = OP_MEM; $$.pcrel = true; $$.sym = $2;                       }
+    | LBRACKET REG RBRACKET                 { $$.type = OP_REGIND; $$.reg = $2;                                     }
+    | LBRACKET REG PLUS NUM RBRACKET        { $$.type = OP_REGINDPOM; $$.reg = $2; $$.num = $4; $$.sym = nullptr;   }
+    | LBRACKET REG PLUS SYM RBRACKET        { $$.type = OP_REGINDPOM; $$.reg = $2; $$.sym = $4;                     }
+    | SYM                                   { $$.type = OP_MEM; $$.sym = $1;                                        }
+    | NUM                                   { $$.type = OP_MEM; $$.num = $1; $$.sym = nullptr;                      }
+    | REG                                   { $$.type = OP_REGDIR; $$.reg = $1;                                     }
     ;
 operand_addr:
-      PERCENT SYM                           { $$.type = OP_PERCENT_SYMBOL; $$.sym = $2;                                 }
-    | STAR NUM                              { $$.type = OP_STAR_LITERAL; $$.num = $2;                                   }
-    | STAR SYM                              { $$.type = OP_STAR_SYMBOL; $$.sym = $2;                                    }
-    | STAR REG                              { $$.type = OP_STAR_REGISTER; $$.reg = $2;                                  }
-    | STAR LBRACKET REG RBRACKET            { $$.type = OP_STAR_BRACKET_REGISTER; $$.reg = $3;                          }
-    | STAR LBRACKET REG PLUS NUM RBRACKET   { $$.type = OP_STAR_BRACKET_REGISTER_LITERAL; $$.reg = $3; $$.num = $5;     }
-    | STAR LBRACKET REG PLUS SYM RBRACKET   { $$.type = OP_STAR_BRACKET_REGISTER_SYMBOL; $$.reg = $3; $$.sym = $5;      }
-    | SYM                                   { $$.type = OP_SYMBOL; $$.sym = $1;                                         }
-    | NUM                                   { $$.type = OP_LITERAL; $$.num = $1;                                        }
+      PERCENT SYM                           { $$.type = OP_IMMED; $$.pcrel = true; $$.sym = $2;                     }
+    | STAR NUM                              { $$.type = OP_MEM; $$.num = $2; $$.sym = nullptr;                      }
+    | STAR SYM                              { $$.type = OP_MEM; $$.sym = $2;                                        }
+    | STAR REG                              { $$.type = OP_REGDIR; $$.reg = $2;                                     }
+    | STAR LBRACKET REG RBRACKET            { $$.type = OP_REGIND; $$.reg = $3;                                     }
+    | STAR LBRACKET REG PLUS NUM RBRACKET   { $$.type = OP_REGINDPOM; $$.reg = $3; $$.num = $5; $$.sym = nullptr;   }
+    | STAR LBRACKET REG PLUS SYM RBRACKET   { $$.type = OP_REGINDPOM; $$.reg = $3; $$.sym = $5;                     }
+    | SYM                                   { $$.type = OP_IMMED; $$.sym = $1;                                      }
+    | NUM                                   { $$.type = OP_IMMED; $$.num = $1; $$.sym = nullptr;                    }
     ;
 syms:
       syms COMMA SYM {

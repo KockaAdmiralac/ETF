@@ -106,6 +106,8 @@
         "*.cp": "c",
         "memlayout.h": "c",
         "procheap.h": "c",
-        "proc.h": "c"
+        "proc.h": "c",
+        "semaphore": "cpp",
+        "*.inc": "cpp"
     }
 }

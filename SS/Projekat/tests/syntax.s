@@ -1,3 +1,4 @@
+.section .text
 lol: halt
 # lol
 .global lol

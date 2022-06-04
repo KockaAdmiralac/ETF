@@ -11,27 +11,14 @@ PARSER = bison
 PFLAGS = -Wall -Wcounterexamples -d
 
 # Compiler flags
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -Iinc -I. -std=c++20
 ifdef DEBUG
-CFLAGS += -ggdb
+CFLAGS += -ggdb -DDEBUG -O0
 endif
 
 # Build rules
 .PHONY: default
-default: assembler
-
-# Assembler files
-AFILES =\
-	$A/main.cpp \
-	$A/cmd.cpp
-
-# Linker files
-LFILES =\
-	$L/main.cpp \
-	$L/cmd.cpp
-
-EFILES =\
-	$E/main.cpp
+default: assembler linker objdump
 
 syntax.tab.cpp syntax.tab.hpp: misc/syntax.ypp
 	$(PARSER) $(PFLAGS) misc/syntax.ypp
@@ -42,14 +29,17 @@ lex.yy.c: misc/syntax.l syntax.tab.hpp
 syntax: lex.yy.c syntax.tab.cpp syntax.tab.hpp
 	$(CC) $(CFLAGS) -DDEBUG_SYNTAX syntax.tab.cpp lex.yy.c -o syntax
 
-assembler: lex.yy.c syntax.tab.cpp syntax.tab.hpp $(AFILES)
-	$(CC) $(CFLAGS) syntax.tab.cpp lex.yy.c $(AFILES) -o assembler
+assembler: lex.yy.c syntax.tab.cpp syntax.tab.hpp src/assembler/*.cpp src/relocatable/*.cpp
+	$(CC) $(CFLAGS) syntax.tab.cpp lex.yy.c src/assembler/*.cpp src/relocatable/*.cpp -o assembler
 
-linker: $(LFILES)
-	$(CC) $(CFLAGS) $(LFILES) -o linker
+linker: src/linker/*.cpp src/relocatable/*.cpp src/hex/*.cpp
+	$(CC) $(CFLAGS) src/linker/*.cpp src/relocatable/*.cpp src/hex/*.cpp -o linker
 
-emulator: $(EFILES)
-	$(CC) $(CFLAGS) $(EFILES) -o emulator
+emulator: src/emulator/*.cpp src/hex/*.cpp
+	$(CC) $(CFLAGS) src/emulator/*.cpp src/hex/*.cpp -o emulator
+
+objdump: src/objdump/*.cpp src/relocatable/*.cpp
+	$(CC) $(CFLAGS) src/objdump/*.cpp src/relocatable/*.cpp -o objdump
 
 clean:
 	rm -f lex.yy.c
@@ -59,3 +49,4 @@ clean:
 	rm -f assembler
 	rm -f linker
 	rm -f emulator
+	rm -f objdump

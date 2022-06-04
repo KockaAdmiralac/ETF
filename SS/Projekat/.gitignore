@@ -2,6 +2,9 @@
 /linker
 /emulator
 /syntax
+/objdump
+*.o
+*.hex
 syntax.tab.cpp
 syntax.tab.hpp
 lex.yy.c
