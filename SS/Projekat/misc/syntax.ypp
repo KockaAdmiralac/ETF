@@ -136,7 +136,7 @@ instruction:
 operand_data:
       DOLLAR NUM                            { $$.type = OP_IMMED; $$.num = $2; $$.sym = nullptr;                    }
     | DOLLAR SYM                            { $$.type = OP_IMMED; $$.sym = $2;                                      }
-    | PERCENT SYM                           { $$.type = OP_MEM; $$.pcrel = true; $$.sym = $2;                       }
+    | PERCENT SYM                           { $$.type = OP_REGINDPOM; $$.reg = 7; $$.pcrel = true; $$.sym = $2;     }
     | LBRACKET REG RBRACKET                 { $$.type = OP_REGIND; $$.reg = $2;                                     }
     | LBRACKET REG PLUS NUM RBRACKET        { $$.type = OP_REGINDPOM; $$.reg = $2; $$.num = $4; $$.sym = nullptr;   }
     | LBRACKET REG PLUS SYM RBRACKET        { $$.type = OP_REGINDPOM; $$.reg = $2; $$.sym = $4;                     }
@@ -145,7 +145,7 @@ operand_data:
     | REG                                   { $$.type = OP_REGDIR; $$.reg = $1;                                     }
     ;
 operand_addr:
-      PERCENT SYM                           { $$.type = OP_IMMED; $$.pcrel = true; $$.sym = $2;                     }
+      PERCENT SYM                           { $$.type = OP_REGDIRADD; $$.reg = 7; $$.pcrel = true; $$.sym = $2;     }
     | STAR NUM                              { $$.type = OP_MEM; $$.num = $2; $$.sym = nullptr;                      }
     | STAR SYM                              { $$.type = OP_MEM; $$.sym = $2;                                        }
     | STAR REG                              { $$.type = OP_REGDIR; $$.reg = $2;                                     }

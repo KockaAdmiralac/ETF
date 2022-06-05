@@ -83,6 +83,13 @@ enum StoreInstructionType {
     ST_REG,
     ST_PUSH
 };
+enum UpMode {
+    UP_NONE,
+    UP_PREDEC,
+    UP_PREINC,
+    UP_POSTDEC,
+    UP_POSTINC
+};
 struct Instruction {
     InstructionType type;
     uint64_t subtype;

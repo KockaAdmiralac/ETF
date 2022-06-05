@@ -18,7 +18,7 @@ endif
 
 # Build rules
 .PHONY: default
-default: assembler linker objdump
+default: assembler linker emulator objdump
 
 syntax.tab.cpp syntax.tab.hpp: misc/syntax.ypp
 	$(PARSER) $(PFLAGS) misc/syntax.ypp

@@ -76,6 +76,7 @@ void place(Relocatable& r, std::unordered_map<std::string, uint64_t>& places, st
         if (startAddr + content.size() != place.second) {
             if (!content.empty()) {
                 file.addSection(startAddr, content);
+                content.clear();
             }
             startAddr = place.second;
         }
