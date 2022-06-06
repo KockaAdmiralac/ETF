@@ -9,8 +9,11 @@
 %%
 [ \t]                               ;
 "+"                                 { return PLUS; }
+"-"                                 { return MINUS; }
 "*"                                 { return STAR; }
 "$"                                 { return DOLLAR; }
+"("                                 { return LBRACE; }
+")"                                 { return RBRACE; }
 "["                                 { return LBRACKET; }
 "]"                                 { return RBRACKET; }
 "%"                                 { return PERCENT; }

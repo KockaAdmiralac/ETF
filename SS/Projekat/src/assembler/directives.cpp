@@ -70,8 +70,23 @@ const DirectiveHandler DIRECTIVES[] = {
     // .equ
     [](Context& context, Directive& directive) {
         std::string newSym = convertSymbol(directive.sym);
-        convertSymbol(directive.sym2);
-        // TODO
+        std::vector<std::pair<std::string, int>> expression;
+        for (int i = 0; i < directive.expr.length; ++i) {
+            ExpressionOperand& operand = directive.expr.operands[i];
+            if (operand.sym == nullptr) {
+                expression.push_back({"", operand.num * operand.sign});
+            } else {
+                expression.push_back({operand.sym, operand.sign});
+                free(operand.sym);
+            }
+        }
+        free(directive.expr.operands);
+        if (!context.r.symtab.hasSymbol(newSym)) {
+            context.addSymbol(newSym, 0, Symbol::SYM_UNDEF);
+        }
+        context.ust.addUnresolved(newSym, expression);
+        // Attempt to resolve immediately
+        context.ust.resolve(newSym, context);
     },
     // .end
     [](Context& context, Directive&) {

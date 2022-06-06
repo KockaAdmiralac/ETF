@@ -14,6 +14,9 @@ bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
     std::vector<std::pair<std::string, int>> operands = this->operands[symbol];
     // Determine whether all symbols in the expression are resolved.
     for (std::pair<std::string, int>& operand : operands) {
+        if (operand.first == "") {
+            continue;
+        }
         Symbol& sym = symtab.getSymbol(operand.first);
         if (sym.isUndefined() && !sym.isExternal()) {
             return false;
@@ -25,14 +28,18 @@ bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
     int64_t value = 0;
     std::unordered_map<uint64_t, uint64_t> sectionIndex;
     for (std::pair<std::string, int>& operand : operands) {
-        Symbol& sym = symtab.getSymbol(operand.first);
-        uint64_t index = sym.isExternal() ? (++nextUniqueSymbol) : sym.index;
-        if (operand.second > 0) {
-            value += sym.value;
-            ++sectionIndex[index];
+        if (operand.first == "") {
+            value += operand.second;
         } else {
-            value -= sym.value;
-            --sectionIndex[index];
+            Symbol& sym = symtab.getSymbol(operand.first);
+            uint64_t index = sym.isExternal() ? (++nextUniqueSymbol) : sym.index;
+            if (operand.second > 0) {
+                value += sym.value;
+                ++sectionIndex[index];
+            } else {
+                value -= sym.value;
+                --sectionIndex[index];
+            }
         }
     }
     bool classified = false;

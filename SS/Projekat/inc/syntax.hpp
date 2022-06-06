@@ -5,6 +5,15 @@ struct SymbolList {
     int length;
     char** syms;
 };
+struct ExpressionOperand {
+    char* sym;
+    int num;
+    int sign;
+};
+struct Expression {
+    int length;
+    ExpressionOperand* operands;
+};
 enum OperandType {
     OP_IMMED,
     OP_REGDIR,
@@ -33,6 +42,7 @@ enum DirectiveType {
 struct Directive {
     DirectiveType type;
     SymbolList syms;
+    Expression expr;
     char* sym;
     char* sym2;
     int num;

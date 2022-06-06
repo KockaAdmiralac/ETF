@@ -4,9 +4,13 @@
 
 Context::Context(const char* filename) {
     std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) {
+        throw std::runtime_error("Failed to open input file: " + std::string(filename));
+    }
     memory.read(inputFile);
     cpu.registers[6] = 0xFF00;
     cpu.registers[7] = read(0);
+    cpu.registers[8] = 0;
 }
 
 uint16_t Context::read(uint64_t addr) {

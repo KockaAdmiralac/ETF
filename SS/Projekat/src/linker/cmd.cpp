@@ -2,6 +2,7 @@
 #include "linker/cmd.hpp"
 
 CommandLineArgs::CommandLineArgs(int argc, char* argv[]) {
+    outputFilename = "a.out";
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "-hex") {

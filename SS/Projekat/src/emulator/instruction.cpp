@@ -175,14 +175,18 @@ void DecodedInstruction::execute(Context& context) {
         case INS_SH:
             switch (subtype) {
                 case SH_LEFT:
+                    context.cpu.carry((context.cpu.registers[regD] & 0x8000) != 0);
                     context.cpu.registers[regD] <<= context.cpu.registers[regS];
                     break;
                 case SH_RIGHT:
+                    context.cpu.carry((context.cpu.registers[regD] & 0x0001) != 0);
                     context.cpu.registers[regD] >>= context.cpu.registers[regS];
                     break;
                 default:
                     throw CPUError("Invalid shift instruction subtype encountered.");
             }
+            context.cpu.zero(context.cpu.registers[regD] == 0);
+            context.cpu.negative(context.cpu.registers[regD] < 0);
             break;
         case INS_LDR:
             context.cpu.registers[regD] = operand;

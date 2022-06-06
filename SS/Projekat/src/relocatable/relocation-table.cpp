@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include "relocatable/file-utils.hpp"
 #include "relocatable/relocation-table.hpp"
@@ -5,7 +6,11 @@
 RelocationTable::RelocationTable(std::string name) : name(name) {}
 
 void RelocationTable::addRelocation(uint64_t offset, RelocationType type, uint64_t symbol, int64_t addend) {
-    relocations.push_back({offset, type, symbol, addend});
+    // Valgrind complains about uninitialized bytes here
+    Relocation r;
+    memset(&r, 0, sizeof(Relocation));
+    r = {offset, type, symbol, addend};
+    relocations.push_back(r);
 }
 
 void RelocationTable::write(std::ostream& file) {
