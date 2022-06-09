@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Pretraga</h1>
+<form>
+    {{ form }}
+    <input type="submit" value="TRAŽI"></input>
+    <input type="reset" value="PONIŠTI"></input>
+</form>
+{% if events %}
+<table class="highlight-{{ highlight_otkazani }}">
+    <thead>
+        <tr>
+            <th>Naziv događaja</th>
+            <th>Grad</th>
+            <th>Mesto</th>
+            <th>Maksimalni kapacitet</th>
+            <th>Detalji</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr class="otkazan-{{ event.je_otkazan }}">
+            <td>{{ event.naziv }}</td>
+            <td>{{ event.id_lokacije.grad.ime_grada }}</td>
+            <td>{{ event.id_lokacije.naziv_lokacije }}</td>
+            <td>{{ event.id_lokacije.max_kapacitet }}</td>
+            <td><a href="/{{ event.id_dog }}">DETALJI</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+Nijedan rezultat ne zadovoljava tražene kriterijume.
+{% endif %}
+{% endblock %}

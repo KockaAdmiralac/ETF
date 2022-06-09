@@ -1,0 +1,616 @@
+{
+  "id": "efb010b5-4f6a-4a83-be3d-0f926cc96415",
+  "version": "2.0",
+  "name": "jun2020",
+  "url": "http://127.0.0.1:8000",
+  "tests": [{
+    "id": "1d8e8d74-deab-4d93-ae5c-5d9f3b2c0bc8",
+    "name": "Korisnik ne unosi parametre",
+    "commands": [{
+      "id": "330442de-aa93-4d7b-94cc-9cd4d9553ef7",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d0abbe4a-6ae6-4b39-964e-84dd429bff6c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d179da9f-7360-4370-a7fb-8ad43651ad25",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ab3dad3d-c2b4-4b8a-9d26-234ec457ac7a",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=li",
+      "targets": [
+        ["css=li", "css:finder"],
+        ["xpath=//li", "xpath:position"],
+        ["xpath=//li[contains(.,'Morate uneti bar jedan kriterijum pretraživanja.')]", "xpath:innerText"]
+      ],
+      "value": "Morate uneti bar jedan kriterijum pretraživanja."
+    }]
+  }, {
+    "id": "930c0053-49c9-4f31-8db8-28680e94abc5",
+    "name": "Korisnik traži događaje sa \"tenis\" u nazivu",
+    "commands": [{
+      "id": "d106572f-def8-4164-a361-1732f141ab3e",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "40071f65-d27a-4ffb-b642-f290b371d6a6",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1d5a2864-4d70-451b-813b-82ddf2bbc4de",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_naziv",
+      "targets": [
+        ["id=id_naziv", "id"],
+        ["name=naziv", "name"],
+        ["css=#id_naziv", "css:finder"],
+        ["xpath=//input[@id='id_naziv']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "01041509-565b-4e16-840c-c76643afe1f2",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_naziv",
+      "targets": [
+        ["id=id_naziv", "id"],
+        ["name=naziv", "name"],
+        ["css=#id_naziv", "css:finder"],
+        ["xpath=//input[@id='id_naziv']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "tenis"
+    }, {
+      "id": "cd772ef2-772a-4d9e-b9b2-44b76652b047",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "50cb7d3f-b6ee-42a9-8efe-c0a31a3e08bf",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.otkazan-0:nth-child(1) > td:nth-child(1)",
+      "targets": [
+        ["css=.otkazan-0:nth-child(1) > td:nth-child(1)", "css:finder"],
+        ["xpath=//td", "xpath:position"],
+        ["xpath=//td[contains(.,'Tenis Djokovic-Troicki')]", "xpath:innerText"]
+      ],
+      "value": "Tenis Djokovic-Troicki"
+    }, {
+      "id": "3a61596a-93de-461b-8232-507b23650fac",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.otkazan-1 > td:nth-child(1)",
+      "targets": [
+        ["css=.otkazan-1 > td:nth-child(1)", "css:finder"],
+        ["xpath=//tr[2]/td", "xpath:position"],
+        ["xpath=//td[contains(.,'Djokovic - Nadal tenis')]", "xpath:innerText"]
+      ],
+      "value": "Djokovic - Nadal tenis"
+    }, {
+      "id": "ba2becfe-b0e8-4c70-a812-3fe9286d936c",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.otkazan-0:nth-child(3) > td:nth-child(1)",
+      "targets": [
+        ["css=.otkazan-0:nth-child(3) > td:nth-child(1)", "css:finder"],
+        ["xpath=//tr[3]/td", "xpath:position"],
+        ["xpath=//td[contains(.,'Tenis Djokovic-Zverev')]", "xpath:innerText"]
+      ],
+      "value": "Tenis Djokovic-Zverev"
+    }]
+  }, {
+    "id": "f738ff01-d0cc-4ac3-839a-e5f83ed25116",
+    "name": "Korisnik traži događaje u Kragujevcu",
+    "commands": [{
+      "id": "627b572b-dc8a-4a53-8ab2-386cdbaefdd7",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "20aad569-0b53-4c8f-abb1-e7bd67123973",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7093855d-f85c-4168-bb4e-dc346bc73115",
+      "comment": "",
+      "command": "select",
+      "target": "id=id_grad",
+      "targets": [],
+      "value": "label=Kragujevac"
+    }, {
+      "id": "cd8ee211-e555-498a-bdf0-cebc5370d12c",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "id=id_grad",
+      "targets": [
+        ["id=id_grad", "id"],
+        ["name=grad", "name"],
+        ["css=#id_grad", "css:finder"],
+        ["xpath=//select[@id='id_grad']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.84375,-0.875"
+    }, {
+      "id": "ed28bf8b-cc4b-4631-8899-41201796502c",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "id=id_grad",
+      "targets": [
+        ["id=id_grad", "id"],
+        ["name=grad", "name"],
+        ["css=#id_grad", "css:finder"],
+        ["xpath=//select[@id='id_grad']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.84375,-0.875"
+    }, {
+      "id": "039cdd08-63ad-45bb-afc6-9ac3da23702f",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "id=id_grad",
+      "targets": [
+        ["id=id_grad", "id"],
+        ["name=grad", "name"],
+        ["css=#id_grad", "css:finder"],
+        ["xpath=//select[@id='id_grad']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.84375,-0.875"
+    }, {
+      "id": "0dc3060f-d1f6-40fb-a0eb-bc0109e0bb21",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a3290c7c-01bf-4f17-9477-b8d74fd07986",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(1)",
+      "targets": [
+        ["css=td:nth-child(1)", "css:finder"],
+        ["xpath=//td", "xpath:position"],
+        ["xpath=//td[contains(.,'Zdravko Čolić koncert')]", "xpath:innerText"]
+      ],
+      "value": "Zdravko Čolić koncert"
+    }, {
+      "id": "71ce2e9e-b675-48df-b784-932f7c066a78",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(2)",
+      "targets": [
+        ["css=td:nth-child(2)", "css:finder"],
+        ["xpath=//td[2]", "xpath:position"],
+        ["xpath=//td[contains(.,'Kragujevac')]", "xpath:innerText"]
+      ],
+      "value": "Kragujevac"
+    }]
+  }, {
+    "id": "f1fc2976-4178-4808-a931-78fa01ba62bf",
+    "name": "Korisnik traži sportske događaje",
+    "commands": [{
+      "id": "db92f302-0638-4874-9b41-cee4924b9e55",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f00d4689-97b8-4973-a9e1-1867942296a8",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0ce87334-76cc-44a9-8115-9544e43d310a",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > label",
+      "targets": [
+        ["css=div:nth-child(3) > label", "css:finder"],
+        ["xpath=//div[@id='id_kategorija']/div[3]/label", "xpath:idRelative"],
+        ["xpath=//div[3]/label", "xpath:position"],
+        ["xpath=//label[contains(.,' Sportski događaji')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c433eac7-85d3-4700-ace9-3aa6c58995f2",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c504b0aa-447d-431e-b032-f0bade61a669",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.otkazan-0:nth-child(1) > td:nth-child(1)",
+      "targets": [
+        ["css=.otkazan-0:nth-child(1) > td:nth-child(1)", "css:finder"],
+        ["xpath=//td", "xpath:position"],
+        ["xpath=//td[contains(.,'Tenis Djokovic-Troicki')]", "xpath:innerText"]
+      ],
+      "value": "Tenis Djokovic-Troicki"
+    }, {
+      "id": "f102c511-0ff6-4fc6-ad06-cecc0f2c1f29",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.otkazan-1 > td:nth-child(1)",
+      "targets": [
+        ["css=.otkazan-1 > td:nth-child(1)", "css:finder"],
+        ["xpath=//tr[2]/td", "xpath:position"],
+        ["xpath=//td[contains(.,'Djokovic - Nadal tenis')]", "xpath:innerText"]
+      ],
+      "value": "Djokovic - Nadal tenis"
+    }, {
+      "id": "ec2239c6-cefe-470f-91b7-27088db3a985",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.otkazan-0:nth-child(3) > td:nth-child(1)",
+      "targets": [
+        ["css=.otkazan-0:nth-child(3) > td:nth-child(1)", "css:finder"],
+        ["xpath=//tr[3]/td", "xpath:position"],
+        ["xpath=//td[contains(.,'Tenis Djokovic-Zverev')]", "xpath:innerText"]
+      ],
+      "value": "Tenis Djokovic-Zverev"
+    }]
+  }, {
+    "id": "330de0e1-f93c-4d64-9461-1c2a6d99d521",
+    "name": "Korisnik traži otkazane sportske događaje",
+    "commands": [{
+      "id": "ac83520f-5670-49b3-93f8-5d9248208f52",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e26f30c2-4e57-42a8-b44c-013d22fca90e",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3ad3b21a-a30f-4f7c-ae11-696d35a54841",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_otkazan",
+      "targets": [
+        ["id=id_otkazan", "id"],
+        ["name=otkazan", "name"],
+        ["css=#id_otkazan", "css:finder"],
+        ["xpath=//input[@id='id_otkazan']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d310df3c-f29e-4648-a030-5179fc86c0a8",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > label",
+      "targets": [
+        ["css=div:nth-child(3) > label", "css:finder"],
+        ["xpath=//div[@id='id_kategorija']/div[3]/label", "xpath:idRelative"],
+        ["xpath=//div[3]/label", "xpath:position"],
+        ["xpath=//label[contains(.,' Sportski događaji')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "cc7290a8-ed43-4a1a-b333-c33d9375bf08",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9eea82ba-ed43-44cd-ac7b-e8c170727ac1",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(1)",
+      "targets": [
+        ["css=td:nth-child(1)", "css:finder"],
+        ["xpath=//td", "xpath:position"],
+        ["xpath=//td[contains(.,'Djokovic - Nadal tenis')]", "xpath:innerText"]
+      ],
+      "value": "Djokovic - Nadal tenis"
+    }]
+  }, {
+    "id": "6b360d78-def3-42e9-b8e1-4faf33717d76",
+    "name": "Korisnik traži otkazane događaje sa \"leto\" u imenu",
+    "commands": [{
+      "id": "ec2107d4-016e-44fd-9254-c105fea1c468",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "43f4681e-1113-40e7-bc34-4c791a769fd6",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "aa0d64a8-5ffb-4661-8b00-5b97471cb690",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_naziv",
+      "targets": [
+        ["id=id_naziv", "id"],
+        ["name=naziv", "name"],
+        ["css=#id_naziv", "css:finder"],
+        ["xpath=//input[@id='id_naziv']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "eb0d9422-1f3f-4cd7-b52a-a762e98d6282",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_naziv",
+      "targets": [
+        ["id=id_naziv", "id"],
+        ["name=naziv", "name"],
+        ["css=#id_naziv", "css:finder"],
+        ["xpath=//input[@id='id_naziv']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "leto"
+    }, {
+      "id": "d2072b9a-d235-46a5-a775-b43b23b660e3",
+      "comment": "",
+      "command": "click",
+      "target": "css=label:nth-child(3)",
+      "targets": [
+        ["css=label:nth-child(3)", "css:finder"],
+        ["xpath=//label[2]", "xpath:position"],
+        ["xpath=//label[contains(.,'Otkazan:')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "aa2f40be-9072-4093-9a5a-c1d42f75a1db",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5f6e3058-84ac-43a1-8d74-f8db1402d72b",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=body",
+      "targets": [
+        ["css=body", "css:finder"],
+        ["xpath=//body", "xpath:position"]
+      ],
+      "value": "Pretraga\\nNaziv: Otkazan: Grad: \\n  \\nIzaberite grad...\\n  Beograd\\n  Kragujevac\\n  Niš\\n  Novi Sad\\n  Smederevo\\nKategorija:\\nMuzički događaji\\nPozorište i film\\nSportski događaji\\nNijedan rezultat ne zadovoljava tražene kriterijume."
+    }]
+  }, {
+    "id": "d9ac5350-95c0-46e4-b410-4674a1172628",
+    "name": "Korisnik traži otkazane sportske događaje u Beogradu sa \"tenis\" u naziv",
+    "commands": [{
+      "id": "a73539b5-76aa-4af7-9964-4e40e64ca0af",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0a5235b8-6e95-469c-97c0-f6169b2e7712",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f86cd825-5ca2-45ed-9150-effcb293cb35",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_naziv",
+      "targets": [
+        ["id=id_naziv", "id"],
+        ["name=naziv", "name"],
+        ["css=#id_naziv", "css:finder"],
+        ["xpath=//input[@id='id_naziv']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f9899f87-af08-4fde-a638-b88deb6c80e6",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_naziv",
+      "targets": [
+        ["id=id_naziv", "id"],
+        ["name=naziv", "name"],
+        ["css=#id_naziv", "css:finder"],
+        ["xpath=//input[@id='id_naziv']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "tenis"
+    }, {
+      "id": "c9f54b66-7e77-4129-ae26-1b98efeed87a",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_otkazan",
+      "targets": [
+        ["id=id_otkazan", "id"],
+        ["name=otkazan", "name"],
+        ["css=#id_otkazan", "css:finder"],
+        ["xpath=//input[@id='id_otkazan']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3690d32f-0322-409f-b25f-d9e20508d663",
+      "comment": "",
+      "command": "select",
+      "target": "id=id_grad",
+      "targets": [],
+      "value": "label=Beograd"
+    }, {
+      "id": "7ec3b36a-d386-4c55-abc3-f5503ecf9675",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_kategorija_1",
+      "targets": [
+        ["id=id_kategorija_1", "id"],
+        ["css=#id_kategorija_1", "css:finder"],
+        ["xpath=//input[@id='id_kategorija_1']", "xpath:attributes"],
+        ["xpath=//div[@id='id_kategorija']/div[2]/label/input", "xpath:idRelative"],
+        ["xpath=//div[2]/label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5c966fe5-7c60-437d-9395-08826d10e8c5",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_kategorija_2",
+      "targets": [
+        ["id=id_kategorija_2", "id"],
+        ["css=#id_kategorija_2", "css:finder"],
+        ["xpath=//input[@id='id_kategorija_2']", "xpath:attributes"],
+        ["xpath=//div[@id='id_kategorija']/div[3]/label/input", "xpath:idRelative"],
+        ["xpath=//div[3]/label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8e0378e2-9745-4e79-8693-77daecd604dd",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='TRAŽI']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "98128ef5-1018-44cd-bba6-a106ed23662d",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(1)",
+      "targets": [
+        ["css=td:nth-child(1)", "css:finder"],
+        ["xpath=//td", "xpath:position"],
+        ["xpath=//td[contains(.,'Djokovic - Nadal tenis')]", "xpath:innerText"]
+      ],
+      "value": "Djokovic - Nadal tenis"
+    }, {
+      "id": "d22c3d8b-0768-4eb7-baf7-8b7a55994b57",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(2)",
+      "targets": [
+        ["css=td:nth-child(2)", "css:finder"],
+        ["xpath=//td[2]", "xpath:position"],
+        ["xpath=//td[contains(.,'Beograd')]", "xpath:innerText"]
+      ],
+      "value": "Beograd"
+    }, {
+      "id": "91ee321c-dae9-4797-bc42-3eb87d7ed61c",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(3)",
+      "targets": [
+        ["css=td:nth-child(3)", "css:finder"],
+        ["xpath=//td[3]", "xpath:position"],
+        ["xpath=//td[contains(.,'Novak Tenis Centar')]", "xpath:innerText"]
+      ],
+      "value": "Novak Tenis Centar"
+    }, {
+      "id": "fce4cd02-617e-498c-8629-4d12b7b4665b",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=td:nth-child(4)",
+      "targets": [
+        ["css=td:nth-child(4)", "css:finder"],
+        ["xpath=//td[4]", "xpath:position"],
+        ["xpath=//td[contains(.,'3000')]", "xpath:innerText"]
+      ],
+      "value": "3000"
+    }, {
+      "id": "84b68761-de4e-47d3-bbf1-dc14e67f206e",
+      "comment": "",
+      "command": "assertText",
+      "target": "linkText=DETALJI",
+      "targets": [
+        ["linkText=DETALJI", "linkText"],
+        ["css=a", "css:finder"],
+        ["xpath=//a[contains(text(),'DETALJI')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/6')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'DETALJI')]", "xpath:innerText"]
+      ],
+      "value": "DETALJI"
+    }]
+  }],
+  "suites": [{
+    "id": "85411002-0eeb-45a5-b80d-cf6b04f257c6",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["1d8e8d74-deab-4d93-ae5c-5d9f3b2c0bc8"]
+  }],
+  "urls": ["http://127.0.0.1:8000/"],
+  "plugins": []
+}

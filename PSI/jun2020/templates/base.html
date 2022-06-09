@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Događaji 2020</title>
+        <meta charset="utf-8" />
+        <script src="{% static 'main.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'main.css' %}"></link>
+    </head>
+    <body>
+        {% if messages %}
+        <section>
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </body>
+</html>

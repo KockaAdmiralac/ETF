@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Detalji događaja</h1>
+<ul>
+    <li><strong>Naziv događaja:</strong> {{ event.naziv }}</li>
+    <li><strong>Grad:</strong> {{ event.id_lokacije.grad.ime_grada }}</li>
+    <li><strong>Mesto:</strong> {{ event.id_lokacije.naziv_lokacije }}</li>
+    <li><strong>Datum:</strong> {{ event.datum }} {{ event.vreme }}</li>
+    <li><strong>Broj gostiju:</strong> {{ event.broj_interesenata }}</li>
+    <li><strong>Ocena:</strong> {{ ocena }}</li>
+</ul>
+{% endblock %}
