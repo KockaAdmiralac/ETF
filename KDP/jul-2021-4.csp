@@ -1,0 +1,86 @@
+[node(i: 1..N)::NODE, head::HEAD, free::FREE, start::START]
+
+NODE::
+    value: integer;
+    next: integer;
+    free: boolean;
+    free := true;
+    [
+        num = N -> next := 0
+        □
+        num <> N -> next := num + 1
+    ];
+    *[
+        free = true; start?get -> start!value(value, next)
+        □
+        free = false; start?get -> start!novalue
+        □
+        start?setNext(newNext) -> next := newNext
+        □
+        start?erase(newNext) -> free := true
+        // Акција постављања вредности није имплементирана
+        // јер није ни тражена у задатку
+    ]
+
+HEAD::
+    first: integer;
+    first := 0;
+    *[
+        first = 0; start?get -> start!empty
+        □
+        first <> 0; start?get -> start!first(first)
+        □
+        start?set(value) -> first := value
+    ]
+
+FREE::
+    free: integer;
+    free := 1;
+    *[
+        free = 0; start?get -> start!full
+        □
+        free <> 0; start?get -> start!free(free)
+        □
+        start?set(newFree) -> free := newFree
+    ]
+
+START::
+    // Претпоставимо да је задата вредност 14
+    value: integer;
+    value := 14;
+    prev: integer;
+    prev := 0;
+    head!get;
+    *[
+        // Вредност не постоји у листи
+        head?empty -> skip
+        □
+        head?first(first) -> node(first)!get
+        □
+        // Десила се нека грешка
+        (i: 1..N) node(i)?novalue -> skip
+        □
+        (i: 1..N) node(i)?value(nodeValue, next) -> [
+            nodeValue = value ->
+                [
+                    prev = 0 -> head!set(next)
+                    □
+                    prev <> 0 -> node(prev)!setNext(next)
+                ];
+                node(i)!erase;
+                free!get;
+                [
+                    free?full -> node(i)!setNext(0)
+                    □
+                    free?free(nextFree) -> node(i)!setNext(nextFree)
+                ];
+                free!set(i)
+            □
+            nodeValue <> value -> [
+                // Вредност не постоји у листи
+                next = 0 -> skip
+                □
+                next <> 0 -> node(next)!get
+            ]
+        ]
+    ]

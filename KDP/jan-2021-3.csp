@@ -1,0 +1,34 @@
+[ticket::TICKET || user(i: 1..N)::USER]
+
+TICKET::
+    users: (1..N) integer;
+    head: integer;
+    tail: integer;
+    head := 0;
+    tail := 0;
+    *[
+        head == tail; (i: 1..N) user(i)?enter ->
+            // Нема никога, па пуштамо овог корисника
+            user(i)!pass;
+            tail := (tail + 1) mod N
+        □
+        head <> tail; (i: 1..N) user(i)?enter ->
+            // Додајемо корисника у ред чекања
+            users(tail) := i;
+            tail := (tail + 1) mod N
+        □
+        (i: 1..N) user(i)?exit ->
+            head := (head + 1) mod N;
+            [
+                // Пуштамо следећег корисника, уколико га има
+                users(head) <> 0 ->
+                    user(users(head))!pass;
+                    users(head) := 0
+            ]
+        □
+    ]
+
+USER::
+    ticket!enter;
+    // У критичној секцији
+    ticket!exit

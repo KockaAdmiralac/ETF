@@ -1,0 +1,93 @@
+[ramp::RAMP, car(i: 0..2*N+1)::CAR]
+
+RAMP::
+    entering: integer;
+    exiting: integer;
+    parked: integer;
+    // Ово је измишљена синтакса за низ структура
+    enterQueue: (0..N) (carId, ticket: integer);
+    exitQueue: (0..N) (carId, ticket: integer);
+    enterHead: integer;
+    exitHead: integer;
+    enterTail: integer;
+    exitTail: integer;
+    ticket := integer;
+    entering := 0;
+    exiting := 0;
+    parked := 0;
+    enterHead := 0;
+    exitHead := 0;
+    enterTail := 0;
+    exitTail := 0;
+    ticket := 0;
+    *[
+        parked - exiting + entering >= N; (i: 0..2*N+1) car(i)?enter -> car(i)!full
+        □
+        parked - exiting + entering < N; (i: 0..2*N+1) car(i)?enter ->
+            entering := entering + 1;
+            [
+                entering = 1; exiting = 0; parked < N -> car(i)!pass
+                □
+                entering > 1 or exiting > 0 or parked = N ->
+                    // Ово је измишљена синтакса за убацивање структуре у низ
+                    enterQueue(enterTail) := (i, ticket);
+                    ticket := ticket + 1;
+                    enterTail := (enterTail + 1) mod N
+            ]
+        □
+        (i: 0..2*N+1) car(i)?entered ->
+            entering := entering - 1;
+            parked := parked + 1;
+            [
+                // Ово је измишљена синтакса за приступање пољу структуре
+                entering > 0; parked + exiting < N; enterQueue(enterHead).ticket > exitQueue(exitHead).ticket ->
+                    car(enterQueue(enterHead).carId)!pass;
+                    enterHead := (enterHead + 1) mod N
+                □
+                exiting > 0; parked + exiting = N or enterQueue(enterHead).ticket < exitQueue(exitHead).ticket ->
+                    car(exitQueue(exitHead).carId)!pass;
+                    exitHead := (exitHead + 1) mod N
+            ]
+        □
+        (i: 0..2*N+1) car(i)?exit ->
+            exiting := exiting + 1;
+            parked := parked - 1;
+            [
+                exiting = 1; entering = 0 -> car(i)!pass
+                □
+                exiting > 1 or entering > 0 ->
+                    // Ово је измишљена синтакса за убацивање структуре у низ
+                    exitQueue(exitTail) := (i, ticket);
+                    ticket := ticket + 1;
+                    exitTail := (exitTail + 1) mod N
+            ]
+        □
+        (i: 0..2*N+1) car(i)?exited ->
+            exiting := exiting - 1;
+            [
+                // Ово је измишљена синтакса за приступање пољу структуре
+                entering > 0; parked + exiting < N; enterQueue(enterHead).ticket > exitQueue(exitHead).ticket ->
+                    car(enterQueue(enterHead).carId)!pass;
+                    enterHead := (enterHead + 1) mod N
+                □
+                exiting > 0; parked + exiting = N or enterQueue(enterHead).ticket < exitQueue(exitHead).ticket ->
+                    car(exitQueue(exitHead).carId)!pass;
+                    exitHead := (exitHead + 1) mod N
+            ]
+    ]
+
+CAR::
+    ramp!enter;
+    [
+        // Тражимо другу гаражу
+        ramp?full -> skip
+        □
+        ramp?pass ->
+            // Пролазимо кроз рампу
+            ramp!entered;
+            // Паркирани смо
+            ramp!exit;
+            ramp?pass;
+            // Пролазимо кроз рампу
+            ramp!exited
+    ]

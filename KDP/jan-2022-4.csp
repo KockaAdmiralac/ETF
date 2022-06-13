@@ -1,0 +1,71 @@
+[Santa::SANTA, Dwarf(0..10)::DWARF, Reindeer(0..9)::REINDEER]
+
+SANTA::[
+    dwarf1: integer := -1;
+    dwarf2: integer := -1;
+    reindeers: integer := 0;
+    *[
+        reindeers < 8; (i: 0..9) Reindeer(i)?wakeup -> [
+            reindeers := reindeers + 1;
+        ];
+        □
+        reindeers = 8; (i: 0..9) Reindeer(i)?wakeup -> [
+            reindeers := 0;
+            (j: 0..9) Reindeer(j)!ack;
+            // Чекамо да ирваси дођу до санки
+            (j: 0..9) Reindeer(j)?onboard;
+            // Путујемо и кад се вратимо ирвасима дамо поклон
+            (j: 0..9) Reindeer(j)!treat;
+        ];
+        □
+        dwarf1 = -1; (i: 0..10) Dwarf(i)?wakeup -> [
+            dwarf1 := i;
+        ];
+        □
+        dwarf1 <> -1 and dwarf2 = -1; (i: 0..10) Dwarf(i)?wakeup -> [
+            dwarf2 := i;
+        ];
+        □
+        reindeers <> 9 and dwarf1 <> -1 and dwarf2 <> -1; (i: 0..10) Dwarf(i)?wakeup -> [
+            dwarf3: integer := i;
+            // Отварамо капију.
+            Dwarf(dwarf1)!ack;
+            Dwarf(dwarf2)!ack;
+            Dwarf(dwarf3)!ack;
+            // Причамо са патуљцима.
+            Dwarf(dwarf1)?going;
+            Dwarf(dwarf2)?going;
+            Dwarf(dwarf3)?going;
+            // Пратимо патуљке.
+            Dwarf(dwarf1)!goodbye;
+            Dwarf(dwarf2)!goodbye;
+            Dwarf(dwarf3)!goodbye;
+            // Чекамо да патуљци оду
+            Dwarf(dwarf1)?gone;
+            Dwarf(dwarf2)?gone;
+            Dwarf(dwarf3)?gone;
+            // Враћамо се на спавање
+            dwarf1 := -1;
+            dwarf2 := -1;
+        ];
+    ];
+];
+
+REINDEER::*[
+    // Радимо нешто друго
+    Santa!wakeup;
+    Santa?ack;
+    // Долазимо до санки
+    Santa!onboard;
+    Santa?treat;
+];
+
+DWARF::*[
+    // Радимо нешто друго
+    Santa!wakeup;
+    Santa?ack;
+    // Причамо са Деда Мразом
+    Santa!going;
+    Santa?goodbye;
+    Santa!gone;
+];

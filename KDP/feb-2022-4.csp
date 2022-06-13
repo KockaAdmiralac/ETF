@@ -1,0 +1,60 @@
+[Bridge::BRIDGE, Car(0..N)::CAR]
+
+BRIDGE::[
+    waiting: (0..2) (0..N) integer;
+    waitingNum: (0..2) integer := 0;
+    // 0 - нико, 1 - лево, 2 - десно
+    priority: integer := 0;
+    // 1 - лева страна, 2 - десна страна
+    currentCrossing := 0;
+    current: integer := 0;
+    *[
+        ; (i: 0..N) Car(i)?request(side) -> [
+            currentCrossing = side and priority = side; -> [
+                // Тренутно пролази наша страна и нико није дошао са друге
+                current := current + 1;
+                Car(i)!pass;
+            ];
+            □
+            currentCrossing = side and priority <> side; -> [
+                // Тренутно пролази наша страна али је неко дошао са друге
+                waiting(side-1, waitingNum(side-1)) := i;
+                waitingNum(side-1) := waitingNum(side-1) + 1;
+            ];
+            □
+            currentCrossing <> side; -> [
+                // Тренутно не пролази наша страна, зауставити их како би се спречило изгладњивање
+                priority := side;
+                waiting(side-1, waitingNum(side-1)) := i;
+                waitingNum(side-1) := waitingNum(side-1) + 1;
+            ];
+        ];
+        □
+        ; (i: 0..N) Car(i)?passed -> [
+            current := current - 1;
+            [
+                current = 0 and priority <> currentCrossing; -> [
+                    // Нема више аутомобила који пролазе мостом али има оних који следећи имају приоритет
+                    [
+                        waitingNum(currentCrossing-1) == 0; -> [
+                            // Уколико има аутомобила са стране која је досад пролазила, промени приоритет
+                            // тако да они са друге стране који дођу после овога не могу да прођу
+                            priority = (3 - priority);
+                        ];
+                    ];
+                    // Промени страну која пролази и притом пусти све са друге стране
+                    currentCrossing := (3 - currentCrossing);
+                    (j: 0..waitingNum) Car(waiting(j, currentCrossing-1))!pass;
+                    waitingNum := 0;
+                ];
+            ];
+        ];
+    ];
+];
+
+CAR::[
+    Bridge!request(side);
+    Bridge?pass;
+    // Пролазимо
+    Bridge!passed;
+];
