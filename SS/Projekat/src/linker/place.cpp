@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "hex/hex-file.hpp"
 #include "linker/place.hpp"
 
@@ -31,7 +32,7 @@ void place(Relocatable& r, std::unordered_map<std::string, uint64_t>& places, st
     }
     // Assign values to sections not specified in arguments
     for (Section& s : r.sections) {
-        if (places.contains(s.name)) {
+        if (places.find(s.name) != places.end()) {
             // Already assigned
             continue;
         }

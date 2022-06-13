@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "assembler/context.hpp"
 #include "assembler/unresolved.hpp"
 #include <stdexcept>
@@ -8,7 +9,7 @@ void UnresolvedSymbolTable::addUnresolved(std::string& symbol, std::vector<std::
 
 bool UnresolvedSymbolTable::resolve(const std::string& symbol, Context& context) {
     SymbolTable& symtab = context.r.symtab;
-    if (!operands.contains(symbol)) {
+    if (operands.find(symbol) == operands.end()) {
         throw std::runtime_error("Symbol cannot be resolved, as it is not unresolved: " + symbol);
     }
     std::vector<std::pair<std::string, int>> operands = this->operands[symbol];

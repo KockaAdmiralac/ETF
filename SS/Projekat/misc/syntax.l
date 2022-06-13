@@ -56,7 +56,8 @@ str                                 { return INSTRUCTION_STR; }
 [a-zA-Z_][a-zA-Z0-9_]*[ \t]*:       {
     yylval.label = strdup(yytext);
     if (yylval.label == NULL) {
-        return YYerror;
+        // return YYerror;
+        return LABEL;
     }
     int i = 0;
     while (yylval.label[i] != '\0') {
@@ -78,7 +79,7 @@ psw                                 { yylval.reg = 8; return REG; }
 0[0-9]+                             { yylval.num = strtol(yytext + 1, NULL, 8); return NUM; }
 0x[0-9a-fA-F]+                      { yylval.num = strtol(yytext + 2, NULL, 16); return NUM; }
 \"[^"]+\"                           { yytext[strlen(yytext)-1] = '\0'; yylval.sym = strdup(yytext + 1); return STRING; }
-[a-zA-Z_.][a-zA-Z0-9_.]*            { yylval.sym = strdup(yytext); if (yylval.sym == NULL) return YYerror; return SYM; }
+[a-zA-Z_.][a-zA-Z0-9_.]*            { yylval.sym = strdup(yytext); if (yylval.sym == NULL) /* return YYerror; */ return SYM; return SYM; }
 \n                                  { ++lineNumber; BEGIN(INITIAL); return ENDL; }
 .                                   ;
 %%

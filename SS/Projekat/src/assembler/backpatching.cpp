@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "assembler/backpatching.hpp"
 #include "assembler/context.hpp"
 

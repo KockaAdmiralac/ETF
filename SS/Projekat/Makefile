@@ -8,10 +8,10 @@ LEXER = flex
 PARSER = bison
 
 # Parser flags
-PFLAGS = -Wall -Wcounterexamples -d
+PFLAGS = -Wall -d
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -Iinc -I. -std=c++20
+CFLAGS = -Wall -Wextra -Iinc -I. -std=c++17
 ifdef DEBUG
 CFLAGS += -ggdb -DDEBUG -O0
 endif

@@ -14,7 +14,7 @@ CommandLineArgs::CommandLineArgs(int argc, char* argv[]) {
                 throw std::runtime_error("Missing filename after the -o option.");
             }
             outputFilename = argv[++i];
-        } else if (arg.starts_with("-place=")) {
+        } else if (arg.rfind("-place=", 0) == 0) {
             size_t pos = arg.find("@", 7);
             if (pos == std::string::npos) {
                 throw std::runtime_error("Invalid format of the -place option: " + arg);

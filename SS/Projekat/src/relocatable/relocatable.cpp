@@ -19,7 +19,7 @@ void Relocatable::read(std::istream& stream) {
         std::string name = readString(stream);
         if (name == ".symtab") {
             symtab.read(stream);
-        } else if (name.starts_with(".rela.")) {
+        } else if (name.rfind(".rela.", 0) == 0) {
             RelocationTable rt(name.substr(6));
             rt.read(stream);
             relocations.push_back(rt);
@@ -42,7 +42,7 @@ void Relocatable::merge(Relocatable& r) {
     }
     symtab.merge(r.symtab, offsets);
     for (Section& s : r.sections) {
-        if (sectionIndices.contains(s.name)) {
+        if (sectionIndices.find(s.name) != sectionIndices.end()) {
             sections[sectionIndices[s.name]].merge(s);
         } else {
             sections.push_back(s);
@@ -50,7 +50,7 @@ void Relocatable::merge(Relocatable& r) {
     }
     for (RelocationTable& rt : r.relocations) {
         rt.patch(r.symtab, symtab, offsets);
-        if (sectionIndices.contains(rt.getName())) {
+        if (sectionIndices.find(rt.getName()) != sectionIndices.end()) {
             relocations[sectionIndices[rt.getName()]].merge(rt, offsets[rt.getName()]);
         } else {
             relocations.push_back(rt);

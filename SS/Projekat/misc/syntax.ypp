@@ -168,17 +168,19 @@ syms:
           $$.syms = (char**)realloc($1.syms, $$.length * sizeof(char*));
           if ($$.syms == NULL) {
               free($1.syms);
-              YYNOMEM;
+              // YYNOMEM;
+          } else {
+              $$.syms[$$.length - 1] = $3;
           }
-          $$.syms[$$.length - 1] = $3;
       }
     | SYM {
           $$.length = 1;
           $$.syms = (char**)malloc(1 * sizeof(char*));
           if ($$.syms == NULL) {
-              YYNOMEM;
+              // YYNOMEM;
+          } else {
+              $$.syms[0] = $1;
           }
-          $$.syms[0] = $1;
       }
     ;
 expr:
@@ -186,20 +188,22 @@ expr:
           $$.length = 1;
           $$.operands = (ExpressionOperand*)malloc(sizeof(ExpressionOperand));
           if ($$.operands == NULL) {
-              YYNOMEM;
+              // YYNOMEM;
+          } else {
+              $$.operands[0].sym = $1;
+              $$.operands[0].sign = 1;
           }
-          $$.operands[0].sym = $1;
-          $$.operands[0].sign = 1;
       }
     | NUM {
           $$.length = 1;
           $$.operands = (ExpressionOperand*)malloc(sizeof(ExpressionOperand));
           if ($$.operands == NULL) {
-              YYNOMEM;
+              // YYNOMEM;
+          } else {
+              $$.operands[0].num = $1;
+              $$.operands[0].sym = nullptr;
+              $$.operands[0].sign = 1;
           }
-          $$.operands[0].num = $1;
-          $$.operands[0].sym = nullptr;
-          $$.operands[0].sign = 1;
       }
     | expr PLUS expr {
           $$ = mergeExpressions($1, $3);
