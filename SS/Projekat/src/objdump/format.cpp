@@ -19,12 +19,21 @@ std::vector<std::vector<std::string>> formatSymbolTable(SymbolTable& symtab) {
     return data;
 }
 
+std::string formatRelocationType(RelocationType relType) {
+    switch (relType) {
+        case REL_ABS: return "REL_ABS";
+        case REL_ABS_LE: return "REL_ABS_LE";
+        case REL_PC: return "REL_PC";
+        default: return "???";
+    }
+}
+
 std::vector<std::vector<std::string>> formatRelocationTable(RelocationTable& table, SymbolTable& symtab) {
     std::vector<std::vector<std::string>> data;
     for (Relocation& rel : table) {
         std::vector<std::string> row;
         row.push_back(std::to_string(rel.offset));
-        row.push_back(rel.type == REL_ABS ? "REL_ABS" : "REL_PC");
+        row.push_back(formatRelocationType(rel.type));
         row.push_back(std::to_string(rel.symbol) + " (" + symtab.getSymbol(rel.symbol).symbol + ")");
         row.push_back(std::to_string(rel.addend));
         data.push_back(row);
@@ -40,7 +49,7 @@ std::vector<std::vector<std::string>> formatSection(Section& section) {
         stream << std::hex << std::setw(2) << std::setfill('0') << uint64_t(byte);
         if (++count == 8) {
             std::stringstream offsetStream;
-            offsetStream << std::hex << std::setw(8) << std::setfill('0') << data.size() * 8;
+            offsetStream << std::hex << std::setw(4) << std::setfill('0') << data.size() * 8;
             data.push_back({offsetStream.str(), stream.str()});
             count = 0;
             stream.str("");
@@ -50,7 +59,7 @@ std::vector<std::vector<std::string>> formatSection(Section& section) {
     }
     if (count != 0) {
         std::stringstream offsetStream;
-        offsetStream << std::hex << std::setw(8) << std::setfill('0') << data.size() * 8;
+        offsetStream << std::hex << std::setw(4) << std::setfill('0') << data.size() * 8;
         data.push_back({offsetStream.str(), stream.str()});
     }
     return data;

@@ -10,6 +10,7 @@ struct Symbol {
     static const uint8_t SYM_ISSYM = 4;
     static const uint8_t SYM_EXTERN = 8;
     static const uint8_t SYM_ABS = 16;
+    static const uint8_t SYM_NONGLOBAL = 32;
     std::string symbol;
     int64_t value;
     uint8_t flags;
@@ -28,13 +29,13 @@ public:
     SymbolTable();
     uint64_t size();
     uint64_t addSymbol(Symbol& symbol);
-    bool hasSymbol(std::string& symbol);
-    Symbol& getSymbol(std::string& symbol);
+    bool hasSymbol(const std::string& symbol);
+    Symbol& getSymbol(const std::string& symbol);
     Symbol& getSymbol(uint64_t symbol);
-    uint64_t getSymbolIndex(std::string& symbol);
+    uint64_t getSymbolIndex(const std::string& symbol);
     void write(std::ostream& stream);
     void read(std::istream& stream);
-    void merge(SymbolTable& symtab);
+    void merge(SymbolTable& symtab, std::unordered_map<std::string, uint64_t>& offsets);
     std::vector<Symbol>::iterator begin();
     std::vector<Symbol>::iterator end();
 private:

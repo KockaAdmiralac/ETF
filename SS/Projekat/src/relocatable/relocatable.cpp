@@ -33,7 +33,6 @@ void Relocatable::read(std::istream& stream) {
 }
 
 void Relocatable::merge(Relocatable& r) {
-    symtab.merge(r.symtab);
     std::unordered_map<std::string, uint64_t> sectionIndices;
     std::unordered_map<std::string, uint64_t> offsets;
     uint64_t index = 0;
@@ -41,6 +40,7 @@ void Relocatable::merge(Relocatable& r) {
         sectionIndices[s.name] = index++;
         offsets[s.name] = s.contents.size();
     }
+    symtab.merge(r.symtab, offsets);
     for (Section& s : r.sections) {
         if (sectionIndices.contains(s.name)) {
             sections[sectionIndices[s.name]].merge(s);
@@ -49,7 +49,7 @@ void Relocatable::merge(Relocatable& r) {
         }
     }
     for (RelocationTable& rt : r.relocations) {
-        rt.patch(r.symtab, symtab);
+        rt.patch(r.symtab, symtab, offsets);
         if (sectionIndices.contains(rt.getName())) {
             relocations[sectionIndices[rt.getName()]].merge(rt, offsets[rt.getName()]);
         } else {

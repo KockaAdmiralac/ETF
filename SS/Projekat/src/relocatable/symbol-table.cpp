@@ -7,7 +7,7 @@ bool Symbol::isUndefined() {
 }
 
 bool Symbol::isGlobal() {
-    return flags & SYM_GLOBAL;
+    return (flags & SYM_GLOBAL) && !(flags & SYM_NONGLOBAL);
 }
 
 bool Symbol::isSymbol() {
@@ -42,11 +42,11 @@ uint64_t SymbolTable::addSymbol(Symbol& symbol) {
     return indices[symbol.symbol];
 }
 
-bool SymbolTable::hasSymbol(std::string& symbol) {
+bool SymbolTable::hasSymbol(const std::string& symbol) {
     return indices.find(symbol) != indices.end();
 }
 
-Symbol& SymbolTable::getSymbol(std::string& symbol) {
+Symbol& SymbolTable::getSymbol(const std::string& symbol) {
     if (!hasSymbol(symbol)) {
         throw std::runtime_error("Unknown symbol: " + symbol);
     }
@@ -57,7 +57,7 @@ Symbol& SymbolTable::getSymbol(uint64_t symbol) {
     return symbols[symbol];
 }
 
-uint64_t SymbolTable::getSymbolIndex(std::string& symbol) {
+uint64_t SymbolTable::getSymbolIndex(const std::string& symbol) {
     return indices[symbol];
 }
 
@@ -89,8 +89,8 @@ void SymbolTable::read(std::istream& stream) {
     }
 }
 
-void SymbolTable::merge(SymbolTable& symtab) {
-    std::vector<Symbol*> symbolsToPatch;
+void SymbolTable::merge(SymbolTable& symtab, std::unordered_map<std::string, uint64_t>& offsets) {
+    std::vector<std::string> symbolsToPatch;
     std::unordered_map<uint64_t, uint64_t> sectionMap;
     for (Symbol& sym : symtab.symbols) {
         if (!sym.isGlobal() && sym.isSymbol()) {
@@ -113,7 +113,9 @@ void SymbolTable::merge(SymbolTable& symtab) {
                     oldSym.value = sym.value;
                     // Will be inaccurate
                     oldSym.index = sym.index;
-                    symbolsToPatch.push_back(&oldSym);
+                    if (!oldSym.isAbsolute()) {
+                        symbolsToPatch.push_back(oldSym.symbol);
+                    }
                 }
                 // The symbol can also remain undefined
             } else if (!sym.isSymbol() && !oldSym.isSymbol()) {
@@ -122,7 +124,7 @@ void SymbolTable::merge(SymbolTable& symtab) {
                 oldSym.flags = sym.flags;
                 // Will be inaccurate
                 oldSym.index = sym.index;
-                symbolsToPatch.push_back(&oldSym);
+                symbolsToPatch.push_back(oldSym.symbol);
             } else if (!sym.isUndefined()) {
                 throw std::runtime_error("Duplicate definition of symbol with different types: " + sym.symbol);
             }
@@ -131,11 +133,15 @@ void SymbolTable::merge(SymbolTable& symtab) {
             if (!sym.isSymbol()) {
                 sectionMap[sym.index] = newIndex;
             }
-            symbolsToPatch.push_back(&sym);
+            if (!sym.isAbsolute() && !sym.isUndefined()) {
+                symbolsToPatch.push_back(sym.symbol);
+            }
         }
     }
-    for (Symbol* sym : symbolsToPatch) {
-        sym->index = sectionMap[sym->index];
+    for (std::string& sym : symbolsToPatch) {
+        Symbol& symbol = getSymbol(sym);
+        symbol.index = sectionMap[symbol.index];
+        symbol.value += offsets[getSymbol(symbol.index).symbol.substr(1)];
     }
 }
 

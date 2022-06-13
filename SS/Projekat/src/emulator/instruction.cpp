@@ -77,6 +77,10 @@ void DecodedInstruction::fetchOperand(Context& context) {
 
 void DecodedInstruction::execute(Context& context) {
     int16_t tmp;
+    uint16_t unsignedDiff;
+    uint64_t unsignedDiffWider;
+    int16_t signedDiff;
+    int64_t signedDiffWider;
     bool condition = false;
     switch (type) {
         case INS_HALT:
@@ -110,7 +114,7 @@ void DecodedInstruction::execute(Context& context) {
                     condition = !context.cpu.zero();
                     break;
                 case JMP_GT:
-                    condition = context.cpu.zero() || (context.cpu.negative() != context.cpu.overflow());
+                    condition = !(context.cpu.zero() || (context.cpu.negative() != context.cpu.overflow()));
                     break;
                 default:
                     throw CPUError("Invalid jump instruction subtype encountered.");
@@ -136,14 +140,21 @@ void DecodedInstruction::execute(Context& context) {
                     context.cpu.registers[regD] *= context.cpu.registers[regS];
                     break;
                 case AR_DIV:
+                    if (context.cpu.registers[regS] == 0) {
+                        throw CPUError("Division by zero.");
+                    }
                     context.cpu.registers[regD] /= context.cpu.registers[regS];
                     break;
                 case AR_CMP:
                     tmp = context.cpu.registers[regD] - context.cpu.registers[regS];
                     context.cpu.zero(tmp == 0);
                     context.cpu.negative(tmp < 0);
-                    context.cpu.carry((uint16_t(context.cpu.registers[regD]) - uint16_t(context.cpu.registers[regS])) != (uint64_t(context.cpu.registers[regD]) - uint64_t(context.cpu.registers[regS])));
-                    context.cpu.overflow((context.cpu.registers[regD] - context.cpu.registers[regS]) != (int64_t(context.cpu.registers[regD]) - int64_t(context.cpu.registers[regS])));
+                    unsignedDiff = uint16_t(context.cpu.registers[regD]) - uint16_t(context.cpu.registers[regS]);
+                    unsignedDiffWider = uint64_t(context.cpu.registers[regD]) - uint64_t(context.cpu.registers[regS]);
+                    context.cpu.carry(unsignedDiff != unsignedDiffWider);
+                    signedDiff = context.cpu.registers[regD] - context.cpu.registers[regS];
+                    signedDiffWider = int64_t(context.cpu.registers[regD]) - int64_t(context.cpu.registers[regS]);
+                    context.cpu.overflow(signedDiff != signedDiffWider);
                     break;
                 default:
                     throw CPUError("Invalid arithmetic instruction subtype encountered.");

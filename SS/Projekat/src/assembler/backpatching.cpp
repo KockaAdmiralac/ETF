@@ -5,15 +5,20 @@ void BackpatchingTable::addPatch(std::string& symbol, uint64_t section, uint64_t
     symbols[symbol].push_back({section, offset, relType});
 }
 
-void BackpatchingTable::patch(std::string& symbol, Context& context) {
+void BackpatchingTable::patch(const std::string& symbol, Context& context) {
+    Symbol& sym = context.r.symtab.getSymbol(symbol);
+    if (sym.isUndefined() && !sym.isExternal()) {
+        throw std::runtime_error("Tried to apply patches for an undefined symbol: " + sym.symbol);
+    }
     for (Patch& p : symbols[symbol]) {
-        Symbol& sym = context.r.symtab.getSymbol(symbol);
-        if (sym.isUndefined()) {
-            throw std::runtime_error("Tried to apply patches for an undefined symbol: " + sym.symbol);
-        }
         if (sym.isAbsolute()) {
-            context.r.sections[p.section].contents[p.offset] = ((sym.value & 0xFF00) >> 8);
-            context.r.sections[p.section].contents[p.offset + 1] = sym.value & 0xFF;
+            if (p.relType == REL_ABS_LE) {
+                context.r.sections[p.section].contents[p.offset + 1] = ((sym.value & 0xFF00) >> 8);
+                context.r.sections[p.section].contents[p.offset] = sym.value & 0xFF;
+            } else {
+                context.r.sections[p.section].contents[p.offset] = ((sym.value & 0xFF00) >> 8);
+                context.r.sections[p.section].contents[p.offset + 1] = sym.value & 0xFF;
+            }
         } else {
             int64_t addend;
             uint64_t symbolIndex;
@@ -35,4 +40,10 @@ void BackpatchingTable::patch(std::string& symbol, Context& context) {
 
 bool BackpatchingTable::empty() const {
     return symbols.empty();
+}
+
+std::vector<std::string> BackpatchingTable::getPendingPatches() const {
+    std::vector<std::string> patches(symbols.size());
+    std::transform(symbols.begin(), symbols.end(), patches.begin(), [](auto& pair) {return pair.first;});
+    return patches;
 }

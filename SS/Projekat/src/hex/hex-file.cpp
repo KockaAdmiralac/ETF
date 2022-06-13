@@ -7,11 +7,14 @@ void HexFile::write(std::ostream& stream) {
     for (std::pair<const uint64_t, std::vector<uint8_t>>& content : contents) {
         if (lastPos != content.first) {
             lastPos = content.first;
+            if (count % 8 != 0) {
+                stream << std::endl;
+            }
             count = 0;
         }
         for (uint8_t byte : content.second) {
             if (count == 0) {
-                stream << std::hex << std::setw(8) << std::setfill('0') << lastPos << ":";
+                stream << std::hex << std::setw(4) << std::setfill('0') << lastPos << ":";
             }
             stream << " " << std::hex << std::setw(2) << std::setfill('0') << uint64_t(byte);
             if (++count == 8) {

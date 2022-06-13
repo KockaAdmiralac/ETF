@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include "assembler/context.hpp"
 
@@ -9,16 +10,18 @@ void Context::addSymbol(std::string& symbol, int64_t value, uint8_t flags) {
         sym.index = 0;
     }
     r.symtab.addSymbol(sym);
+    ust.resolveAll(*this);
 }
 
 void Context::addLabel(std::string& label) {
     if (r.symtab.hasSymbol(label)) {
         Symbol& sym = r.symtab.getSymbol(label);
-        if (sym.isUndefined()) {
-            sym.flags &= ~Symbol::SYM_UNDEF;
+        if (sym.isUndefined() && sym.isSymbol()) {
+            sym.flags &= ~(Symbol::SYM_UNDEF | Symbol::SYM_EXTERN);
             sym.value = locationCounter();
             sym.index = sectionIndex;
             bt.patch(label, *this);
+            ust.resolveAll(*this);
         } else {
             throw std::runtime_error("Label " + label + " duplicates another symbol.");
         }
@@ -28,20 +31,51 @@ void Context::addLabel(std::string& label) {
 }
 
 void Context::addSection(std::string& section) {
-    Symbol sec("." + section, 0, r.symtab.size(), 0, 0);
-    sectionIndex = r.symtab.addSymbol(sec);
+    std::string sectionSymbol = "." + section;
+    if (r.symtab.hasSymbol(sectionSymbol)) {
+        Symbol& sym = r.symtab.getSymbol(sectionSymbol);
+        if (!sym.isUndefined()) {
+            throw std::runtime_error("Section " + sectionSymbol + " duplicates another symbol.");
+        }
+        sym.flags = 0;
+        sym.index = r.symtab.getSymbolIndex(sectionSymbol);
+        bt.patch(sectionSymbol, *this);
+        ust.resolveAll(*this);
+    } else {
+        Symbol sec(sectionSymbol, 0, r.symtab.size(), 0, 0);
+        sectionIndex = r.symtab.addSymbol(sec);
+        ust.resolveAll(*this);
+    }
     r.sections.push_back({section});
     r.relocations.push_back({section});
 }
 
-void Context::addData(int64_t data) {
-    currentSection().contents.push_back((data & 0xFF00) >> 8);
+void Context::addData(int64_t data, bool invert) {
+    if (!invert) {
+        currentSection().contents.push_back((data & 0xFF00) >> 8);
+    }
     currentSection().contents.push_back(data & 0xFF);
+    if (invert) {
+        currentSection().contents.push_back((data & 0xFF00) >> 8);
+    }
 }
 
 void Context::write(std::string& filename) {
     if (!bt.empty()) {
-        throw std::runtime_error("There are unapplied patches in the backpatching table!");
+        std::stringstream errorStream;
+        errorStream << "There are unapplied patches in the backpatching table:";
+        for (std::string patch : bt.getPendingPatches()) {
+            errorStream << std::endl << "- " << patch;
+        }
+        throw std::runtime_error(errorStream.str());
+    }
+    if (!ust.empty()) {
+        std::stringstream errorStream;
+        errorStream << "There are unresolved symbols in the unresolved symbol table:";
+        for (std::string symbol : ust.getPendingSymbols()) {
+            errorStream << std::endl << "- " << symbol;
+        }
+        throw std::runtime_error(errorStream.str());
     }
     std::ofstream file(filename, std::ios::binary);
     if (file.fail()) {

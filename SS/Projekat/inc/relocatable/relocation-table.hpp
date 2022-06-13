@@ -7,7 +7,8 @@
 
 enum RelocationType {
     REL_ABS,
-    REL_PC
+    REL_PC,
+    REL_ABS_LE
 };
 struct Relocation {
     uint64_t offset;
@@ -20,7 +21,7 @@ public:
     void addRelocation(uint64_t offset, RelocationType type, uint64_t symbol, int64_t addend);
     void write(std::ostream& file);
     void read(std::istream& file);
-    void patch(SymbolTable& oldSymtab, SymbolTable& newSymtab);
+    void patch(SymbolTable& oldSymtab, SymbolTable& newSymtab, std::unordered_map<std::string, uint64_t>& offsets);
     void merge(RelocationTable& table, uint64_t offset);
     bool empty() const;
     std::string getName() const;

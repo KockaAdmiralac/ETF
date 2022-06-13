@@ -14,7 +14,7 @@ struct Context {
     void addSymbol(std::string& symbol, int64_t value, uint8_t flags = Symbol::SYM_ISSYM);
     void addLabel(std::string& symbol);
     void addSection(std::string& section);
-    void addData(int64_t data);
+    void addData(int64_t data, bool invert = false);
     void write(std::string& filename);
     Section& currentSection();
     RelocationTable& currentRelocationTable();

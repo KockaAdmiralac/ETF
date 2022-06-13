@@ -99,9 +99,11 @@ const InstructionHandler INSTRUCTIONS[] = {
     },
     // ldr, pop
     [](Context& context, Instruction& instruction) {
+        bool isPop = instruction.subtype == LD_POP;
+        instruction.subtype = 0;
         insertOpcode(context, instruction);
         UpMode upMode = UP_NONE;
-        if (instruction.subtype == LD_POP) {
+        if (isPop) {
             instruction.operand.type = OP_REGIND;
             instruction.operand.reg = 6;
             upMode = UP_POSTINC;
@@ -110,9 +112,11 @@ const InstructionHandler INSTRUCTIONS[] = {
     },
     // str, push
     [](Context& context, Instruction& instruction) {
+        bool isPush = instruction.subtype == ST_PUSH;
+        instruction.subtype = 0;
         insertOpcode(context, instruction);
         UpMode upMode = UP_NONE;
-        if (instruction.subtype == LD_POP) {
+        if (isPush) {
             instruction.operand.type = OP_REGIND;
             instruction.operand.reg = 6;
             upMode = UP_PREDEC;

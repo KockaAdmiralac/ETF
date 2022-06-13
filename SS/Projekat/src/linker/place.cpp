@@ -56,13 +56,26 @@ void place(Relocatable& r, std::unordered_map<std::string, uint64_t>& places, st
         Section& s = r.sections[i];
         for (Relocation& rel : r.relocations[i]) {
             int64_t value;
-            if (rel.type == REL_ABS) {
-                value = r.symtab.getSymbol(rel.symbol).value + rel.addend;
-            } else {
-                std::string sectionSymbol = "." + s.name;
-                int64_t destValue = r.symtab.getSymbol(rel.symbol).value + rel.addend;
-                int64_t srcValue = r.symtab.getSymbol(sectionSymbol).value + rel.offset;
-                value = destValue - srcValue;
+            int64_t destValue;
+            int64_t srcValue;
+            std::string sectionSymbol;
+            switch (rel.type) {
+                case REL_ABS:
+                    value = r.symtab.getSymbol(rel.symbol).value + rel.addend;
+                    break;
+                case REL_ABS_LE:
+                    value = r.symtab.getSymbol(rel.symbol).value + rel.addend;
+                    value = ((value & 0xFF00) >> 8) | ((value & 0xFF) << 8);
+                    break;
+                case REL_PC:
+                    sectionSymbol = "." + s.name;
+                    destValue = r.symtab.getSymbol(rel.symbol).value + rel.addend;
+                    srcValue = r.symtab.getSymbol(sectionSymbol).value + rel.offset;
+                    value = destValue - srcValue;
+                    break;
+                default:
+                    throw std::runtime_error("Unknown relocation type encountered.");
+                    break;
             }
             s.contents[rel.offset] = (value & 0xFF00) >> 8;
             s.contents[rel.offset + 1] = value & 0xFF;

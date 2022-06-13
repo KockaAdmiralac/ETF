@@ -14,8 +14,9 @@ struct Patch {
 class BackpatchingTable {
 public:
     void addPatch(std::string& symbol, uint64_t section, uint64_t offset, RelocationType relType);
-    void patch(std::string& symbol, Context& context);
+    void patch(const std::string& symbol, Context& context);
     bool empty() const;
+    std::vector<std::string> getPendingPatches() const;
 private:
     std::unordered_map<std::string, std::vector<Patch>> symbols;
 };

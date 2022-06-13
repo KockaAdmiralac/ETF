@@ -24,9 +24,13 @@ void RelocationTable::read(std::istream& file) {
     readVector(file, relocations);
 }
 
-void RelocationTable::patch(SymbolTable& oldSymtab, SymbolTable& newSymtab) {
+void RelocationTable::patch(SymbolTable& oldSymtab, SymbolTable& newSymtab, std::unordered_map<std::string, uint64_t>& offsets) {
     for (Relocation& r : relocations) {
         r.symbol = newSymtab.getSymbolIndex(oldSymtab.getSymbol(r.symbol).symbol);
+        Symbol& sym = newSymtab.getSymbol(r.symbol);
+        if (!sym.isSymbol()) {
+            r.addend += offsets[sym.symbol.substr(1)];
+        }
     }
 }
 

@@ -8,7 +8,10 @@ class Context;
 class UnresolvedSymbolTable {
 public:
     void addUnresolved(std::string& symbol, std::vector<std::pair<std::string, int>> expression);
-    bool resolve(std::string& symbol, Context& context);
+    bool resolve(const std::string& symbol, Context& context);
+    void resolveAll(Context& context);
+    bool empty() const;
+    std::vector<std::string> getPendingSymbols() const;
 private:
     std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> operands;
 };

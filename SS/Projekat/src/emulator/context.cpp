@@ -14,7 +14,7 @@ Context::Context(const char* filename) {
 }
 
 uint16_t Context::read(uint64_t addr) {
-    return (uint16_t(readByte(addr)) << 8) + readByte(addr + 1);
+    return (uint16_t(readByte(addr + 1)) << 8) + readByte(addr);
 }
 
 void Context::write(uint64_t addr, uint16_t data) {
@@ -23,21 +23,15 @@ void Context::write(uint64_t addr, uint16_t data) {
             case 0xFF00:
                 terminal.write(data);
                 break;
-            case 0xFF01:
-                terminal.write(data >> 8);
-                break;
             case 0xFF10:
                 timer.timCfg = data;
-                break;
-            case 0xFF11:
-                timer.timCfg = data >> 8;
                 break;
             default:
                 throw CPUError("Segmentation fault while writing to memory.");
         }
     } else {
-        writeByte(addr, (data & 0xFF00) >> 8);
-        writeByte(addr + 1, data & 0xFF);
+        writeByte(addr, data & 0xFF);
+        writeByte(addr + 1, (data & 0xFF00) >> 8);
     }
 }
 
@@ -45,9 +39,9 @@ uint8_t Context::readByte(uint64_t addr) {
     if ((addr & 0xFF00) == 0xFF00) {
         switch (addr & 0xFFFF) {
             case 0xFF02:
-                return (terminal.termIn >> 8);
-            case 0xFF03:
                 return terminal.termIn & 0xFF;
+            case 0xFF03:
+                return (terminal.termIn >> 8);
             default:
                 throw CPUError("Segmentation fault while reading from memory.");
         }

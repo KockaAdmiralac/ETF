@@ -22,6 +22,9 @@ const DirectiveHandler DIRECTIVES[] = {
         for (std::string& sym : syms) {
             if (context.r.symtab.hasSymbol(sym)) {
                 Symbol& symbol = context.r.symtab.getSymbol(sym);
+                if (!symbol.isSymbol()) {
+                    throw std::runtime_error("Attempted to mark a section as global: " + sym);
+                }
                 symbol.flags |= Symbol::SYM_GLOBAL;
             } else {
                 context.addSymbol(sym, 0, Symbol::SYM_GLOBAL | Symbol::SYM_UNDEF);
@@ -33,9 +36,17 @@ const DirectiveHandler DIRECTIVES[] = {
         std::vector<std::string> syms = convertSymbolList(directive.syms);
         for (std::string& sym : syms) {
             if (context.r.symtab.hasSymbol(sym)) {
-                throw std::runtime_error("External symbol already defined: " + sym);
+                Symbol& s = context.r.symtab.getSymbol(sym);
+                if (s.isUndefined()) {
+                    s.flags |= Symbol::SYM_EXTERN | Symbol::SYM_GLOBAL;
+                } else {
+                    throw std::runtime_error("External symbol already defined: " + sym);
+                }
+            } else {
+                context.addSymbol(sym, 0, Symbol::SYM_EXTERN | Symbol::SYM_GLOBAL | Symbol::SYM_UNDEF);
             }
-            context.addSymbol(sym, 0, Symbol::SYM_EXTERN | Symbol::SYM_GLOBAL | Symbol::SYM_UNDEF);
+            context.bt.patch(sym, context);
+            context.ust.resolveAll(context);
         }
     },
     // .section
@@ -46,11 +57,11 @@ const DirectiveHandler DIRECTIVES[] = {
     // .word
     [](Context& context, Directive& directive) {
         if (directive.syms.length == 0) {
-            context.addData(directive.num);
+            context.addData(directive.num, true);
         } else {
             std::vector<std::string> syms = convertSymbolList(directive.syms);
             for (std::string& sym : syms) {
-                context.addData(context.resolveSymbol(sym));
+                context.addData(context.resolveSymbol(sym, REL_ABS_LE), true);
             }
         }
     },
@@ -66,6 +77,7 @@ const DirectiveHandler DIRECTIVES[] = {
         for (char c : sym) {
             context.currentSection().contents.push_back(c);
         }
+        context.currentSection().contents.push_back(0);
     },
     // .equ
     [](Context& context, Directive& directive) {

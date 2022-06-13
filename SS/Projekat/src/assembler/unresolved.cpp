@@ -6,7 +6,7 @@ void UnresolvedSymbolTable::addUnresolved(std::string& symbol, std::vector<std::
     this->operands[symbol] = operands;
 }
 
-bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
+bool UnresolvedSymbolTable::resolve(const std::string& symbol, Context& context) {
     SymbolTable& symtab = context.r.symtab;
     if (!operands.contains(symbol)) {
         throw std::runtime_error("Symbol cannot be resolved, as it is not unresolved: " + symbol);
@@ -17,6 +17,9 @@ bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
         if (operand.first == "") {
             continue;
         }
+        if (!symtab.hasSymbol(operand.first)) {
+            return false;
+        }
         Symbol& sym = symtab.getSymbol(operand.first);
         if (sym.isUndefined() && !sym.isExternal()) {
             return false;
@@ -24,7 +27,6 @@ bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
     }
     this->operands.erase(symbol);
     // Determine symbol classification index and evaluate the expression.
-    uint64_t nextUniqueSymbol = symtab.size();
     int64_t value = 0;
     std::unordered_map<uint64_t, uint64_t> sectionIndex;
     for (std::pair<std::string, int>& operand : operands) {
@@ -32,7 +34,7 @@ bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
             value += operand.second;
         } else {
             Symbol& sym = symtab.getSymbol(operand.first);
-            uint64_t index = sym.isExternal() ? (++nextUniqueSymbol) : sym.index;
+            uint64_t index = sym.isExternal() ? context.r.symtab.getSymbolIndex(operand.first) : sym.index;
             if (operand.second > 0) {
                 value += sym.value;
                 ++sectionIndex[index];
@@ -60,7 +62,33 @@ bool UnresolvedSymbolTable::resolve(std::string& symbol, Context& context) {
     sym.value = value;
     if (classificationIndex == 0) {
         sym.flags |= Symbol::SYM_ABS;
+    } else if (context.r.symtab.getSymbol(classificationIndex).isSymbol()) {
+        sym.flags |= Symbol::SYM_NONGLOBAL;
     }
     context.bt.patch(symbol, context);
+    resolveAll(context);
     return true;
+}
+
+void UnresolvedSymbolTable::resolveAll(Context& context) {
+    bool retry;
+    do {
+        retry = false;
+        for (auto pair : operands) {
+            if (resolve(pair.first, context)) {
+                retry = true;
+                break;
+            }
+        }
+    } while (retry);
+}
+
+bool UnresolvedSymbolTable::empty() const {
+    return operands.empty();
+}
+
+std::vector<std::string> UnresolvedSymbolTable::getPendingSymbols() const {
+    std::vector<std::string> symbols(operands.size());
+    std::transform(operands.begin(), operands.end(), symbols.begin(), [](auto& pair) {return pair.first;});
+    return symbols;
 }
