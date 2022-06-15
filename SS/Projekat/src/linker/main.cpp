@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
             }
             Relocatable r;
             r.read(inputFile);
-            product.merge(r);
+            product.merge(r, filename);
         }
         if (args.generateHex) {
             std::ofstream outputFile(args.outputFilename);

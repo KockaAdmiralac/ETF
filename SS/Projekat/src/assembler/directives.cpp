@@ -9,7 +9,22 @@ std::string convertSymbol(char* sym) {
 std::vector<std::string> convertSymbolList(const SymbolList& syms) {
     std::vector<std::string> vec;
     for (int i = 0; i < syms.length; ++i) {
-        vec.push_back(convertSymbol(syms.syms[i]));
+        if (syms.syms[i].type == SYM_SYM) {
+            vec.push_back(convertSymbol(syms.syms[i].data.sym));
+        }
+    }
+    free(syms.syms);
+    return vec;
+}
+
+std::vector<std::pair<std::string, int>> convertSymbolListWithNums(const SymbolList& syms) {
+    std::vector<std::pair<std::string, int>> vec;
+    for (int i = 0; i < syms.length; ++i) {
+        if (syms.syms[i].type == SYM_SYM) {
+            vec.push_back({convertSymbol(syms.syms[i].data.sym), 0});
+        } else {
+            vec.push_back({"", syms.syms[i].data.num});
+        }
     }
     free(syms.syms);
     return vec;
@@ -56,12 +71,12 @@ const DirectiveHandler DIRECTIVES[] = {
     },
     // .word
     [](Context& context, Directive& directive) {
-        if (directive.syms.length == 0) {
-            context.addData(directive.num, true);
-        } else {
-            std::vector<std::string> syms = convertSymbolList(directive.syms);
-            for (std::string& sym : syms) {
-                context.addData(context.resolveSymbol(sym, REL_ABS_LE), true);
+        std::vector<std::pair<std::string, int>> syms = convertSymbolListWithNums(directive.syms);
+        for (auto& sym : syms) {
+            if (sym.first == "") {
+                context.addData(sym.second, true);
+            } else {
+                context.addData(context.resolveSymbol(sym.first, REL_ABS_LE), true);
             }
         }
     },
@@ -77,7 +92,6 @@ const DirectiveHandler DIRECTIVES[] = {
         for (char c : sym) {
             context.currentSection().contents.push_back(c);
         }
-        context.currentSection().contents.push_back(0);
     },
     // .equ
     [](Context& context, Directive& directive) {

@@ -105,7 +105,6 @@ directive:
       DIRECTIVE_GLOBAL syms                     { $$.type = DIR_GLOBAL; $$.syms = $2;                                   }
     | DIRECTIVE_EXTERN syms                     { $$.type = DIR_EXTERN; $$.syms = $2;                                   }
     | DIRECTIVE_SECTION SYM                     { $$.type = DIR_SECTION; $$.sym = $2;                                   }
-    | DIRECTIVE_WORD NUM                        { $$.type = DIR_WORD; $$.num = $2; $$.syms.length = 0;                  }
     | DIRECTIVE_WORD syms                       { $$.type = DIR_WORD; $$.syms = $2;                                     }
     | DIRECTIVE_SKIP NUM                        { $$.type = DIR_SKIP; $$.num = $2;                                      }
     | DIRECTIVE_ASCII STRING                    { $$.type = DIR_ASCII; $$.sym = $2;                                     }
@@ -165,21 +164,44 @@ operand_addr:
 syms:
       syms COMMA SYM {
           $$.length = $1.length + 1;
-          $$.syms = (char**)realloc($1.syms, $$.length * sizeof(char*));
+          $$.syms = (SymbolListElement*)realloc($1.syms, $$.length * sizeof(SymbolListElement));
           if ($$.syms == NULL) {
               free($1.syms);
               // YYNOMEM;
           } else {
-              $$.syms[$$.length - 1] = $3;
+              $$.syms[$$.length - 1].type = SYM_SYM;
+              $$.syms[$$.length - 1].data.sym = $3;
+          }
+      }
+    | syms COMMA NUM {
+          $$.length = $1.length + 1;
+          $$.syms = (SymbolListElement*)realloc($1.syms, $$.length * sizeof(SymbolListElement));
+          if ($$.syms == NULL) {
+              free($1.syms);
+              // YYNOMEM;
+          } else {
+              $$.syms[$$.length - 1].type = SYM_LIT;
+              $$.syms[$$.length - 1].data.num = $3;
           }
       }
     | SYM {
           $$.length = 1;
-          $$.syms = (char**)malloc(1 * sizeof(char*));
+          $$.syms = (SymbolListElement*)malloc(1 * sizeof(SymbolListElement));
           if ($$.syms == NULL) {
               // YYNOMEM;
           } else {
-              $$.syms[0] = $1;
+              $$.syms[0].type = SYM_SYM;
+              $$.syms[0].data.sym = $1;
+          }
+      }
+    | NUM {
+          $$.length = 1;
+          $$.syms = (SymbolListElement*)malloc(sizeof(SymbolListElement));
+          if ($$.syms == NULL) {
+              // YYNOMEM;
+          } else {
+              $$.syms[0].type = SYM_LIT;
+              $$.syms[0].data.num = $1;
           }
       }
     ;

@@ -32,7 +32,7 @@ void Relocatable::read(std::istream& stream) {
     }
 }
 
-void Relocatable::merge(Relocatable& r) {
+void Relocatable::merge(Relocatable& r, std::string& filename) {
     std::unordered_map<std::string, uint64_t> sectionIndices;
     std::unordered_map<std::string, uint64_t> offsets;
     uint64_t index = 0;
@@ -40,7 +40,7 @@ void Relocatable::merge(Relocatable& r) {
         sectionIndices[s.name] = index++;
         offsets[s.name] = s.contents.size();
     }
-    symtab.merge(r.symtab, offsets);
+    symtab.merge(r.symtab, offsets, filename);
     for (Section& s : r.sections) {
         if (sectionIndices.find(s.name) != sectionIndices.end()) {
             sections[sectionIndices[s.name]].merge(s);

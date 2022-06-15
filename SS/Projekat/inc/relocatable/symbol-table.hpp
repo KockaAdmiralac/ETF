@@ -35,7 +35,7 @@ public:
     uint64_t getSymbolIndex(const std::string& symbol);
     void write(std::ostream& stream);
     void read(std::istream& stream);
-    void merge(SymbolTable& symtab, std::unordered_map<std::string, uint64_t>& offsets);
+    void merge(SymbolTable& symtab, std::unordered_map<std::string, uint64_t>& offsets, std::string& filename);
     std::vector<Symbol>::iterator begin();
     std::vector<Symbol>::iterator end();
 private:

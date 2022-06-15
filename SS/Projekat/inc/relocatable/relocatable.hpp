@@ -10,6 +10,6 @@ struct Relocatable {
     std::vector<Section> sections;
     void write(std::ostream& stream);
     void read(std::istream& stream);
-    void merge(Relocatable& r);
+    void merge(Relocatable& r, std::string& filename);
 };
 #endif

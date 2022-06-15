@@ -2,7 +2,7 @@
 .extern e1, e2, e3, label
 .section sec1
 label: .word 4
-.word g2, .ivt, g3
+.word g2, .ivt, g3, 6
 .skip 2
 .ascii "lol"
 .section ivt

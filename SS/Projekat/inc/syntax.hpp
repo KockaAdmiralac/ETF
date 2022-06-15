@@ -1,9 +1,20 @@
 #ifndef _SYNTAX_HPP
 #define _SYNTAX_HPP
 #include <cstdint>
+enum SymbolType {
+    SYM_SYM,
+    SYM_LIT
+};
+struct SymbolListElement {
+    SymbolType type;
+    union {
+        int num;
+        char* sym;
+    } data;
+};
 struct SymbolList {
     int length;
-    char** syms;
+    SymbolListElement* syms;
 };
 struct ExpressionOperand {
     char* sym;

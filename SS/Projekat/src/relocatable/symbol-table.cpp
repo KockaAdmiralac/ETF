@@ -89,13 +89,17 @@ void SymbolTable::read(std::istream& stream) {
     }
 }
 
-void SymbolTable::merge(SymbolTable& symtab, std::unordered_map<std::string, uint64_t>& offsets) {
+void SymbolTable::merge(SymbolTable& symtab, std::unordered_map<std::string, uint64_t>& offsets, std::string& filename) {
     std::vector<std::string> symbolsToPatch;
     std::unordered_map<uint64_t, uint64_t> sectionMap;
     for (Symbol& sym : symtab.symbols) {
         if (!sym.isGlobal() && sym.isSymbol()) {
-            // Local symbol, ignore
-            continue;
+            // Local symbol, rename it so it definitely gets inserted
+            // as a new symbol.
+            if (sym.symbol == "") {
+                continue;
+            }
+            sym.symbol = filename + "+" + sym.symbol;
         }
         if (hasSymbol(sym.symbol)) {
             // Merging two symbols
