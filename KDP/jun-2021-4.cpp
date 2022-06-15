@@ -32,7 +32,11 @@ void player(int i) {
     }
     while (true) {
         if (hasWon(cards)) {
-            out("game over");
+            in("can set game over");
+            if (!rdp("game over")) {
+                out("game over");
+            }
+            out("can set game over");
             out("deck", (i + 1) % 4, Card(-1, -1));
             break;
         }
@@ -48,7 +52,7 @@ void player(int i) {
 
 void initialize() {
     // Празнимо простор торки од претходне игре
-    while (inp("deck") || inp("player") || inp("game over"));
+    while (inp("deck") || inp("player") || inp("game over") || inp("can set game over"));
     // Вршимо насумичну расподелу шпила
     vector<Card> cards;
     for (int color = 0; color < 4; ++color) {
@@ -69,4 +73,5 @@ void initialize() {
         }
         eval(player, p);
     }
+    out("can set game over");
 }

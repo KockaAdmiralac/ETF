@@ -5,13 +5,16 @@ const int N = 5;
 void philosopher(int i) {
     int left = i;
     int right = (i + 1) % N;
+    int ticket;
     while (true) {
         // Мислимо
-        in("fifo");
+        in("ticket", &ticket);
+        out("ticket", ticket + 1);
+        in("current", ticket);
         in("permit");
         in("fork", left);
         in("fork", right);
-        out("fifo");
+        out("current", ticket + 1);
         // Једемо
         out("fork", right);
         out("fork", left);
@@ -27,5 +30,6 @@ void init() {
             out("permit");
         }
     }
-    out("fifo");
+    out("ticket", 0);
+    out("current", 0);
 }
