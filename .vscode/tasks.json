@@ -8,21 +8,9 @@
     "label": "all",
     "tasks": [
         {
-            "label": "clean",
-            "command": "make",
-            "args": [
-                "clean"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/SS/Projekat"
-            }
-        },
-        {
             "label": "build",
             "command": "make",
             "dependsOn": [
-                "cd",
-                "clean"
             ],
             "dependsOrder": "sequence",
             "options": {

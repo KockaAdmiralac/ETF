@@ -5,16 +5,14 @@
             "name": "gcc build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/SS/Projekat/linker",
+            "program": "${workspaceFolder}/SS/Projekat/emulator",
             "args": [
-                "-hex",
-                // "-relocatable",
-                "-place=ivt@0x0000",
-                "-o",
-                "program.hex",
-                // "program.o",
-                "interrupts.o",
-                "main.o"
+                // "-hex",
+                // "-place=ivt@0x0000",
+                // "-o",
+                "instructions.hex",
+                // "instructions.o",
+                // "find-max.o"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/SS/Projekat",
