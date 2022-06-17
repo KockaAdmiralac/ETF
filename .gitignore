@@ -1,29 +1,11 @@
 **/Materijali/*/**
-**/Materijali/**/*.doc
 **/Materijali/**/*.pdf
 **/Materijali/**/*.vmdk
-**/Materijali/**/*.qcow2
 **/Materijali/**/*.bin
 __pycache__
 a.out
-ASP1/Materijal
-ASP1/dz2/dz2
-ASP1/dz3/dz3
-ASP2/dz3/dz3
-ASP2/dz3/text
-ASP2/dz3/src.o
-OO1/test.cpp
-ORT2/Simulator
-OS1/Projekat/CCOUTPUT
-OS1/Projekat/OUTPUT
-OS1/Projekat/PROJ.EXE
-P2/test.c
-PP2/dz5
-Misc/data
-Misc/imena.csv
-Misc/rezultati.csv
-SIS/test.py
 node_modules
+
 ## Quartus
 # Quartus generated files
 *.qws
@@ -33,10 +15,10 @@ db/
 incremental_db/
 simulation/
 output_files/
-# Has tmp in the name so i assume its safe to ignore
 greybox_tmp/
 *.qdf
 *.rpt
+
 # NetBeans
 IS1/**/nbproject/private/
 IS1/**/build/
