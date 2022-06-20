@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "3ee0a0fa-cb9e-46e5-aeaf-710bd17d6613",
+		"name": "IEP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "1298898"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"forename\": \"Warehouse\",\n    \"surname\": \"Warehouseić\",\n    \"email\": \"warehouse@warehouse.com\",\n    \"password\": \"warehousePass123\",\n    \"isCustomer\": false\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://127.0.0.1:5001/refresh"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"warehouse@warehouse.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/delete"
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/perapisar/Projects/ETF/IEP/Projekat/test.csv"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:5002/update"
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5003/search?name=&category=",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5003",
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": ""
+						},
+						{
+							"key": "category",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requests\": [\n        {\n            \"id\": 1,\n            \"quantity\": 1\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5003/order"
+			},
+			"response": []
+		},
+		{
+			"name": "Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5003/status"
+			},
+			"response": []
+		},
+		{
+			"name": "Product statistics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5004/productStatistics"
+			},
+			"response": []
+		},
+		{
+			"name": "Category statistics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5004/categoryStatistics"
+			},
+			"response": []
+		},
+		{
+			"name": "Catalog",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5000/v2/_catalog"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY1NTc0NzA2MiwianRpIjoiYjA1MDcxMTMtMjU4Mi00MjA4LWFlN2QtZGUwMmEyNWFiZDhiIiwibmJmIjoxNjU1NzQ3MDYyLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiYWRtaW5AYWRtaW4uY29tIiwiZXhwIjoxNjU1NzUwNjYyLCJmb3JlbmFtZSI6ImFkbWluIiwic3VybmFtZSI6ImFkbWluIiwicm9sZXMiOlsiYWRtaW4iXX0.qOATlcZtiYhTZWjxerC_DsniGtbvYPfHCyHAq9bymQM"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

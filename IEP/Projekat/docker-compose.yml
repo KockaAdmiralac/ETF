@@ -1,0 +1,109 @@
+version: '3'
+services:
+  registry:
+    image: registry:2
+    ports:
+      - 5000:5000
+  auth_db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3310:3306
+    volumes:
+      - auth_db_vol:/var/lib/mysql
+    networks:
+      - auth_net
+  shop_db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3311:3306
+    volumes:
+      - shop_db_vol:/var/lib/mysql
+    networks:
+      - shop_net
+      - admin_net
+      - customer_net
+      - daemon_net
+  init_auth_db:
+    image: 127.0.0.1:5000/init_auth_db
+    build:
+      context: .
+      dockerfile: init_auth_db/Dockerfile
+    networks:
+      - auth_net
+  init_shop_db:
+    image: 127.0.0.1:5000/init_shop_db
+    build:
+      context: .
+      dockerfile: init_shop_db/Dockerfile
+    networks:
+      - shop_net
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - daemon_net
+      - warehouse_net
+  authentication:
+    image: 127.0.0.1:5000/authentication
+    build:
+      context: .
+      dockerfile: authentication/Dockerfile
+    networks:
+      - auth_net
+    ports:
+      - 5001:5001
+  warehouse:
+    image: 127.0.0.1:5000/warehouse
+    build:
+      context: .
+      dockerfile: warehouse/Dockerfile
+    deploy:
+      replicas: 3
+    networks:
+      - warehouse_net
+    ports:
+      - 5002:5002
+  daemon:
+    image: 127.0.0.1:5000/daemon
+    build:
+      context: .
+      dockerfile: daemon/Dockerfile
+    networks:
+      - daemon_net
+  customer:
+    image: 127.0.0.1:5000/customer
+    build:
+      context: .
+      dockerfile: customer/Dockerfile
+    deploy:
+      replicas: 3
+    networks:
+      - customer_net
+    ports:
+      - 5003:5003
+  admin:
+    image: 127.0.0.1:5000/admin
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+    networks:
+      - admin_net
+    ports:
+      - 5004:5004
+
+volumes:
+  auth_db_vol:
+  shop_db_vol:
+
+networks:
+  auth_net:
+  shop_net:
+  admin_net:
+  customer_net:
+  warehouse_net:
+  daemon_net:
