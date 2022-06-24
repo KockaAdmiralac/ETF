@@ -1,9 +1,5 @@
 version: '3'
 services:
-  registry:
-    image: registry:2
-    ports:
-      - 5000:5000
   auth_db:
     image: mysql
     environment:
@@ -28,14 +24,14 @@ services:
       - customer_net
       - daemon_net
   paradajz:
-    image: 127.0.0.1:5000/paradajz
+    image: paradajz
     build:
       context: .
       dockerfile: paradajz/Dockerfile
     networks:
       - auth_net
   krastavac:
-    image: 127.0.0.1:5000/krastavac
+    image: krastavac
     build:
       context: .
       dockerfile: krastavac/Dockerfile
@@ -49,7 +45,7 @@ services:
       - daemon_net
       - warehouse_net
   authentication:
-    image: 127.0.0.1:5000/authentication
+    image: authentication
     build:
       context: .
       dockerfile: authentication/Dockerfile
@@ -58,7 +54,7 @@ services:
     ports:
       - 5001:5001
   warehouse:
-    image: 127.0.0.1:5000/warehouse
+    image: warehouse
     build:
       context: .
       dockerfile: warehouse/Dockerfile
@@ -69,14 +65,14 @@ services:
     ports:
       - 5002:5002
   daemon:
-    image: 127.0.0.1:5000/daemon
+    image: daemon
     build:
       context: .
       dockerfile: daemon/Dockerfile
     networks:
       - daemon_net
   customer:
-    image: 127.0.0.1:5000/customer
+    image: customer
     build:
       context: .
       dockerfile: customer/Dockerfile
@@ -87,7 +83,7 @@ services:
     ports:
       - 5003:5003
   admin:
-    image: 127.0.0.1:5000/admin
+    image: admin
     build:
       context: .
       dockerfile: admin/Dockerfile

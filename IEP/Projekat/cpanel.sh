@@ -3,6 +3,7 @@
 if [ "$#" -ne 1 ]
 then
     echo "One argument required."
+    exit 1
 fi
 
 case "$1" in
@@ -27,7 +28,9 @@ case "$1" in
         redis-cli
         ;;
     test)
-        python tests/main.py \
+        cd tests
+        pip install -r requirements.txt
+        python main.py \
             --authentication-address http://127.0.0.1:5001 \
             --jwt-secret "zaki@etf.bg.ac.rs" \
             --roles-field roles \
@@ -45,16 +48,23 @@ case "$1" in
         docker swarm leave --force
         docker kill $(docker ps -q)
         docker rm $(docker ps --filter=status=exited --filter=status=created -q)
+        docker rm -f $(docker ps -a -q)
         docker rmi $(docker images -a -q)
+        docker volume rm $(docker volume ls -q)
+        docker network rm $(docker network ls -q)
         docker system prune -a
         docker builder prune
         ;;
-    swarm:init)
+    deploy)
         docker swarm init
-        ;;
-    swarm:deploy)
         docker-compose build
-        docker-compose push
         docker stack deploy --compose-file docker-compose.yml projekat
+        ;;
+    status)
+        docker stack services projekat
+        ;;
+    *)
+        echo "Invalid command."
+        exit 1
         ;;
 esac

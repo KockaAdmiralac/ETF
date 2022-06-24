@@ -4,6 +4,7 @@ from shared.config import ShopConfiguration
 from shared.shop_models import db
 from sqlalchemy.exc import OperationalError
 from sqlalchemy_utils import database_exists, create_database
+from sys import exit
 from time import sleep
 
 app = Flask(__name__)
@@ -16,6 +17,9 @@ while connecting_to_db:
     try:
         if not database_exists(app.config['SQLALCHEMY_DATABASE_URI']):
             create_database(app.config['SQLALCHEMY_DATABASE_URI'])
+        else:
+            print('Database already exists')
+            exit(0)
 
         db.init_app(app)
         connecting_to_db = False
