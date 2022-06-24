@@ -27,18 +27,18 @@ services:
       - admin_net
       - customer_net
       - daemon_net
-  init_auth_db:
-    image: 127.0.0.1:5000/init_auth_db
+  paradajz:
+    image: 127.0.0.1:5000/paradajz
     build:
       context: .
-      dockerfile: init_auth_db/Dockerfile
+      dockerfile: paradajz/Dockerfile
     networks:
       - auth_net
-  init_shop_db:
-    image: 127.0.0.1:5000/init_shop_db
+  krastavac:
+    image: 127.0.0.1:5000/krastavac
     build:
       context: .
-      dockerfile: init_shop_db/Dockerfile
+      dockerfile: krastavac/Dockerfile
     networks:
       - shop_net
   redis:

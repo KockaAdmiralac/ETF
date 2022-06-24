@@ -16,11 +16,11 @@ case "$1" in
         docker stop projekat-authentication-1
         docker stop projekat-daemon-1
         docker stop projekat-customer-1
-        docker rm projekat-init_auth_db-1 -f
-        docker rm projekat-init_shop_db-1 -f
+        docker rm projekat-paradajz-1 -f
+        docker rm projekat-krastavac-1 -f
         mysql -u root --protocol tcp -P 3310 -proot -e "DROP DATABASE auth;"
         mysql -u root --protocol tcp -P 3311 -proot -e "DROP DATABASE shop;"
-        docker-compose up -d --build init_auth_db init_shop_db
+        docker-compose up -d --build paradajz krastavac
         docker-compose up -d
         ;;
     redis)
