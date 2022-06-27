@@ -1,0 +1,2 @@
+Lol Lol	predmet1,rok1,6;predmet2,rok1,10;predmet1,rok2,9
+Lol2 Lol	predmet1,rok1,8;predmet2,rok1,6;predmet3,rok3,9
