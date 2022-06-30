@@ -1,0 +1,18 @@
+[Podesavanje NO/NC]
+Piston1 Left switch = 1
+Piston1 Right switch = 0,000000
+Piston2 Left switch = 1,000000
+Piston2 Right switch = 1
+Piston3 Left switch = 0
+Piston3 Right switch = 0
+Piston4 Left switch = 0
+Piston4 Right switch = 1
+
+[Analog outputs]
+Klip1 = TRUE
+Klip2 = FALSE
+Klip3 = TRUE
+Klip4 = FALSE
+
+[Speed]
+Brzina = 50,000000
