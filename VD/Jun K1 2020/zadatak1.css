@@ -1,0 +1,31 @@
+header {
+    background-color: lightgray;
+}
+
+header img {
+    box-sizing: border-box;
+    display: block;
+    height: auto;
+    margin: 25px;
+    width: calc(100% - 50px);
+}
+
+nav .btn {
+    padding: 20px;
+}
+
+.progress {
+    width: 100%;
+}
+
+h2 {
+    color: orange;
+}
+
+form h2 {
+    color: green;
+}
+
+.row.p-4:nth-child(odd) {
+    background-color: lightgray;
+}
