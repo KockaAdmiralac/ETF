@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            header, nav, ul, li, section, main, form, p, label, input, body, h1, footer {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body, section, header, nav, footer {
+                width: 100%;
+            }
+            header > p {
+                background-color: lightgray;
+                padding: 5px;
+                margin-bottom: 1px;
+                text-align: right;
+            }
+            header > img {
+                width: 100%;
+            }
+            nav {
+                background-color: lightgray;
+                padding: 5px;
+            }
+            nav > ul {
+                display: flex;
+                font-weight: bold;
+                justify-content: center;
+                list-style-type: none;
+                width: 100%;
+            }
+            nav > ul > li:not(:last-child)::after {
+                content: "|";
+                padding: 5px;
+            }
+            section {
+                background-color: lightgray;
+                height: 500px;
+                margin-top: 1px;
+                text-align: center;
+            }
+            main {
+                background-color: white;
+                box-sizing: border-box;
+                height: 100%;
+                margin: 0 auto;
+                padding: 3px;
+                text-align: center;
+                width: 1000px;
+            }
+            main > h1 {
+                border-bottom: 1px solid lightgray;
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+            .form-row > label {
+                text-align: left;
+            }
+            main > form {
+                box-sizing: border-box;
+                margin: 20px auto;
+                width: 400px;
+            }
+            .form-row {
+                display: grid;
+                grid-template-columns: 250px 1fr;
+                margin-bottom: 3px;
+            }
+            .form-row > div {
+                display: flex;
+            }
+            .submit-button {
+                margin-top: 20px;
+            }
+            footer {
+                background-color: lightgray;
+                margin-top: 1px;
+                padding: 10px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <p>12.03.2020.</p>
+            <img src="image.jpg" />
+        </header>
+        <nav>
+            <ul>
+                <li>Početna stranica</li>
+                <li>O nama</li>
+                <li>Kontakt</li>
+            </ul>
+        </nav>
+        <section>
+            <main>
+                <h1>Postanite deo naše kompanije</h1>
+                <form>
+                    <p class="form-row">
+                        <label for="ime">Ime firme:</label>
+                        <input type="text" id="ime" name="ime">
+                    </p>
+                    <p class="form-row">
+                        <label for="adresa">Adresa:</label>
+                        <input type="text" id="adresa" name="adresa">
+                    </p>
+                    <p class="form-row">
+                        <label for="mejl">Mejl:</label>
+                        <input type="email" id="mejl" name="mejl">
+                    </p>
+                    <div class="form-row">
+                        <label>Način plaćanja:</label>
+                        <div>
+                            <p>
+                                <input type="radio" name="nacin" id="kartica">
+                                <label for="kartica">Kartica</label>
+                            </p>
+                            <p>
+                                <input type="radio" name="nacin" id="kes">
+                                <label for="kes">Keš</label>
+                            </p>
+                        </div>
+                    </div>
+                    <p class="form-row">
+                        <label for="tos">Slažem se sa uslovima korišćenja:</label>
+                        <input type="checkbox" id="tos" name="tos">
+                    </p>
+                    <p class="form-row">
+                        <label for="datum">Datum:</label>
+                        <input type="date" id="datum" name="datum">
+                    </p>
+                    <input type="submit" value="Prijavi se" class="submit-button">
+                </form>
+            </main>
+        </section>
+        <footer>Copyright</footer>
+    </body>
+</html>

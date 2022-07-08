@@ -1,0 +1,49 @@
+:root {
+    --bs-light-rgb: 144, 238, 144;
+    --bs-bg-opacity: 1;
+}
+
+.navbar-brand {
+    color: #5E5E5E;
+    font-size: 28px;
+}
+
+.container {
+    margin-top: 15px;
+}
+
+.logo {
+    box-sizing: border-box;
+    height: 40px;
+    text-align: center;
+}
+
+.nordeus {
+    background-color: #E7482A;
+}
+
+.nvidia {
+    background-color: black;
+}
+
+.microsoft {
+    background-color: #575352;
+}
+
+.facebook {
+    background-color: #3B5998;
+}
+
+.logo img {
+    height: 100%;
+}
+
+.logo img:hover {
+    border-left: 1px dotted white;
+    border-right: 1px dotted white;
+}
+
+footer {
+    background-color: lightgreen;
+    color: #5E5E5E;
+}
