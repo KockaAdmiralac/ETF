@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Pregled prijave za rafting turu{% endblock %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="confirmed" value="1">
+    <p>Ukupna cena rafting ture je {{ cena }}.</p>
+    <p><input type="submit" value="POTVRDI"></p>
+    <p><a href="/">Nazad</a></p>
+</form>
+{% endblock %}

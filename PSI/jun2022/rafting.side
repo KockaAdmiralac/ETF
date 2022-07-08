@@ -1,0 +1,909 @@
+{
+  "id": "8b0cdf70-ff45-410d-8f6f-c77ad394f015",
+  "version": "2.0",
+  "name": "rafting",
+  "url": "http://127.0.0.1:8000",
+  "tests": [{
+    "id": "38637045-f8c9-40c7-8213-b7d96d44129d",
+    "name": "01: Uspešna prijava",
+    "commands": [{
+      "id": "ba166fcc-3805-4a55-ad78-5155ce3096a5",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8ab6bbfa-d0b5-482c-b24d-2d17af2430da",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5a8a3baa-5441-43bd-9354-3289f2341a58",
+      "comment": "",
+      "command": "select",
+      "target": "id=id_rafting_putanja",
+      "targets": [],
+      "value": "label=Tara i Drina"
+    }, {
+      "id": "2053407d-7355-4395-b39a-d4bc0d50db6e",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.53125,-0.875"
+    }, {
+      "id": "4b80dc86-0c74-4958-8875-3641ec4429d3",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.53125,-0.875"
+    }, {
+      "id": "fed2dabd-362f-412e-9ba9-87ac13c94962",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.53125,-0.875"
+    }, {
+      "id": "9eebd1ea-f00c-48ea-96da-2b04b711b126",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "45fa7d60-b559-4823-974c-bcce8981cfd0",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "8630eb8a-4897-4247-bd74-5f1d1b5377fc",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "76c2169c-ceea-4899-a2ab-eb57c8af6954",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "560f8fe7-6a9b-4b72-8d4e-2fc53f31d1a5",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_dodatne_aktivnosti_0",
+      "targets": [
+        ["id=id_dodatne_aktivnosti_0", "id"],
+        ["name=dodatne_aktivnosti", "name"],
+        ["css=#id_dodatne_aktivnosti_0", "css:finder"],
+        ["xpath=//input[@id='id_dodatne_aktivnosti_0']", "xpath:attributes"],
+        ["xpath=//div[@id='id_dodatne_aktivnosti']/div/label/input", "xpath:idRelative"],
+        ["xpath=//label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e15479ac-f346-44c3-bc9e-704345fa4afd",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_dodatne_aktivnosti_2",
+      "targets": [
+        ["id=id_dodatne_aktivnosti_2", "id"],
+        ["css=#id_dodatne_aktivnosti_2", "css:finder"],
+        ["xpath=//input[@id='id_dodatne_aktivnosti_2']", "xpath:attributes"],
+        ["xpath=//div[@id='id_dodatne_aktivnosti']/div[3]/label/input", "xpath:idRelative"],
+        ["xpath=//div[3]/label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0ef36c71-79a7-473f-ba72-58f1c0bad125",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "bfe374bb-566d-4bdd-9b99-b2a04863e31c",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=p:nth-child(3)",
+      "targets": [
+        ["css=p:nth-child(3)", "css:finder"],
+        ["xpath=//p", "xpath:position"],
+        ["xpath=//p[contains(.,'Ukupna cena rafting ture je 1000.')]", "xpath:innerText"]
+      ],
+      "value": "Ukupna cena rafting ture je 1000."
+    }, {
+      "id": "29f5e3ee-25a3-4e52-b76b-c4fd69ec1a9f",
+      "comment": "",
+      "command": "click",
+      "target": "css=p > input",
+      "targets": [
+        ["css=p > input", "css:finder"],
+        ["xpath=//input[@value='POTVRDI']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d2116082-0abe-4aa1-bbbe-82fef66d3b1f",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=li",
+      "targets": [
+        ["css=li", "css:finder"],
+        ["xpath=//li", "xpath:position"],
+        ["xpath=//li[contains(.,'Prijava uspešna!')]", "xpath:innerText"]
+      ],
+      "value": "Prijava uspešna!"
+    }]
+  }, {
+    "id": "70c2a3ae-f2ef-44cd-8a23-abfe705b7e40",
+    "name": "05: Nosilac prijave prazan",
+    "commands": [{
+      "id": "2fe54de6-6b6d-4014-b3ee-5e0ebbdfe984",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b636ce1c-9ebe-4173-8907-3b0b8440b379",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30649e7e-340c-4c74-b618-d115076f7743",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "34d4874a-79bc-4ba0-a363-9ee8e0712fce",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "2"
+    }, {
+      "id": "f575bb18-1165-419f-8a6e-3e1136f1edac",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "53cb4a09-0f7c-48d2-9a78-94bbdfd3478e",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "2"
+    }, {
+      "id": "91d3f864-57d3-4623-9d10-4c6549e8a309",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2343f8e9-02a1-436b-ab1c-4af7db7e8eb4",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "0f7670ae-68a4-465f-8ed7-a5de9332429f",
+    "name": "02: Broj noćenja prazan",
+    "commands": [{
+      "id": "20006c4c-834a-4dec-b578-5bbb1fd9d0fa",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "01f1cca5-672e-4271-9d60-19c03c537a61",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2be4a29a-0b23-4eb5-89e0-7666fd9c06b1",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "91276021-13d9-44b8-8e65-a68cecf55899",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "af5d58e1-9810-4a81-aff3-2222507caf87",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "80b05414-d9e8-499e-8489-5e329cee3d17",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "6a872a2a-8a21-4d2c-887e-485b63d09e26",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4f289e88-016b-4c9d-8962-a096b9b35c36",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "2275e5cc-144b-44a5-b307-585eb29751ce",
+    "name": "06: Broj noćenja nedovoljno veliki",
+    "commands": [{
+      "id": "a1270d5e-6d2d-4e5f-8e2d-24a74760e11b",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8a9781ba-bea3-4db8-94cc-94bfab0f3a9d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "322a4a57-79b1-4ee5-9039-dd668f31322c",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e87e6432-dd5b-4cbf-9f85-e4b39833c5f3",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "aec72c3c-c5f2-45f9-b409-8d905c9f49b2",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "1"
+    }, {
+      "id": "74ebb0bd-51f8-4c30-92ff-a706b338aaf4",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "2"
+    }, {
+      "id": "d5d6ab58-da2c-4e6b-acc7-351eec45f787",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_dodatne_aktivnosti_0",
+      "targets": [
+        ["id=id_dodatne_aktivnosti_0", "id"],
+        ["name=dodatne_aktivnosti", "name"],
+        ["css=#id_dodatne_aktivnosti_0", "css:finder"],
+        ["xpath=//input[@id='id_dodatne_aktivnosti_0']", "xpath:attributes"],
+        ["xpath=//div[@id='id_dodatne_aktivnosti']/div/label/input", "xpath:idRelative"],
+        ["xpath=//label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a39dd111-49bd-4e9e-a558-465095d82713",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e52c30eb-b4bc-41f9-a510-483a81f76fcd",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=li",
+      "targets": [
+        ["css=li", "css:finder"],
+        ["xpath=//li", "xpath:position"],
+        ["xpath=//li[contains(.,'Noćenja mora biti barem onoliko koliko ima dodatnih aktivnosti, plus jedno noćenje za rafting.')]", "xpath:innerText"]
+      ],
+      "value": "Noćenja mora biti barem onoliko koliko ima dodatnih aktivnosti, plus jedno noćenje za rafting."
+    }, {
+      "id": "e5a6044e-793c-470e-9ef5-26ff59edfb1b",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "87f078bb-11f8-413b-af83-b33d31e4c5f8",
+    "name": "03: Broj gostiju premali",
+    "commands": [{
+      "id": "8865b67d-c024-41ce-9a0c-b62addff3875",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e99fa339-24aa-4468-b1d4-10a66961a289",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6d1c05f0-db3b-4793-8595-bad0867bff39",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2bfdede0-046c-4f49-afb8-e807f25d578a",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "bc312626-b8bd-4329-a96c-89bbda9a7584",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "13ed1b2c-6829-40af-861c-9575e6e3ec6f",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "1"
+    }, {
+      "id": "bab90f87-8788-4704-ad3f-e6681ebf503e",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "131850b3-5bfb-45c3-be64-f9db0623093a",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "49bb1d58-0acc-40d5-ab0f-ecd5f92b0155",
+    "name": "04: Broj gostiju preveliki",
+    "commands": [{
+      "id": "3796e4e8-486c-456a-94c0-1ce8877953d5",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5e681371-3809-4df1-aaf5-28fe05e3511d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7088de4a-643f-442a-a022-513b06eb0d03",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "23c421cb-ba61-4d60-af2f-e91b34707154",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "c829f517-9955-4e4d-848e-94d400f79b89",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "637591f7-e65a-4245-986c-dab991987e6b",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "11"
+    }, {
+      "id": "592aaa4a-6f48-4487-8edd-316d0c8e30c9",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "75d41402-3118-4cd2-8b6a-339073f721b9",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "31f926b3-e818-4222-936b-d037a4702098",
+    "name": "07: Vraćanje nazad",
+    "commands": [{
+      "id": "e8990d23-d270-465c-b3cb-427f175da950",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "004cbc93-d4e3-497f-99d7-8490c1e0314c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1916x1036",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "724f0d5e-5969-45f2-8739-abdac317c93e",
+      "comment": "",
+      "command": "select",
+      "target": "id=id_rafting_putanja",
+      "targets": [],
+      "value": "label=Tara i Drina"
+    }, {
+      "id": "afb08611-5bf6-44a0-b06c-4d4f0a033e6d",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.53125,-0.875"
+    }, {
+      "id": "1d74a62a-bb3a-4f5a-b8cf-ad2f0d7deba6",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.53125,-0.875"
+    }, {
+      "id": "16b342c3-1380-4be0-984e-2d9a7a7ed624",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "-0.53125,-0.875"
+    }, {
+      "id": "68522ad2-6ed6-4a4c-b686-ba33779d3ecc",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a0caac4f-4529-45c4-ab52-e9deac162f96",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "66ffa044-ec42-46af-bac1-83a360e3f01d",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "d4696e49-0bfb-490b-931b-da55665be291",
+      "comment": "",
+      "command": "type",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "3b54be20-8cf0-4d0e-8935-9272017a6b35",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_dodatne_aktivnosti_0",
+      "targets": [
+        ["id=id_dodatne_aktivnosti_0", "id"],
+        ["name=dodatne_aktivnosti", "name"],
+        ["css=#id_dodatne_aktivnosti_0", "css:finder"],
+        ["xpath=//input[@id='id_dodatne_aktivnosti_0']", "xpath:attributes"],
+        ["xpath=//div[@id='id_dodatne_aktivnosti']/div/label/input", "xpath:idRelative"],
+        ["xpath=//label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fca86ca2-871a-4c8b-add3-f9c840a828f6",
+      "comment": "",
+      "command": "click",
+      "target": "id=id_dodatne_aktivnosti_2",
+      "targets": [
+        ["id=id_dodatne_aktivnosti_2", "id"],
+        ["css=#id_dodatne_aktivnosti_2", "css:finder"],
+        ["xpath=//input[@id='id_dodatne_aktivnosti_2']", "xpath:attributes"],
+        ["xpath=//div[@id='id_dodatne_aktivnosti']/div[3]/label/input", "xpath:idRelative"],
+        ["xpath=//div[3]/label/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "11f9ffee-2147-43a4-a718-ac977eaa1288",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(9)",
+      "targets": [
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@value='PRIJAVI']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7e3eb049-e552-4aaf-8d1c-c02cf1913c01",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Nazad",
+      "targets": [
+        ["linkText=Nazad", "linkText"],
+        ["css=a", "css:finder"],
+        ["xpath=//a[contains(text(),'Nazad')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'Nazad')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1f359ebc-8c0c-4204-86ce-1a148c400b03",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=id_rafting_putanja",
+      "targets": [
+        ["id=id_rafting_putanja", "id"],
+        ["name=rafting_putanja", "name"],
+        ["css=#id_rafting_putanja", "css:finder"],
+        ["xpath=//select[@id='id_rafting_putanja']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "Tara i Drina"
+    }, {
+      "id": "c5d34893-9982-4cb0-acae-6ec83a2dc58e",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=id_nosilac_prijave",
+      "targets": [
+        ["id=id_nosilac_prijave", "id"],
+        ["name=nosilac_prijave", "name"],
+        ["css=#id_nosilac_prijave", "css:finder"],
+        ["xpath=//input[@id='id_nosilac_prijave']", "xpath:attributes"],
+        ["xpath=//p[2]/input", "xpath:position"]
+      ],
+      "value": "Luka"
+    }, {
+      "id": "3274030f-ed5c-48be-91c1-0cfe84bb5842",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=id_broj_nocenja",
+      "targets": [
+        ["id=id_broj_nocenja", "id"],
+        ["name=broj_nocenja", "name"],
+        ["css=#id_broj_nocenja", "css:finder"],
+        ["xpath=//input[@id='id_broj_nocenja']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }, {
+      "id": "12be4b54-5292-4bef-a6b2-118d2fd1d778",
+      "comment": "",
+      "command": "assertValue",
+      "target": "id=id_broj_gostiju",
+      "targets": [
+        ["id=id_broj_gostiju", "id"],
+        ["name=broj_gostiju", "name"],
+        ["css=#id_broj_gostiju", "css:finder"],
+        ["xpath=//input[@id='id_broj_gostiju']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "5"
+    }]
+  }],
+  "suites": [{
+    "id": "918c9afe-c216-46a4-a0ba-9fc20ddff2a9",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["38637045-f8c9-40c7-8213-b7d96d44129d"]
+  }],
+  "urls": ["http://127.0.0.1:8000/"],
+  "plugins": []
+}
