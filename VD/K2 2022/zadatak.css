@@ -1,0 +1,40 @@
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+table {
+    margin: 0 auto;
+}
+
+td {
+    border: 1px solid black;
+    box-sizing: border-box;
+    height: 100px;
+    pointer-events: none;
+    width: 100px;
+}
+
+form {
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.preview .selected {
+    background-color: blue;
+}
+
+.playing td {
+    pointer-events: all;
+}
+
+.playing .selected, .finished .selected {
+    background-color: green;
+}
+
+.error .selected {
+    background-color: red;
+}
