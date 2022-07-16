@@ -1,22 +1,26 @@
 <template>
-<section>
+<main>
   <h1>Rezervacije korisnika: {{username}}</h1>
   <table>
-    <tr>
-      <th>Identifikacioni broj</th>
-      <th>Početna destinacija</th>
-      <th>Krajnja destinacija</th>
-      <th>Trajanje u minutima</th>
-    </tr>
-    <tr v-for="reservation of reservations" :key="reservation.id">
-      <td>{{reservation.id}}</td>
-      <td>{{reservation.start}}</td>
-      <td>{{reservation.end}}</td>
-      <td>{{reservation.duration}}</td>
-    </tr>
+    <thead>
+      <tr>
+        <th>Identifikacioni broj</th>
+        <th>Početna destinacija</th>
+        <th>Krajnja destinacija</th>
+        <th>Trajanje u minutima</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="reservation of reservations" :key="reservation.id">
+        <td>{{reservation.id}}</td>
+        <td>{{reservation.start}}</td>
+        <td>{{reservation.end}}</td>
+        <td>{{reservation.duration}}</td>
+      </tr>
+    </tbody>
   </table>
   <button @click="back()">Nazad</button>
-</section>
+</main>
 </template>
 
 <script>

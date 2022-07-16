@@ -2,20 +2,24 @@
 <section>
   <h1>Posetilac: {{username}}</h1>
   <table>
-    <tr>
-      <th>Identifikacioni broj</th>
-      <th>Početna destinacija</th>
-      <th>Krajnja destinacija</th>
-      <th>Trajanje u minutima</th>
-      <th>Akcija</th>
-    </tr>
-    <tr v-for="flight of flights" :key="flight.id" :class="flight.duration > 200 ? 'long' : ''">
-      <td>{{flight.id}}</td>
-      <td>{{flight.start}}</td>
-      <td>{{flight.end}}</td>
-      <td>{{flight.duration}}</td>
-      <td><button @click="book(flight)">Rezerviši</button></td>
-    </tr>
+    <thead>
+      <tr>
+        <th>Identifikacioni broj</th>
+        <th>Početna destinacija</th>
+        <th>Krajnja destinacija</th>
+        <th>Trajanje u minutima</th>
+        <th>Akcija</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="flight of flights" :key="flight.id" :class="flight.duration > 200 ? 'long' : ''">
+        <td>{{flight.id}}</td>
+        <td>{{flight.start}}</td>
+        <td>{{flight.end}}</td>
+        <td>{{flight.duration}}</td>
+        <td><button @click="book(flight)">Rezerviši</button></td>
+      </tr>
+    </tbody>
   </table>
   <p class="error">{{error}}</p>
 </section>

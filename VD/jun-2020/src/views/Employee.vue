@@ -1,5 +1,5 @@
 <template>
-<section>
+<main>
   <h1>Zaposleni</h1>
   <form @submit.prevent="submit()">
     <p>
@@ -21,7 +21,7 @@
     <input type="submit" value="Unesi">
     <p class="error">{{error}}</p>
   </form>
-</section>
+</main>
 </template>
 
 <style scoped>

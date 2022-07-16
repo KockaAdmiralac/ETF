@@ -1,5 +1,5 @@
 <template>
-<section>
+<main>
   <h1>Login</h1>
   <form @submit.prevent="login()">
     <p>
@@ -13,7 +13,7 @@
     <input type="submit" value="Login">
     <p class="error">{{error}}</p>
   </form>
-</section>
+</main>
 </template>
 
 <style scoped>
