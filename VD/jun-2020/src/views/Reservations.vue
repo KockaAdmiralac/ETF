@@ -24,7 +24,7 @@ export default {
   name: 'Reservations',
   data() {
     return {
-      mojeRezervacije : [],
+      reservations : [],
       username: ''
     }
   },
