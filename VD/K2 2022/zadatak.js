@@ -57,7 +57,7 @@ $(function() {
      * Uklanja oznaku da su izabrane sa svih ćelija.
      */
     function deselectAll() {
-        $('.selected').removeClass('selected');
+        $('.selected').removeClass('selected').removeClass('previous');
     }
     /**
      * Postavlja trenutno stanje igre kao klasu table za igru.
@@ -84,6 +84,7 @@ $(function() {
             setGameState('playing');
             clearInterval(interval);
         } else {
+            $('.selected').addClass('previous');
             selectField(fieldsToPreview[0]);
         }
     }
@@ -111,7 +112,7 @@ $(function() {
      * Rukovalac pritiska na ćeliju na tabli.
      * @param {ClickEvent} event Podaci događaja o pritisku na ćeliju
      */
-     $cells.click(event => {
+    $cells.click(event => {
         const $cell = $(event.currentTarget);
         $cell.addClass('selected');
         if (correctFields.includes(getCellIndex($cell))) {
