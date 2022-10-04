@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Dobrodošli</title>
+        <h:outputStylesheet name="css/main.css"></h:outputStylesheet>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p>
+                <label for="username">Korisničko ime:</label>
+                <h:inputText id="username" value="#{loginManagedBean.username}"></h:inputText>
+            </p>
+            <p>
+                <label for="password">Lozinka:</label>
+                <h:inputText id="password" value="#{loginManagedBean.password}"></h:inputText>
+            </p>
+            <p>
+                <label for="tip">Tip:</label>
+                <h:selectOneMenu value="#{loginManagedBean.tip}">
+                    <f:selectItem itemLabel="Kupac" itemValue="kupac"></f:selectItem>
+                    <f:selectItem itemLabel="Prodavac" itemValue="prodavac"></f:selectItem>
+                </h:selectOneMenu>
+            </p>
+            <p><h:commandButton value="Prijavi se" action="#{loginManagedBean.login()}"></h:commandButton></p>
+            <p><h:outputText class="error" value="#{loginManagedBean.error}"></h:outputText></p>
+        </h:form>
+    </h:body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Prodavac</title>
+        <h:outputStylesheet name="css/main.css"></h:outputStylesheet>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:commandLink value="Izloguj se" action="#{loginManagedBean.logout()}"></h:commandLink>
+        </h:form>
+        <p>
+            Dobrodošli
+            <h:outputText value="#{prodavacManagedBean.name}"></h:outputText>&nbsp;<h:outputText value="#{prodavacManagedBean.surname}"></h:outputText>
+            koji ste rođeni
+            <h:outputText value="#{prodavacManagedBean.birthdate}"></h:outputText>.
+        </p>
+        <h:dataTable value="#{prodavacManagedBean.orders}" var="order">
+            <h:column>
+                <f:facet name="header">Kupac</f:facet>
+                <h:outputText value="#{order.kupac}"></h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Datum</f:facet>
+                <h:outputText value="#{order.datumNarudzbine}"></h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Proizvodi</f:facet>
+                <h:outputText value="#{order.proizvodi}"></h:outputText>
+            </h:column>
+        </h:dataTable>
+        <p>Najverniji kupac: <h:outputText value="#{prodavacManagedBean.najvernijiKupac}"></h:outputText></p>
+    </h:body>
+</html>
