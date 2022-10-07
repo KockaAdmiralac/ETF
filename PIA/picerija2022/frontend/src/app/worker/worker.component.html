@@ -1,0 +1,31 @@
+<a href="/" (click)="logout()">Log out.</a>
+<h2>Orders</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Size</th>
+        <th>Extras</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    <tr *ngFor="let order of orders">
+        <td>{{order._id}}</td>
+        <td>{{order.size}}</td>
+        <td>{{order.extras.join(', ')}}</td>
+        <td>{{order.status}}</td>
+        <td *ngIf="order.status == 'nova'"><button (click)="update(order, 'prihvacena')">Approve</button> <button (click)="update(order, 'odbijena')">Reject</button></td>
+    </tr>
+</table>
+<h2>Add extras</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Order</th>
+    </tr>
+    <tr *ngFor="let extra of extras" [class.outage]="extra.amount === 0">
+        <td>{{extra.name}}</td>
+        <td>{{extra.amount}}</td>
+        <td><button (click)="order(extra)">Order</button></td>
+    </tr>
+</table>

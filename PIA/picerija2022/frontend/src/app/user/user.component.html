@@ -1,0 +1,35 @@
+Welcome, {{firstName}} {{lastName}}. <a href="/" (click)="logout()">Log out.</a>
+<h2>My orders</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Size</th>
+        <th>Extras</th>
+        <th>Status</th>
+    </tr>
+    <tr *ngFor="let order of orders">
+        <td>{{order._id}}</td>
+        <td>{{order.size}}</td>
+        <td>{{order.extras.join(', ')}}</td>
+        <td>{{order.status}}</td>
+    </tr>
+</table>
+<h2>New order</h2>
+<form (submit)="submit()">
+    <p>
+        <label for="size">Size:</label>&nbsp;
+        <select id="size" name="size" [(ngModel)]="size">
+            <option value="mala">Small</option>
+            <option value="srednja">Medium</option>
+            <option value="velika">Large</option>
+        </select>
+    </p>
+    <p>Extras:</p>
+    <ul>
+        <li *ngFor="let extra of extras">
+            <input type="checkbox" name="{{extra.name}}" id="{{extra.name}}" (change)="changeExtra(extra)" disabled="{{extra.amount > 0 ? '' : 'disabled'}}">
+            <label for="{{extra.name}}">{{extra.name}} ({{extra.amount}})</label>
+        </li>
+    </ul>
+<input type="submit" value="Potvrdi">
+</form>

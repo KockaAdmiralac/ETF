@@ -1,0 +1,19 @@
+<h2>Login</h2>
+<form (submit)="submit()">
+    <p>
+        <label for="username">Username:</label>&nbsp;
+        <input type="text" id="username" name="username" [(ngModel)]="username">
+    </p>
+    <p>
+        <label for="password">Password:</label>&nbsp;
+        <input type="password" id="password" name="password" [(ngModel)]="password">
+    </p>
+    <p>
+        <label for="user">User</label>&nbsp;
+        <input type="radio" name="type" id="user" value="kupac" [(ngModel)]="type">&nbsp;
+        <label for="worker">Worker</label>&nbsp;
+        <input type="radio" name="type" id="worker" value="radnik" [(ngModel)]="type">
+    </p>
+    <input type="submit" value="Login">
+    <p class="error">{{error}}</p>
+</form>
