@@ -10,18 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.annotation.FacesConfig;
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Named;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.servlet.http.HttpSession;
 import rs.ac.bg.etf.pia.petshop2021.entities.Order;
 import rs.ac.bg.etf.pia.petshop2021.util.DB;
 import rs.ac.bg.etf.pia.petshop2021.util.SessionUtils;
 
 @Named(value = "prodavacManagedBean")
 @RequestScoped
-@FacesConfig(version = FacesConfig.Version.JSF_2_3)
 public class ProdavacManagedBean {
     private String name;
     private String surname;

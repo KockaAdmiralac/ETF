@@ -10,17 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
-import javax.faces.annotation.FacesConfig;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
 import rs.ac.bg.etf.pia.petshop2021.entities.Product;
 import rs.ac.bg.etf.pia.petshop2021.util.DB;
 import rs.ac.bg.etf.pia.petshop2021.util.SessionUtils;
 
 @Named(value = "kupacManagedBean")
 @SessionScoped
-@FacesConfig(version = FacesConfig.Version.JSF_2_3)
 public class KupacManagedBean implements Serializable {
     private List<Product> allProducts;
 
