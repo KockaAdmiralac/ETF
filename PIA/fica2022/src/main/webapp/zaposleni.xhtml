@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Zaposleni</title>
+        <h:outputStylesheet name="css/main.css"></h:outputStylesheet>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:commandButton action="#{lmb.logout()}" value="Odjavi se"></h:commandButton>
+            <h2>Zahtevi</h2>
+            <h:dataTable value="#{zmb.requests}" var="r">
+                <h:column>
+                    <f:facet name="header">Kupac</f:facet>
+                    #{r.kupac}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Marka</f:facet>
+                    #{r.marka}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Datum</f:facet>
+                    #{r.datum}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Iznos</f:facet>
+                    #{r.iznos}
+                </h:column>
+                <h:column>
+                    <h:commandButton action="#{zmb.delete(r)}" value="Obriši"></h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </h:body>
+</html>

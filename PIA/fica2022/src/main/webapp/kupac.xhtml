@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Kupac</title>
+        <h:outputStylesheet name="css/main.css"></h:outputStylesheet>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p>Dobrodošli, <h:outputText value="#{kmb.name}"></h:outputText>&nbsp;<h:outputText value="#{kmb.surname}"></h:outputText>.</p>
+            <h:commandButton action="#{lmb.logout()}" value="Odjavi se"></h:commandButton>
+            <h2>Kalkulator</h2>
+            <p>
+                <label for="marka">Marka:</label>
+                <h:selectOneMenu value="#{kmb.marka}" id="marka">
+                    <f:selectItems value="#{kmb.automobili}"></f:selectItems>
+                </h:selectOneMenu>
+            </p>
+            <p>
+                <label for="datum">Datum (yyyy-MM-dd):</label>
+                <h:inputText value="#{kmb.datum}" id="datum"></h:inputText>
+            </p>
+            <p>
+                <label for="datum">Snaga:</label>
+                <h:inputText value="#{kmb.snaga}" id="snaga"></h:inputText>
+            </p>
+            <p>
+                <ul>
+                    <li>Tehnički pregled: <h:selectBooleanCheckbox value="#{kmb.tehnicki}"></h:selectBooleanCheckbox></li>
+                    <li>Polisa osiguranja: <h:selectBooleanCheckbox value="#{kmb.polisa}"></h:selectBooleanCheckbox></li>
+                </ul>
+            </p>
+            <p><h:commandButton action="#{kmb.calculate()}" value="Izračunaj ponudu za registraciju"></h:commandButton></p>
+            <p><h:outputText value="#{kmb.error}" class="error"></h:outputText></p>
+            <p><h:outputText value="#{kmb.success}" class="green"></h:outputText></p>
+        </h:form>
+    </h:body>
+</html>
