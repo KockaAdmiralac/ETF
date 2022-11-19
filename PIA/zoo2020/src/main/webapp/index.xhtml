@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Dobrodošli</title>
+        <h:outputStylesheet name="css/main.css"></h:outputStylesheet>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p>
+                <label for="username">Username:</label>
+                <h:inputText id="username" value="#{loginManagedBean.username}"></h:inputText>
+            </p>
+            <p>
+                <label for="password">Password:</label>
+                <h:inputSecret id="password" value="#{loginManagedBean.password}"></h:inputSecret>
+            </p>
+            <p>
+                <h:selectOneRadio value="#{loginManagedBean.group}">
+                    <f:selectItem itemValue="radnik" itemLabel="Radnik"></f:selectItem>
+                    <f:selectItem itemValue="posetilac" itemLabel="Posetilac"></f:selectItem>
+                </h:selectOneRadio>
+            </p>
+            <p><h:commandButton action="#{loginManagedBean.login()}" value="Login"></h:commandButton></p>
+            <p><h:outputText value="#{loginManagedBean.error}" class="error"></h:outputText></p>
+        </h:form>
+    </h:body>
+</html>

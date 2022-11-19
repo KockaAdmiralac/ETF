@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Radnik</title>
+        <h:outputStylesheet name="css/main.css"></h:outputStylesheet>
+    </h:head>
+    <body>
+        <h:form>
+            <h:commandButton action="#{loginManagedBean.logout()}" value="Odjavi se"></h:commandButton>
+            <h2>Predlozi</h2>
+            <h:dataTable value="#{posetilacManagedBean.predlozi}" var="p">
+                <h:column class="#{(p.glasovi gt 2) ? 'green' : ''}">
+                    <f:facet name="header">Životinja</f:facet>
+                    #{p.zivotinja}
+                </h:column>
+                <h:column class="#{(p.glasovi gt 2) ? 'green' : ''}">
+                    <f:facet name="header">Posetilac</f:facet>
+                    #{p.posetilac}
+                </h:column>
+                <h:column class="#{(p.glasovi gt 2) ? 'green' : ''}">
+                    <f:facet name="header">Komentar</f:facet>
+                    #{p.komentar}
+                </h:column>
+                <h:column class="#{(p.glasovi gt 2) ? 'green' : ''}">
+                    <f:facet name="header">Glasovi</f:facet>
+                    #{p.glasovi}
+                </h:column>
+                <h:column class="#{(p.glasovi gt 2) ? 'green' : ''}">
+                    <f:facet name="header">Odobri</f:facet>
+                    <h:commandButton action="#{radnikManagedBean.approve(p)}" rendered="#{not p.odobren}" value="Odobri"></h:commandButton>
+                </h:column>
+                <h:column class="#{(p.glasovi gt 2) ? 'green' : ''}">
+                    <f:facet name="header">Odbaci</f:facet>
+                    <h:commandButton action="#{radnikManagedBean.reject(p)}" rendered="#{not p.odobren}" value="Odbaci"></h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </body>
+</html>
