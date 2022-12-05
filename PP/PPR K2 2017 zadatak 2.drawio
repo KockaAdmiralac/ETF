@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="tYlDYjaEmtX9PiCUEAjz" name="Automat">
-        <mxGraphModel dx="652" dy="598" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="827" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -81,11 +81,11 @@
                 <mxCell id="jYwG1Nct6LFHFkB_jDx7-25" value="&lt;pre&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;a&lt;sub&gt;3&lt;/sub&gt;&lt;/font&gt;&lt;/pre&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="800" y="560" width="80" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="jYwG1Nct6LFHFkB_jDx7-26" value="&lt;pre&gt;&lt;/pre&gt;&lt;pre&gt;&lt;span style=&quot;font-size: 20px&quot;&gt;&amp;lt;C&amp;gt; → c • &amp;lt;A&amp;gt;, {b, ─┤}&lt;br/&gt;&amp;lt;A&amp;gt; → • a &amp;lt;C&amp;gt; b, {b}&lt;br/&gt;&amp;lt;A&amp;gt; → •, {b}&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
-                    <mxGeometry x="420" y="600" width="280" height="80" as="geometry"/>
+                <mxCell id="jYwG1Nct6LFHFkB_jDx7-26" value="&lt;pre&gt;&lt;/pre&gt;&lt;pre&gt;&lt;span style=&quot;font-size: 20px&quot;&gt;&amp;lt;C&amp;gt; → c • &amp;lt;A&amp;gt;, {b, ─┤}&lt;br/&gt;&amp;lt;A&amp;gt; → • a &amp;lt;C&amp;gt; b, {b, ─┤}&lt;br/&gt;&amp;lt;A&amp;gt; → •, {b, ─┤}&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="600" width="290" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="jYwG1Nct6LFHFkB_jDx7-27" value="&lt;pre&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;c&lt;sub&gt;5&lt;/sub&gt;&lt;/font&gt;&lt;/pre&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="420" y="560" width="80" height="40" as="geometry"/>
+                    <mxGeometry x="410" y="560" width="80" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="jYwG1Nct6LFHFkB_jDx7-28" value="&lt;pre&gt;&lt;font&gt;&lt;pre&gt;&lt;span style=&quot;font-size: 20px&quot;&gt;&amp;lt;C&amp;gt; → c &amp;lt;A&amp;gt; •, {b, ─┤}&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/font&gt;&lt;/pre&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
                     <mxGeometry x="40" y="640" width="280" height="40" as="geometry"/>
@@ -228,7 +228,7 @@
                             <mxPoint x="510" y="380"/>
                             <mxPoint x="440" y="380"/>
                             <mxPoint x="440" y="520"/>
-                            <mxPoint x="560" y="520"/>
+                            <mxPoint x="555" y="520"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
