@@ -1,0 +1,7 @@
+/bin/
+/lib/
+/src/rs/etf/pp1/ast
+/src/rs/etf/pp1/lex/Yylex*
+/src/rs/etf/pp1/syntax/*.java
+/src/rs/etf/pp1/syntax/*_astbuild.cup
+/app.log

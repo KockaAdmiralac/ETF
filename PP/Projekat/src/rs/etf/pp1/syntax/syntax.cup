@@ -1,0 +1,39 @@
+package rs.etf.pp1.syntax;
+
+import rs.etf.pp1.ast.*;
+
+terminal PROG, BREAK, CLASS, ENUM, ELSE, CONST, IF, DO, WHILE, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, FOREACH, PLUS, MINUS, TIMES, SLASH, MODULO, EQU, NEQ, GRT, GEQ, LSS, LEQ, AND, OR, ASSIGN, UPLUS, UMINUS, SEMI, COLON, COMMA, PERIOD, LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, LAMBDA;
+terminal Boolean BOOL;
+terminal Integer NUMBER;
+terminal char CHARCONST;
+terminal String IDENT;
+
+nonterminal Program, ConstDecl, Const, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, BracketList, ClassDecl, PreMainBlock, PreMainBlockList, MethodDeclList, MethodDecl;
+
+Program ::= (Program) PROG IDENT PreMainBlockList LBRACE MethodDeclList RBRACE;
+
+ConstDecl ::= CONST IDENT:type ConstDeclList SEMI;
+
+Const ::= NUMBER | CHARCONST | BOOL;
+
+ConstDeclSingle ::= IDENT:name ASSIGN Const;
+
+ConstDeclList ::= ConstDeclList COMMA ConstDeclSingle | ConstDeclSingle;
+
+VarDecl ::= IDENT:type VarDeclList SEMI;
+
+VarDeclSingle ::= IDENT:name BracketList;
+
+VarDeclList ::= VarDeclList COMMA VarDeclSingle | VarDeclSingle;
+
+BracketList ::= BracketList LBRACKET RBRACKET | /* empty */;
+
+ClassDecl ::= GEQ/* empty */;
+
+PreMainBlock ::= ConstDecl | VarDecl | ClassDecl;
+
+PreMainBlockList ::= PreMainBlockList PreMainBlock | /* empty */;
+
+MethodDeclList ::= MethodDeclList MethodDecl | /* empty */;
+
+MethodDecl ::= LSS/* empty */;

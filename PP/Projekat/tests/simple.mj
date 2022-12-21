@@ -1,0 +1,8 @@
+program simple
+
+const int a = 10;
+const char b = 1, c = 11;
+int d, e[], f[][];
+
+{
+}
