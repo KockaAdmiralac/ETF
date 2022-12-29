@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="MJCompiler" default="compile" basedir=".">
+<!DOCTYPE project>
+<project name="MicroJavaCompiler" default="compile" basedir=".">
 
 	<target name="clean">
 		<delete file="src/rs/etf/pp1/lex/Yylex.java" />
@@ -14,7 +15,7 @@
 	<target name="lexerGen">
 		<delete file="src/rs/etf/pp1/lex/Yylex.java" />
 		<delete file="src/rs/etf/pp1/lex/Yylex.java~" />
-		<java jar="lib/JFlex.jar" fork="true">
+		<java jar="lib/JFlex.jar" fork="true" failonerror="true">
 			<arg value="-d" />
 			<arg value="src/rs/etf/pp1/lex" />
 			<arg value="src/rs/etf/pp1/lex/lexer.lex" />
@@ -26,14 +27,14 @@
 		<delete file="src/rs/etf/pp1/syntax/sym.java" />
 		<delete file="src/rs/etf/pp1/syntax/syntax_astbuild.cup" />
 		<delete dir="src/rs/etf/pp1/ast" />
-		<java jar="lib/cup_v10k.jar" fork="true" dir="src">
+		<java jar="lib/cup_v10k.jar" fork="true" dir="src" failonerror="true">
 			<arg value="-destdir" />
 			<arg value="rs/etf/pp1/syntax" />
 			<arg value="-ast" />
 			<arg value="rs.etf.pp1.ast" />
 			<arg value="-parser" />
 			<arg value="Parser" />
-			<arg value="-dump_states" />
+			<!-- <arg value="-dump_states" /> -->
 			<arg value="-buildtree" />
 			<arg value="rs/etf/pp1/syntax/syntax.cup" />
 		</java>
@@ -42,7 +43,7 @@
 	<target name="compile" depends="lexerGen,parserGen">
 		<delete dir="bin" />
 		<mkdir dir="bin" />
-		<javac srcdir="src/rs/etf/pp1" destdir="bin" includeantruntime="false">
+		<javac srcdir="src/rs/etf/pp1" destdir="bin" includeantruntime="false" debug="true">
 			<classpath>
 				<pathelement path="lib/JFlex.jar" />
 				<pathelement path="lib/cup_v10k.jar" />
@@ -64,7 +65,7 @@
 
 	<target name="run" depends="jar">
 		<java jar="bin/pp1.jar" fork="true">
-			<arg value="tests/simple.mj" />
+			<arg value="tests/test303.mj" />
 			<classpath>
 				<pathelement path="lib/JFlex.jar" />
 				<pathelement path="lib/cup_v10k.jar" />
