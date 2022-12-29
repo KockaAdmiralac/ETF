@@ -1,39 +1,199 @@
 package rs.etf.pp1.syntax;
 
 import rs.etf.pp1.ast.*;
+import java_cup.runtime.Symbol;
+import org.apache.log4j.Logger;
 
-terminal PROG, BREAK, CLASS, ENUM, ELSE, CONST, IF, DO, WHILE, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, FOREACH, PLUS, MINUS, TIMES, SLASH, MODULO, EQU, NEQ, GRT, GEQ, LSS, LEQ, AND, OR, ASSIGN, UPLUS, UMINUS, SEMI, COLON, COMMA, PERIOD, LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, LAMBDA;
+parser code {:
+	public boolean errorDetected = false;
+	private Logger logger = Logger.getLogger(getClass());
+
+	public void report_fatal_error(String message, Object info) throws Exception {
+		done_parsing();
+		report_error(message, info);
+	}
+
+	public void syntax_error(Symbol cur_token) {
+		report_error("Syntax error", cur_token);
+	}
+
+	public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+		report_fatal_error("Fatal error, parsing cannot continue", cur_token);
+	}
+
+	public void report_error(String message, Object info) {
+		errorDetected = true;
+		int errorOffset = 0;
+		if (info instanceof Symbol) {
+			errorOffset = ((Symbol)info).left;
+		} else if (info instanceof Integer) {
+			errorOffset = (int)info;
+		}
+		if (errorOffset == 0) {
+			logger.error(message);
+		} else {
+			logger.error(message + " (line " + errorOffset + ")");
+		}
+	}
+:}
+
+terminal PROG, BREAK, CLASS, ELSE, CONST, IF, WHILE, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, FOREACH, AND, OR, ASSIGN, UPLUS, UMINUS, SEMI, COMMA, PERIOD, LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, LAMBDA;
 terminal Boolean BOOL;
 terminal Integer NUMBER;
 terminal char CHARCONST;
 terminal String IDENT;
+terminal Integer ADDOP;
+terminal Integer MULOP;
+terminal Integer RELOP;
 
-nonterminal Program, ConstDecl, Const, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, BracketList, ClassDecl, PreMainBlock, PreMainBlockList, MethodDeclList, MethodDecl;
+nonterminal ConstDecl, Type, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, VarDeclMultiple, ClassMethodDecl, PreMainBlock, PreMainBlockList, MethodDeclList, ReturnType, FormPars, FormParamMultiple, Statement, StatementList, DesignatorStatement, ClassName, LoopHeader;
 
-Program ::= (Program) PROG IDENT PreMainBlockList LBRACE MethodDeclList RBRACE;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, ArrayBrackets, Term, Factor, Expr, Condition, CondTerm, CondFact;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodName, MethodDecl, ConstructorType, ClassMethodBody, ClassDecl;
+nonterminal rs.etf.pp1.semantics.ParameterList ActPars, FunctionCall;
+nonterminal rs.etf.pp1.semantics.DesignatorList ArrayAssignmentDesignators;
 
-ConstDecl ::= CONST IDENT:type ConstDeclList SEMI;
+precedence left ELSE;
 
-Const ::= NUMBER | CHARCONST | BOOL;
+Program ::= (Program) ProgName PreMainBlockList LBRACE MethodDeclList RBRACE;
 
-ConstDeclSingle ::= IDENT:name ASSIGN Const;
+ProgName ::= (ProgName) PROG IDENT:name;
 
-ConstDeclList ::= ConstDeclList COMMA ConstDeclSingle | ConstDeclSingle;
+ConstDecl ::= (ConstDecl) CONST Type ConstDeclList SEMI;
 
-VarDecl ::= IDENT:type VarDeclList SEMI;
+Const ::= (NumberConst) NUMBER:number | (CharConst) CHARCONST:charconst | (BoolConst) BOOL:bool;
 
-VarDeclSingle ::= IDENT:name BracketList;
+Type ::= (Type) IDENT:typeName;
 
-VarDeclList ::= VarDeclList COMMA VarDeclSingle | VarDeclSingle;
+ConstDeclSingle ::= (ConstDeclSingle) IDENT:name ASSIGN Const;
 
-BracketList ::= BracketList LBRACKET RBRACKET | /* empty */;
+ConstDeclList ::= (ListConstDeclList) ConstDeclSingle COMMA ConstDeclList
+				| (ErrorListConstDeclList) error:s {: parser.report_error("Error during constant declaration, recovery until comma", sleft); :} COMMA ConstDeclList
+				| (SingleConstDeclList) ConstDeclSingle
+				| (ErrorSingleConstDeclList) error:s
+				{: parser.report_error("Error during constant declaration, recovery until semicolon", sleft); :}
+				;
 
-ClassDecl ::= GEQ/* empty */;
+VarDecl ::= (VarDecl) Type VarDeclList SEMI;
 
-PreMainBlock ::= ConstDecl | VarDecl | ClassDecl;
+VarDeclSingle ::= (VarDeclSingle) IDENT:name ArrayBrackets;
 
-PreMainBlockList ::= PreMainBlockList PreMainBlock | /* empty */;
+VarDeclList ::= (ListVarDeclList) VarDeclSingle COMMA VarDeclList
+			  | (ErrorListVarDeclList) error:s {: parser.report_error("Error during variable declaration, recovery until comma", sleft); :} COMMA VarDeclList
+			  | (SingleVarDeclList) VarDeclSingle
+			  | (ErrorSingleVarDeclList) error:s
+			  {: parser.report_error("Error during variable declaration, recovery until semicolon", sleft); :}
+			  ;
 
-MethodDeclList ::= MethodDeclList MethodDecl | /* empty */;
+VarDeclMultiple ::= (ListVarDeclMultiple) VarDeclMultiple VarDecl | (EmptyVarDeclMultiple) /* empty */;
 
-MethodDecl ::= LSS/* empty */;
+ArrayBrackets ::= (YesArrayBrackets) LBRACKET RBRACKET | (NoArrayBrackets) /* empty */;
+
+ClassDecl ::= (RegularClassDecl) CLASS ClassName LBRACE VarDeclMultiple ClassMethodDecl RBRACE
+			| (FieldErrorClassDecl) CLASS ClassName LBRACE error:s {: parser.report_error("Error in class field declaration, recovery until left brace", sleft); :} ClassMethodDecl RBRACE
+			;
+
+ClassMethodDecl ::= (BodyClassMethodDecl) LBRACE ClassMethodBody RBRACE | (EmptyClassMethodDecl) /* empty */;
+
+ClassMethodBody ::= (ConstructorClassMethodBody) ClassMethodBody ConstructorType LPAREN FormPars RPAREN VarDeclMultiple LBRACE StatementList RBRACE
+				  | (RegularClassMethodBody) ClassMethodBody MethodDecl
+				  | (EmptyClassMethodBody) /* empty */
+				  ;
+
+ConstructorType ::= (ConstructorType) Type;
+
+ClassName ::= (ExtendsClassName) IDENT:name EXTENDS IDENT:typeName
+			| (ErrorExtendsClassName) IDENT EXTENDS error:s
+			{: parser.report_error("Error in extends declaration, recovery until left brace", sleft); :}
+			| (RegularClassName) IDENT:name
+			;
+
+PreMainBlock ::= (ConstDeclPreMainBlock) ConstDecl | (VarDeclPreMainBlock) VarDecl | (ClassDeclPreMainBlock) ClassDecl;
+
+PreMainBlockList ::= (ListPreMainBlockList) PreMainBlockList PreMainBlock | (EmptyPreMainBlockList) /* empty */;
+
+MethodDeclList ::= (ListMethodDeclList) MethodDeclList MethodDecl | (EmptyMethodDeclList) /* empty */;
+
+MethodDecl ::= (MethodDecl) ReturnType MethodName LPAREN FormPars RPAREN VarDeclMultiple LBRACE StatementList RBRACE;
+
+ReturnType ::= (VoidReturnType) VOID | (TypeReturnType) Type;
+
+MethodName ::= (MethodName) IDENT:name;
+
+FormPars ::= (MultipleFormPars) FormParamMultiple | (EmptyFormPars) /* empty */;
+
+FormParamMultiple ::= (ListFormParamMultiple) Type IDENT:name ArrayBrackets COMMA FormParamMultiple
+					| (ErrorListFormParamMultiple) error:s {: parser.report_error("Error in formal parameters, recovery until comma", sleft); :} COMMA FormParamMultiple
+					| (SingleFormParamMultiple) Type IDENT:name ArrayBrackets
+					| (ErrorSingleFormParamMultiple) error:s
+					{: parser.report_error("Error in formal parameters, recovery until right brace", sleft); :}
+					;
+
+Statement ::= (DesignatorStatementStatement) DesignatorStatement SEMI
+			| (ErrorStatement) error:s SEMI
+			{: parser.report_error("Error during assignment, recovery until semicolon", sleft); :}
+			| (IfStatement) IF LPAREN Condition RPAREN Statement
+			| (IfElseStatement) IF LPAREN Condition RPAREN Statement ELSE Statement
+			| (WhileStatement) WHILE LoopHeader Condition RPAREN Statement
+			| (BreakStatement) BREAK SEMI
+			| (ContinueStatement) CONTINUE SEMI
+			| (ReturnNoExprStatement) RETURN SEMI
+			| (ReturnExprStatement) RETURN Expr SEMI
+			| (ReadStatement) READ LPAREN Designator RPAREN SEMI
+			| (PrintNoNumberStatement) PRINT LPAREN Expr RPAREN SEMI
+			| (PrintNumberStatement) PRINT LPAREN Expr COMMA NUMBER RPAREN SEMI
+			| (ForeachStatement) Designator PERIOD FOREACH LoopHeader IDENT:ident LAMBDA Statement RPAREN SEMI
+			| (StatementListStatement) LBRACE StatementList RBRACE
+			;
+
+StatementList ::= (StatementStatementList) StatementList Statement | (EmptyStatementList) /* empty */;
+
+LoopHeader ::= (LoopHeader) LPAREN;
+
+DesignatorStatement ::= (AssignmentDesignatorStatement) Designator ASSIGN Expr
+					  | (FunctionCallDesignatorStatement) Designator FunctionCall
+					  | (UnaryPlusDesignatorStatement) Designator UPLUS
+					  | (UnaryMinusDesignatorStatement) Designator UMINUS
+					  | (ArrayAssignmentDesignatorStatement) LBRACKET ArrayAssignmentDesignators RBRACKET ASSIGN Designator
+					  ;
+
+FunctionCall ::= (ActParsFunctionCall) LPAREN ActPars RPAREN | (NoParsFunctionCall) LPAREN RPAREN;
+
+ArrayAssignmentDesignators ::= (EmptyArrayAssignmentDesignators) /* empty */
+							 | (DesignatorArrayAssignmentDesignators) Designator
+							 | (MissingListArrayAssignmentDesignators) ArrayAssignmentDesignators COMMA
+							 | (DesignatorListArrayAssignmentDesignators) ArrayAssignmentDesignators COMMA Designator
+							 ;
+
+ActPars ::= (ExprActPars) Expr | (ExprListActPars) ActPars COMMA Expr;
+
+Designator ::= (IdentDesignator) IDENT:symName
+			 | (PropertyAccessDesignator) Designator PERIOD IDENT:fieldName
+			 | (ArrayAccessDesignator) Designator LBRACKET Expr RBRACKET
+			 ;
+
+Expr ::= (TermExpr) Term
+	   | (NegatedExpr) ADDOP Term
+	   | (AddopExpr) Term ADDOP Expr
+	   | (NegatedAddopExpr) ADDOP Term ADDOP Expr
+	   ;
+
+Term ::= (FactorTerm) Factor | (MulopTerm) Term MULOP Factor;
+
+Factor ::= (DesignatorFactor) Designator
+		 | (FunctionCallFactor) Designator FunctionCall
+		 | (ConstFactor) Const
+		 | (ArrayReferenceFactor) NEW Type LBRACKET Expr RBRACKET
+		 | (ObjectReferenceFactor) NEW Type FunctionCall
+		 | (ExpressionFactor) LPAREN Expr RPAREN
+		 ;
+
+Condition ::= (OrCondition) Condition OR CondTerm
+			| (CondTermCondition) CondTerm
+			| (ErrorCondition) error:s
+			{: parser.report_error("Error in conditional expression, recovery until right brace", sleft); :}
+			;
+
+CondTerm ::= (AndCondTerm) CondTerm AND CondFact | (CondFactCondTerm) CondFact;
+
+CondFact ::= (ExprCondFact) Expr | (RelopCondFact) Expr RELOP Expr;

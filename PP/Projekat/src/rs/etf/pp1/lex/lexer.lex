@@ -3,7 +3,9 @@ package rs.etf.pp1.lex;
 import java_cup.runtime.Symbol;
 import org.apache.log4j.Logger;
 import rs.etf.pp1.syntax.sym;
+import rs.etf.pp1.mj.runtime.Code;
 
+@SuppressWarnings("unused")
 %%
 
 %{
@@ -44,11 +46,11 @@ import rs.etf.pp1.syntax.sym;
 "program"		{ return newSymbol(sym.PROG, yytext());		}
 "break"			{ return newSymbol(sym.BREAK, yytext()); 	}
 "class"			{ return newSymbol(sym.CLASS, yytext()); 	}
-"enum"			{ return newSymbol(sym.ENUM, yytext()); 	}
+/* "enum"		{ return newSymbol(sym.ENUM, yytext()); 	} */
 "else"			{ return newSymbol(sym.ELSE, yytext()); 	}
 "const"			{ return newSymbol(sym.CONST, yytext()); 	}
 "if"			{ return newSymbol(sym.IF, yytext()); 		}
-"do"			{ return newSymbol(sym.DO, yytext()); 		}
+/* "do"			{ return newSymbol(sym.DO, yytext()); 		} */
 "while"			{ return newSymbol(sym.WHILE, yytext()); 	}
 "new"			{ return newSymbol(sym.NEW, yytext()); 		}
 "print"			{ return newSymbol(sym.PRINT, yytext()); 	}
@@ -60,24 +62,25 @@ import rs.etf.pp1.syntax.sym;
 "foreach"		{ return newSymbol(sym.FOREACH, yytext());	}
 
 /* Operators */
-"+"				{ return newSymbol(sym.PLUS, yytext()); 	}
-"-"				{ return newSymbol(sym.MINUS, yytext()); 	}
-"*"				{ return newSymbol(sym.TIMES, yytext()); 	}
-"/"				{ return newSymbol(sym.SLASH, yytext()); 	}
-"%"				{ return newSymbol(sym.MODULO, yytext()); 	}
-"=="			{ return newSymbol(sym.EQU, yytext()); 		}
-"!="			{ return newSymbol(sym.NEQ, yytext()); 		}
-">"				{ return newSymbol(sym.GRT, yytext());		}
-">="			{ return newSymbol(sym.GEQ, yytext());		}
-"<"				{ return newSymbol(sym.LSS, yytext());		}
-"<="			{ return newSymbol(sym.LEQ, yytext());		}
+"*"				{ return newSymbol(sym.MULOP, Code.mul); 	}
+"/"				{ return newSymbol(sym.MULOP, Code.div); 	}
+"%"				{ return newSymbol(sym.MULOP, Code.rem); 	}
+"=="			{ return newSymbol(sym.RELOP, Code.eq); 	}
+"!="			{ return newSymbol(sym.RELOP, Code.ne); 	}
+">="			{ return newSymbol(sym.RELOP, Code.ge);		}
+">"				{ return newSymbol(sym.RELOP, Code.gt);		}
+"<="			{ return newSymbol(sym.RELOP, Code.le);		}
+"<"				{ return newSymbol(sym.RELOP, Code.lt);		}
 "&&"			{ return newSymbol(sym.AND, yytext()); 		}
 "||"			{ return newSymbol(sym.OR, yytext()); 		}
+"=>"			{ return newSymbol(sym.LAMBDA, yytext()); 	}
 "="				{ return newSymbol(sym.ASSIGN, yytext());	}
 "++"			{ return newSymbol(sym.UPLUS, yytext()); 	}
+"+"				{ return newSymbol(sym.ADDOP, Code.add); 	}
 "--"			{ return newSymbol(sym.UMINUS, yytext()); 	}
+"-"				{ return newSymbol(sym.ADDOP, Code.sub); 	}
 ";"				{ return newSymbol(sym.SEMI, yytext()); 	}
-":"				{ return newSymbol(sym.COLON, yytext()); 	}
+/* ":"			{ return newSymbol(sym.COLON, yytext()); 	} */
 ","				{ return newSymbol(sym.COMMA, yytext()); 	}
 "."				{ return newSymbol(sym.PERIOD, yytext()); 	}
 "("				{ return newSymbol(sym.LPAREN, yytext()); 	}
@@ -86,7 +89,6 @@ import rs.etf.pp1.syntax.sym;
 "]"				{ return newSymbol(sym.RBRACKET, yytext());	}
 "{"				{ return newSymbol(sym.LBRACE, yytext()); 	}
 "}"				{ return newSymbol(sym.RBRACE, yytext()); 	}
-"=>"			{ return newSymbol(sym.LAMBDA, yytext()); 	}
 
 /* Tokens */
 "true"					{ return newSymbol(sym.BOOL, true); 	}
@@ -95,4 +97,4 @@ import rs.etf.pp1.syntax.sym;
 ['].[']					{ return newSymbol(sym.CHARCONST, yytext().charAt(1));		}
 [a-zA-Z][a-zA-Z0-9_]*	{ return newSymbol(sym.IDENT, yytext());					}
 
-. 						{ logger.error("Lexical error (" + yytext() + ") at line " + (yyline + 1) + " and column " + (yycolumn + 1)); }
+. 						{ throw new RuntimeException("Lexical error at character " + yytext() + " (line " + (yyline + 1) + ", column " + (yycolumn + 1) + ")"); }
