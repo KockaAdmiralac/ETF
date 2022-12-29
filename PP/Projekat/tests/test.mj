@@ -1,0 +1,34 @@
+program bool
+
+int a;
+const int a = 10;
+
+class A {
+	{
+		void b(
+			int a//, bool a
+		)
+			//int a;
+		{
+			//
+		}
+	}
+}
+
+class B extends A {
+	{
+		B() {}
+		void c() {
+			b(1);
+		}
+	}
+}
+
+{
+
+	void main() B b; {
+		b = new B();
+		b.b(1);
+	}
+
+}

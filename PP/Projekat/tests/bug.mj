@@ -1,0 +1,22 @@
+program MJ 
+
+class B {
+
+    {
+        int f() {return -1;}
+    }
+
+}
+
+class BB extends B{
+
+    {
+        int f() {return -2;}
+    }
+}
+
+{
+    void main() B b; BB bb; {
+        b = bb;
+    }
+}

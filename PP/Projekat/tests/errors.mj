@@ -1,0 +1,39 @@
+program simple
+
+int a;
+const int b = 10;
+const char b = '1', c = 'c';
+int d, e[];
+const bool g = true, h = false;
+const char i = 'c';
+
+class Lol {}
+class Lol2 extends Lol {
+	int a, b;
+}
+class Lol3 extends Lol2 {
+	int c, d;
+	{
+		Lol3() {}
+		void a() {
+			this.a();
+			a = 1;
+			a();
+			a++;
+			a--;
+			[, a, b, ] = e;
+			a = b * c + (-1) - 2 / 4 % d;
+			b = new Lol(1, f(), 2);
+			c = new Lol2[a];
+			if (a) {
+				//
+			}
+		}
+		Lol b(int a, int b) int b; {}
+	}
+}
+
+{
+	void lol() {}
+	Lol lol2(int a) int b, c[]; {}
+}
