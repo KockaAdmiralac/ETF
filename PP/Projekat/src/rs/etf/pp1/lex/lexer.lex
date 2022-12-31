@@ -46,11 +46,9 @@ import rs.etf.pp1.mj.runtime.Code;
 "program"		{ return newSymbol(sym.PROG, yytext());		}
 "break"			{ return newSymbol(sym.BREAK, yytext()); 	}
 "class"			{ return newSymbol(sym.CLASS, yytext()); 	}
-/* "enum"		{ return newSymbol(sym.ENUM, yytext()); 	} */
 "else"			{ return newSymbol(sym.ELSE, yytext()); 	}
 "const"			{ return newSymbol(sym.CONST, yytext()); 	}
 "if"			{ return newSymbol(sym.IF, yytext()); 		}
-/* "do"			{ return newSymbol(sym.DO, yytext()); 		} */
 "while"			{ return newSymbol(sym.WHILE, yytext()); 	}
 "new"			{ return newSymbol(sym.NEW, yytext()); 		}
 "print"			{ return newSymbol(sym.PRINT, yytext()); 	}
@@ -75,12 +73,11 @@ import rs.etf.pp1.mj.runtime.Code;
 "||"			{ return newSymbol(sym.OR, yytext()); 		}
 "=>"			{ return newSymbol(sym.LAMBDA, yytext()); 	}
 "="				{ return newSymbol(sym.ASSIGN, yytext());	}
-"++"			{ return newSymbol(sym.UPLUS, yytext()); 	}
+"++"			{ return newSymbol(sym.UADDOP, Code.add); 	}
 "+"				{ return newSymbol(sym.ADDOP, Code.add); 	}
-"--"			{ return newSymbol(sym.UMINUS, yytext()); 	}
+"--"			{ return newSymbol(sym.UADDOP, Code.sub); 	}
 "-"				{ return newSymbol(sym.ADDOP, Code.sub); 	}
 ";"				{ return newSymbol(sym.SEMI, yytext()); 	}
-/* ":"			{ return newSymbol(sym.COLON, yytext()); 	} */
 ","				{ return newSymbol(sym.COMMA, yytext()); 	}
 "."				{ return newSymbol(sym.PERIOD, yytext()); 	}
 "("				{ return newSymbol(sym.LPAREN, yytext()); 	}

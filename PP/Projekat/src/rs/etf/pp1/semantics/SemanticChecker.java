@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import rs.etf.pp1.Main;
 import rs.etf.pp1.ast.*;
+import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
@@ -17,10 +18,8 @@ public class SemanticChecker extends VisitorAdaptor {
 	private Obj currentClass = null;
 	private int numConstructors = 0;
 	private Obj currentMethod = null;
-	private int currentValue = 0;
+	private int loopCount = 0;
 	public boolean errorDetected = false;
-	public int dataSize = 0;
-	public int loopCount = 0;
 
 	private void error(String message, SyntaxNode node) {
 		errorDetected = true;
@@ -124,7 +123,7 @@ public class SemanticChecker extends VisitorAdaptor {
 	@Override
 	public void visit(Program node) {
 		node.obj = node.getProgName().obj;
-		dataSize = Tab.currentScope.getnVars();
+		Code.dataSize = Tab.currentScope.getnVars();
 		// Can't chain symbols under the type, as there is no type.
 		Tab.chainLocalSymbols(node.obj);
 		Tab.closeScope();
@@ -132,20 +131,17 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(NumberConst node) {
-		node.struct = Tab.intType;
-		currentValue = node.getNumber();
+		node.obj = new Obj(Obj.Con, "$const", Tab.intType, node.getNumber(), 0);
 	}
 
 	@Override
 	public void visit(CharConst node) {
-		node.struct = Tab.charType;
-		currentValue = (int) node.getCharconst();
+		node.obj = new Obj(Obj.Con, "$const", Tab.charType, (int) node.getCharconst(), 0);
 	}
 
 	@Override
 	public void visit(BoolConst node) {
-		node.struct = Main.boolType;
-		currentValue = node.getBool() ? 1 : 0;
+		node.obj = new Obj(Obj.Con, "$const", Main.boolType, node.getBool() ? 1 : 0, 0);
 	}
 
 	@Override
@@ -171,7 +167,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			// Error reported beforehand, ignoring.
 			return;
 		}
-		if (!node.getConst().struct.equals(currentType.getType())) {
+		if (!node.getConst().obj.getType().equals(currentType.getType())) {
 			error("Incompatible types in declaration of " + node.getName(), node);
 			return;
 		}
@@ -179,8 +175,8 @@ public class SemanticChecker extends VisitorAdaptor {
 			error("Constant " + node.getName() + " already defined", node);
 			return;
 		}
-		Obj cnst = Tab.insert(Obj.Con, node.getName(), node.getConst().struct);
-		cnst.setAdr(currentValue);
+		Obj cnst = Tab.insert(Obj.Con, node.getName(), node.getConst().obj.getType());
+		cnst.setAdr(node.getConst().obj.getAdr());
 	}
 
 	@Override
@@ -230,6 +226,7 @@ public class SemanticChecker extends VisitorAdaptor {
 		currentClass = Tab.insert(Obj.Type, node.getName(), new Struct(Struct.Class));
 		numConstructors = 0;
 		Tab.openScope();
+		Tab.insert(Obj.Fld, "$tvfp", Tab.intType);
 		logger.info("Processing class " + node.getName());
 	}
 
@@ -260,7 +257,6 @@ public class SemanticChecker extends VisitorAdaptor {
 		currentClass.getType().setElementType(inheritedType);
 		for (Obj sym : inheritedClass.getType().getMembers()) {
 			if (sym.getKind() == Obj.Meth) {
-				// TODO: For now...
 				continue;
 			}
 			// Should never return false, considering how we just opened the scope.
@@ -337,13 +333,7 @@ public class SemanticChecker extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(ListFormParamMultiple node) {
-		addParam(node.getName(), node.getArrayBrackets().struct);
-		currentType = null;
-	}
-
-	@Override
-	public void visit(SingleFormParamMultiple node) {
+	public void visit(FormParamSingle node) {
 		addParam(node.getName(), node.getArrayBrackets().struct);
 		currentType = null;
 	}
@@ -401,7 +391,7 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(ConstFactor node) {
-		node.struct = node.getConst().struct;
+		node.struct = node.getConst().obj.getType();
 	}
 
 	@Override
@@ -423,6 +413,11 @@ public class SemanticChecker extends VisitorAdaptor {
 	public void visit(ObjectReferenceFactor node) {
 		if (currentType == null) {
 			node.struct = Tab.noType;
+			return;
+		}
+		if (currentType.getType().getKind() != Struct.Class) {
+			node.struct = Tab.noType;
+			error("Only classes and arrays may be instatiated with 'new'", node);
 			return;
 		}
 		ParameterList parameters = node.getFunctionCall().parameterlist;
@@ -659,26 +654,14 @@ public class SemanticChecker extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(UnaryPlusDesignatorStatement node) {
+	public void visit(UnaryAddopDesignatorStatement node) {
 		Obj obj = node.getDesignator().obj;
 		if (!isModifiableDesignator(node.getDesignator())) {
-			error("Left hand side of an increment operation must be modifiable", node);
+			error("Left hand side of an increment/decrement operation must be modifiable", node);
 			return;
 		}
 		if (!obj.getType().equals(Tab.intType)) {
-			error("Left hand side of an increment operation must be an integer", node);
-		}
-	}
-
-	@Override
-	public void visit(UnaryMinusDesignatorStatement node) {
-		Obj obj = node.getDesignator().obj;
-		if (!isModifiableDesignator(node.getDesignator())) {
-			error("Left hand side of an decrement operation must be modifiable", node);
-			return;
-		}
-		if (!obj.getType().equals(Tab.intType)) {
-			error("Left hand side of an decrement operation must be an integer", node);
+			error("Left hand side of an increment/decrement operation must be an integer", node);
 		}
 	}
 
@@ -790,6 +773,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			error("Variable identifier in a foreach statement must be the same type as elements of the designator array",
 					node);
 		}
+		node.obj = ident;
 	}
 
 	@Override

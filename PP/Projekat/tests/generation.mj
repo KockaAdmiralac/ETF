@@ -1,0 +1,23 @@
+program generation
+
+{
+	void main() int a; {
+		a = 6 / (2 + 4) * (-2) - 5 % 3;
+		a++;
+		print(a);
+		print('c', 2);
+		if (a == 2 || a > -5 && a < -2) {
+			if (a == -3) {
+				print('a');
+			} else {
+				print('b');
+			}
+		} else {
+			print('c');
+		}
+		while (a < 0) {
+			a++;
+			print(a);
+		}
+	}
+}

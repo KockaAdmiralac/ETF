@@ -37,19 +37,20 @@ parser code {:
 	}
 :}
 
-terminal PROG, BREAK, CLASS, ELSE, CONST, IF, WHILE, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, FOREACH, AND, OR, ASSIGN, UPLUS, UMINUS, SEMI, COMMA, PERIOD, LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, LAMBDA;
+terminal PROG, BREAK, CLASS, ELSE, CONST, IF, WHILE, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, FOREACH, AND, OR, ASSIGN, SEMI, COMMA, PERIOD, LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, LAMBDA;
 terminal Boolean BOOL;
 terminal Integer NUMBER;
 terminal char CHARCONST;
 terminal String IDENT;
 terminal Integer ADDOP;
+terminal Integer UADDOP;
 terminal Integer MULOP;
 terminal Integer RELOP;
 
-nonterminal ConstDecl, Type, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, VarDeclMultiple, ClassMethodDecl, PreMainBlock, PreMainBlockList, MethodDeclList, ReturnType, FormPars, FormParamMultiple, Statement, StatementList, DesignatorStatement, ClassName, LoopHeader;
+nonterminal ConstDecl, Type, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, VarDeclMultiple, ClassMethodDecl, PreMainBlock, PreMainBlockList, MethodDeclList, ReturnType, FormPars, FormParamMultiple, FormParamSingle, StatementList, DesignatorStatement, ClassName, LoopHeader, IfHeader, ThenHeader, ElseHeader, Or;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Const, ArrayBrackets, Term, Factor, Expr, Condition, CondTerm, CondFact;
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodName, MethodDecl, ConstructorType, ClassMethodBody, ClassDecl;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct ArrayBrackets, Term, Factor, Expr, Condition, CondTerm, CondFact;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Const, Program, ProgName, Designator, MethodName, MethodDecl, ConstructorType, ClassMethodBody, ClassDecl, Statement;
 nonterminal rs.etf.pp1.semantics.ParameterList ActPars, FunctionCall;
 nonterminal rs.etf.pp1.semantics.DesignatorList ArrayAssignmentDesignators;
 
@@ -122,19 +123,21 @@ MethodName ::= (MethodName) IDENT:name;
 
 FormPars ::= (MultipleFormPars) FormParamMultiple | (EmptyFormPars) /* empty */;
 
-FormParamMultiple ::= (ListFormParamMultiple) Type IDENT:name ArrayBrackets COMMA FormParamMultiple
+FormParamMultiple ::= (ListFormParamMultiple) FormParamSingle COMMA FormParamMultiple
 					| (ErrorListFormParamMultiple) error:s {: parser.report_error("Error in formal parameters, recovery until comma", sleft); :} COMMA FormParamMultiple
-					| (SingleFormParamMultiple) Type IDENT:name ArrayBrackets
+					| (SingleFormParamMultiple) FormParamSingle
 					| (ErrorSingleFormParamMultiple) error:s
 					{: parser.report_error("Error in formal parameters, recovery until right brace", sleft); :}
 					;
 
+FormParamSingle ::= (FormParamSingle) Type IDENT:name ArrayBrackets;
+
 Statement ::= (DesignatorStatementStatement) DesignatorStatement SEMI
 			| (ErrorStatement) error:s SEMI
 			{: parser.report_error("Error during assignment, recovery until semicolon", sleft); :}
-			| (IfStatement) IF LPAREN Condition RPAREN Statement
-			| (IfElseStatement) IF LPAREN Condition RPAREN Statement ELSE Statement
-			| (WhileStatement) WHILE LoopHeader Condition RPAREN Statement
+			| (IfStatement) IF IfHeader LPAREN Condition RPAREN ThenHeader Statement
+			| (IfElseStatement) IF IfHeader LPAREN Condition RPAREN ThenHeader Statement ELSE ElseHeader Statement
+			| (WhileStatement) WHILE LoopHeader LPAREN Condition RPAREN ThenHeader Statement
 			| (BreakStatement) BREAK SEMI
 			| (ContinueStatement) CONTINUE SEMI
 			| (ReturnNoExprStatement) RETURN SEMI
@@ -142,18 +145,20 @@ Statement ::= (DesignatorStatementStatement) DesignatorStatement SEMI
 			| (ReadStatement) READ LPAREN Designator RPAREN SEMI
 			| (PrintNoNumberStatement) PRINT LPAREN Expr RPAREN SEMI
 			| (PrintNumberStatement) PRINT LPAREN Expr COMMA NUMBER RPAREN SEMI
-			| (ForeachStatement) Designator PERIOD FOREACH LoopHeader IDENT:ident LAMBDA Statement RPAREN SEMI
+			| (ForeachStatement) Designator PERIOD FOREACH LoopHeader LPAREN IDENT:ident LAMBDA Statement RPAREN SEMI
 			| (StatementListStatement) LBRACE StatementList RBRACE
 			;
 
 StatementList ::= (StatementStatementList) StatementList Statement | (EmptyStatementList) /* empty */;
 
-LoopHeader ::= (LoopHeader) LPAREN;
+LoopHeader ::= (LoopHeader) /* empty */;
+IfHeader ::= (IfHeader) /* empty */;
+ThenHeader ::= (ThenHeader) /* empty */;
+ElseHeader ::= (ElseHeader) /* empty */;
 
 DesignatorStatement ::= (AssignmentDesignatorStatement) Designator ASSIGN Expr
 					  | (FunctionCallDesignatorStatement) Designator FunctionCall
-					  | (UnaryPlusDesignatorStatement) Designator UPLUS
-					  | (UnaryMinusDesignatorStatement) Designator UMINUS
+					  | (UnaryAddopDesignatorStatement) Designator UADDOP:op
 					  | (ArrayAssignmentDesignatorStatement) LBRACKET ArrayAssignmentDesignators RBRACKET ASSIGN Designator
 					  ;
 
@@ -188,7 +193,7 @@ Factor ::= (DesignatorFactor) Designator
 		 | (ExpressionFactor) LPAREN Expr RPAREN
 		 ;
 
-Condition ::= (OrCondition) Condition OR CondTerm
+Condition ::= (OrCondition) Condition Or CondTerm
 			| (CondTermCondition) CondTerm
 			| (ErrorCondition) error:s
 			{: parser.report_error("Error in conditional expression, recovery until right brace", sleft); :}
@@ -197,3 +202,5 @@ Condition ::= (OrCondition) Condition OR CondTerm
 CondTerm ::= (AndCondTerm) CondTerm AND CondFact | (CondFactCondTerm) CondFact;
 
 CondFact ::= (ExprCondFact) Expr | (RelopCondFact) Expr RELOP Expr;
+
+Or ::= (Or) OR;

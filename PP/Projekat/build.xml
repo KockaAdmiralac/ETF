@@ -65,31 +65,17 @@
 
 	<target name="run" depends="jar">
 		<java jar="bin/pp1.jar" fork="true">
-			<arg value="tests/test303.mj" />
+			<arg value="tests/test302.mj" />
+			<arg value="bin/generation.obj" />
+			<arg value="--debug" />
+			<arg value="--run" />
+			<redirector input="input.txt" />
 			<classpath>
 				<pathelement path="lib/JFlex.jar" />
 				<pathelement path="lib/cup_v10k.jar" />
 				<pathelement path="lib/log4j-1.2.17.jar" />
 				<pathelement path="lib/symboltable-1-1.jar" />
 				<pathelement path="lib/mj-runtime-1.1.jar" />
-			</classpath>
-		</java>
-	</target>
-
-	<target name="disasm">
-		<java classname="rs.etf.pp1.mj.runtime.disasm">
-			<arg value="test/program.obj" />
-			<classpath>
-				<pathelement location="lib/mj-runtime.jar" />
-			</classpath>
-		</java>
-	</target>
-
-	<target name="runObj" depends="disasm">
-		<java classname="rs.etf.pp1.mj.runtime.Run">
-			<arg value="test/program.obj" />
-			<classpath>
-				<pathelement location="lib/mj-runtime.jar" />
 			</classpath>
 		</java>
 	</target>
