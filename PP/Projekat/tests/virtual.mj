@@ -1,0 +1,30 @@
+program virtual
+
+class A {
+	{
+		int a(int b, int c) {
+			return b + c;
+		}
+	}
+}
+
+class B extends A {
+	{
+		int a(int b, int c) {
+			return b * c;
+		}
+	}
+}
+
+{
+	void main() A a[]; int i; {
+		a = new A[3];
+		a[0] = new B();
+		a[1] = new A();
+		a[2] = new B();
+		while (i < len(a)) {
+			print(a[i].a(2, 3));
+			i++;
+		}
+	}
+}

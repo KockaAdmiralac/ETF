@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import rs.etf.pp1.ClassUtils;
 import rs.etf.pp1.Main;
 import rs.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
@@ -43,45 +44,6 @@ public class SemanticChecker extends VisitorAdaptor {
 		Obj param = Tab.insert(Obj.Var, paramName, type);
 		currentMethod.setLevel(currentMethod.getLevel() + 1);
 		param.setFpPos(currentMethod.getLevel());
-	}
-
-	private boolean isSuperclassOf(Struct parent, Struct child) {
-		do {
-			// HACK: equals will enter an infinite loop if the classes have the same amount
-			// of methods and fields
-			if (parent == child) {
-				return true;
-			}
-			child = child.getElemType();
-		} while (child != null);
-		return false;
-	}
-
-	private boolean areTypesAssignable(Struct src, Struct dst) {
-		if (src.getKind() != Struct.Class || dst.getKind() != Struct.Class) {
-			return src.assignableTo(dst);
-		}
-		if (isSuperclassOf(dst, src)) {
-			return true;
-		}
-		return src.assignableTo(dst);
-	}
-
-	private boolean areParametersCompatible(Obj method, ParameterList parameters) {
-		List<Struct> params = parameters.getParams();
-		if (method.getKind() != Obj.Meth || method.getLevel() != params.size()) {
-			return false;
-		}
-		for (Obj o : method.getLocalSymbols()) {
-			int pos = o.getFpPos();
-			if (pos == 0) {
-				continue;
-			}
-			if (!areTypesAssignable(params.get(pos - 1), o.getType())) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private Designator getPreviousDesignator(Designator designator) {
@@ -296,7 +258,7 @@ public class SemanticChecker extends VisitorAdaptor {
 		ParameterList parameters = new ParameterList(currentMethod);
 		for (int i = 0; i < numConstructors - 1; ++i) {
 			Obj constructorMethod = Tab.find("$constructor" + i);
-			if (areParametersCompatible(constructorMethod, parameters)) {
+			if (ClassUtils.areParametersCompatible(constructorMethod, parameters)) {
 				error("Constructor has the same formal arguments as constructor index " + i, node);
 			}
 		}
@@ -381,7 +343,7 @@ public class SemanticChecker extends VisitorAdaptor {
 				}
 			}
 		}
-		if (!areParametersCompatible(method, parameters)) {
+		if (!ClassUtils.areParametersCompatible(method, parameters)) {
 			error("Incompatible parameter types in method invocation", node);
 			node.struct = Tab.noType;
 			return;
@@ -430,11 +392,11 @@ public class SemanticChecker extends VisitorAdaptor {
 			if (!method.getName().startsWith("$constructor")) {
 				continue;
 			}
-			if (areParametersCompatible(method, parameters)) {
+			if (ClassUtils.areParametersCompatible(method, parameters)) {
 				constructorMatches = true;
 			}
 		}
-		if (!constructorMatches) {
+		if (!constructorMatches && parameters.getParams().size() > 1) {
 			error("No constructor matches the given arguments", node);
 			node.struct = Tab.noType;
 			return;
@@ -620,7 +582,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			error("Left hand side of an assignment operation must be modifiable", node);
 			return;
 		}
-		if (!areTypesAssignable(node.getExpr().struct, obj.getType())) {
+		if (!ClassUtils.areTypesAssignable(node.getExpr().struct, obj.getType())) {
 			error("Right side of an assignment operation must be compatible with the left side", node);
 		}
 	}
@@ -647,7 +609,7 @@ public class SemanticChecker extends VisitorAdaptor {
 				}
 			}
 		}
-		if (!areParametersCompatible(method, parameters)) {
+		if (!ClassUtils.areParametersCompatible(method, parameters)) {
 			error("Incompatible parameter types in method invocation", node);
 			return;
 		}
@@ -817,7 +779,7 @@ public class SemanticChecker extends VisitorAdaptor {
 				error("Designator at index " + i + " in array assignment expression is not assignable", node);
 				continue;
 			}
-			if (!areTypesAssignable(designators.get(i).obj.getType(), designator.getElemType())) {
+			if (!ClassUtils.areTypesAssignable(designators.get(i).obj.getType(), designator.getElemType())) {
 				error("Designator at index " + i + " in array assignment expression is of incompatible type", node);
 			}
 		}

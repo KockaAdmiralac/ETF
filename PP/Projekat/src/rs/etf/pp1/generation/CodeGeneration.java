@@ -1,10 +1,14 @@
 package rs.etf.pp1.generation;
 
 import java.util.List;
+import java.util.SortedMap;
 import java.util.Stack;
+import java.util.TreeMap;
 
+import rs.etf.pp1.ClassUtils;
 import rs.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
+import rs.etf.pp1.semantics.ParameterList;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
@@ -12,6 +16,9 @@ import rs.etf.pp1.symboltable.concepts.Struct;
 public class CodeGeneration extends VisitorAdaptor {
 
 	private Stack<ConditionScope> conditionScopes = new Stack<>();
+	private SortedMap<String, TVF> vtables = new TreeMap<>();
+	private Obj currentClass = null;
+	private int returnErrorHandler;
 
 	@Override
 	public void visit(ProgName node) {
@@ -28,6 +35,16 @@ public class CodeGeneration extends VisitorAdaptor {
 		len.setAdr(Code.pc);
 		Code.put(Code.arraylength);
 		Code.put(Code.return_);
+		// Error handler when no return was found.
+		returnErrorHandler = Code.pc;
+		String errorMessage = "No value returned from method";
+		for (char c : errorMessage.toCharArray()) {
+			Code.loadConst(c);
+			Code.loadConst(1);
+			Code.put(Code.bprint);
+		}
+		Code.put(Code.trap);
+		Code.put(1);
 	}
 
 	private void exitReturn() {
@@ -41,13 +58,26 @@ public class CodeGeneration extends VisitorAdaptor {
 				|| (parent instanceof ArrayAssignmentDesignators) || (parent instanceof ReadStatement);
 	}
 
+	private Obj findConstructorWithParams(Struct cls, ParameterList params) {
+		for (Obj meth : cls.getMembers()) {
+			if (meth.getKind() != Obj.Meth || !meth.getName().startsWith("$constructor")) {
+				continue;
+			}
+			if (ClassUtils.areParametersCompatible(meth, params)) {
+				return meth;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void visit(MethodName node) {
 		node.obj.setAdr(Code.pc);
 		if (node.obj.getName().equals("main")) {
 			Code.mainPc = Code.pc;
-			// TODO: Generate TVF
-			// imefunkcije(-1)(adresa)imefunkcije2(-1)(adresa)(-2)
+			for (TVF tvf : vtables.values()) {
+				tvf.generate();
+			}
 		}
 		Code.put(Code.enter);
 		Code.put(node.obj.getLevel());
@@ -55,19 +85,41 @@ public class CodeGeneration extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(ConstructorType node) {
+		node.obj.setAdr(Code.pc);
+		Code.put(Code.enter);
+		Code.put(node.obj.getLevel());
+		Code.put(node.obj.getLocalSymbols().size());
+	}
+
+	@Override
+	public void visit(RegularClassName node) {
+		currentClass = ((ClassDecl) node.getParent()).obj;
+	}
+
+	@Override
+	public void visit(ExtendsClassName node) {
+		currentClass = ((ClassDecl) node.getParent()).obj;
+	}
+
+	@Override
+	public void visit(RegularClassDecl node) {
+		vtables.put(node.obj.getName(), new TVF(node.obj.getType()));
+		currentClass = null;
+	}
+
+	@Override
 	public void visit(MethodDecl node) {
 		if (node.obj.getType().equals(Tab.noType)) {
 			exitReturn();
 		} else {
-			String errorMessage = "No value returned from method";
-			for (char c : errorMessage.toCharArray()) {
-				Code.loadConst(c);
-				Code.loadConst(1);
-				Code.put(Code.bprint);
-			}
-			Code.put(Code.trap);
-			Code.put(1);
+			Code.putJump(returnErrorHandler);
 		}
+	}
+
+	@Override
+	public void visit(ConstructorClassMethodBody node) {
+		exitReturn();
 	}
 
 	@Override
@@ -92,6 +144,15 @@ public class CodeGeneration extends VisitorAdaptor {
 
 	@Override
 	public void visit(IdentDesignator node) {
+		if (currentClass != null) {
+			boolean isFunctionCall = (node.getParent() instanceof FunctionCallFactor
+					|| node.getParent() instanceof FunctionCallDesignatorStatement);
+			boolean isMember = currentClass.getType().getMembersTable().searchKey(node.obj.getName()) == node.obj;
+			if (isFunctionCall || isMember) {
+				// Push 'this' to stack.
+				Code.put(Code.load_n + 0);
+			}
+		}
 		if (!designatorParentIsStore(node)) {
 			Code.load(node.obj);
 		}
@@ -134,16 +195,44 @@ public class CodeGeneration extends VisitorAdaptor {
 
 	@Override
 	public void visit(FunctionCallFactor node) {
-		// TODO: Virtual methods
-		Code.put(Code.call);
-		Code.put2(node.getDesignator().obj.getAdr() - Code.pc + 1);
+		boolean accessOverObject = node.getDesignator() instanceof PropertyAccessDesignator;
+		if (currentClass == null && !accessOverObject) {
+			Code.put(Code.call);
+			Code.put2(node.getDesignator().obj.getAdr() - Code.pc + 1);
+		} else {
+			// Push 'this' to stack.
+			node.getDesignator().traverseBottomUp(this);
+			// Get the TVF address.
+			Code.put(Code.getfield);
+			Code.put2(0);
+			// Call the virtual method by name.
+			Code.put(Code.invokevirtual);
+			for (char c : node.getDesignator().obj.getName().toCharArray()) {
+				Code.put4(c);
+			}
+			Code.put4(-1);
+		}
 	}
 
 	@Override
 	public void visit(FunctionCallDesignatorStatement node) {
-		// TODO: Virtual methods
-		Code.put(Code.call);
-		Code.put2(node.getDesignator().obj.getAdr() - Code.pc);
+		boolean accessOverObject = node.getDesignator() instanceof PropertyAccessDesignator;
+		if (currentClass == null && !accessOverObject) {
+			Code.put(Code.call);
+			Code.put2(node.getDesignator().obj.getAdr() - Code.pc + 1);
+		} else {
+			// Push 'this' to stack.
+			node.getDesignator().traverseBottomUp(this);
+			// Get the TVF address.
+			Code.put(Code.getfield);
+			Code.put2(0);
+			// Call the virtual method by name.
+			Code.put(Code.invokevirtual);
+			for (char c : node.getDesignator().obj.getName().toCharArray()) {
+				Code.put4(c);
+			}
+			Code.put4(-1);
+		}
 		if (node.getDesignator().obj.getType() != Tab.noType) {
 			// Remove return result from expression stack.
 			Code.put(Code.pop);
@@ -153,22 +242,39 @@ public class CodeGeneration extends VisitorAdaptor {
 	@Override
 	public void visit(ArrayReferenceFactor node) {
 		Struct typeToAllocate = node.struct.getElemType();
-		if (typeToAllocate.getKind() == Struct.Class) {
-			Code.loadConst(typeToAllocate.getNumberOfFields());
-			Code.put(Code.mul);
-		}
 		Code.put(Code.newarray);
-		Code.put(typeToAllocate.equals(Tab.charType) ? 1 : 0);
-		// TODO: Call default class constructor
-		// TODO: Initialize TVF reference
+		Code.put(typeToAllocate.equals(Tab.charType) ? 0 : 1);
+	}
+
+	@Override
+	public void visit(NewHeader node) {
+		ObjectReferenceFactor parent = (ObjectReferenceFactor) node.getParent();
+		Code.put(Code.new_);
+		Code.put2(parent.struct.getNumberOfFields() * 4);
+		// Stack: (obj)
+		Code.put(Code.dup);
+		// Stack: (obj) (obj)
+		Code.loadConst(vtables.get(parent.getType().getTypeName()).getPtr());
+		// Stack: (obj) (obj) (ptr)
+		Code.put(Code.putfield);
+		Code.put2(0);
+		// Stack: (obj)
+		Code.put(Code.dup);
+		// Stack: (obj) (obj)
 	}
 
 	@Override
 	public void visit(ObjectReferenceFactor node) {
-		Code.put(Code.new_);
-		Code.put2(node.struct.getNumberOfFields() * 4);
-		// TODO: Call constructor
-		// TODO: Initialize TVF reference
+		Obj constructor = findConstructorWithParams(node.struct, node.getFunctionCall().parameterlist);
+		// Stack: (obj) (obj) <params>
+		if (constructor == null) {
+			// This is only possible for default constructors, so there are no parameters.
+			Code.put(Code.pop);
+		} else {
+			Code.put(Code.call);
+			Code.put2(constructor.getAdr() - Code.pc + 1);
+		}
+		// Stack: (obj)
 	}
 
 	@Override
