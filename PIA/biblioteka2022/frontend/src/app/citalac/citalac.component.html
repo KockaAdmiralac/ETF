@@ -1,0 +1,46 @@
+<p>Welcome, {{firstName}} {{lastName}}. <button (click)="logout()">Log out</button></p>
+<h2>My books</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Return date</th>
+        <th>Return</th>
+    </tr>
+    <tr *ngFor="let book of books" [class.expired]="isExpired(book)">
+        <td>{{book.id}}</td>
+        <td>{{book.title}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.deadline}}</td>
+        <td><button (click)="changeBookStatus(book, false)">Return</button></td>
+    </tr>
+</table>
+<h2>All books</h2>
+<form (submit)="updateSearch($event)">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" [(ngModel)]="title">
+    <label for="author">Author:</label>
+    <input type="text" name="author" id="author" [(ngModel)]="author">
+    <input type="submit" value="Pretraga">
+</form>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Available</th>
+        <th>Get</th>
+    </tr>
+    <tr *ngFor="let book of shownBooks">
+        <td>{{book.id}}</td>
+        <td>{{book.title}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.person ? 'No' : 'Yes'}}</td>
+        <td>
+            <p *ngIf="books.length === 3">User already has three books</p>
+            <p *ngIf="books.length < 3 && book.person">Book already taken</p>
+            <button *ngIf="books.length < 3 && !book.person" (click)="changeBookStatus(book, true)">Get</button>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,37 @@
+{
+    "name": "test-one",
+    "version": "0.0.0",
+    "scripts": {
+        "ng": "ng",
+        "start": "ng serve",
+        "build": "ng build",
+        "watch": "ng build --watch --configuration development",
+        "test": "ng test"
+    },
+    "private": true,
+    "dependencies": {
+        "@angular/animations": "^14.2.0",
+        "@angular/common": "^14.2.0",
+        "@angular/compiler": "^14.2.0",
+        "@angular/core": "^14.2.0",
+        "@angular/forms": "^14.2.0",
+        "@angular/platform-browser": "^14.2.0",
+        "@angular/platform-browser-dynamic": "^14.2.0",
+        "@angular/router": "^14.2.0",
+        "rxjs": "~7.5.0",
+        "tslib": "^2.3.0",
+        "zone.js": "~0.11.4"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "^14.2.3",
+        "@angular/cli": "~14.2.3",
+        "@angular/compiler-cli": "^14.2.0",
+        "@typescript-eslint/eslint-plugin": "5.47.1",
+        "@typescript-eslint/parser": "5.47.1",
+        "eslint": "8.31.0",
+        "eslint-plugin-jsdoc": "39.6.4",
+        "eslint-plugin-node": "11.1.0",
+        "eslint-plugin-promise": "6.1.1",
+        "typescript": "~4.7.2"
+    }
+}
