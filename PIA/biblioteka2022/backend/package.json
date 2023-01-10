@@ -1,8 +1,8 @@
 {
-    "name": "hello-nodejs-typescript",
+    "name": "biblioteka2022-backend",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/server.js",
+    "main": "dist/src/server.js",
     "scripts": {
         "build-ts": "tsc",
         "start": "npm run serve",
