@@ -1,0 +1,38 @@
+program Januar2022
+	const int K = 2;
+	int add;
+	class A {
+		int fld;
+	{
+		int m(int a)
+		{ return fld * 2; }
+		void met()
+		{ fld = fld + 3; }
+	} }
+	class B extends A {
+	{
+		int m(int b)
+		{ // T1
+			return fld + b;
+		}
+	}
+	}
+	A arr[];
+{
+	int f(int index){
+		add = arr[index].m(K);
+		arr[index].met();
+		return add + K;
+	}
+	void main()
+		B b;
+		int ret;
+	{
+		// T2
+		arr = new A[2];
+		arr[0] = new B();
+		arr[1] = new A();
+		ret = f(0) + f(1);
+		print(arr[0].m(ret));
+	}
+}
