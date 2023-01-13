@@ -21,6 +21,8 @@ public class SemanticChecker extends VisitorAdaptor {
 	private Obj currentMethod = null;
 	private int loopCount = 0;
 	public boolean errorDetected = false;
+	private static final String[] objKindNames = { "Con", "Var", "Type", "Meth", "Fld", "Elem", "Prog" };
+	private static final String[] structKindNames = { "None", "Int", "Char", "Array", "Class", "Bool" };
 
 	private void error(String message, SyntaxNode node) {
 		errorDetected = true;
@@ -29,6 +31,25 @@ public class SemanticChecker extends VisitorAdaptor {
 			lineMessage = " (line " + node.getLine() + ")";
 		}
 		logger.error("Semantic error: " + message + lineMessage);
+	}
+
+	private void logSymbol(String message, Obj sym, SyntaxNode node) {
+		StringBuilder builder = new StringBuilder(message);
+		if (node != null) {
+			builder.append(" (line " + node.getLine() + ")");
+		}
+		builder.append(": [");
+		builder.append(sym.getName());
+		builder.append(", ");
+		builder.append(objKindNames[sym.getKind()]);
+		builder.append(", ");
+		builder.append(structKindNames[sym.getType().getKind()]);
+		builder.append(", ");
+		builder.append(sym.getAdr());
+		builder.append(", ");
+		builder.append(sym.getLevel());
+		builder.append("]");
+		logger.info(builder.toString());
 	}
 
 	private void addParam(String paramName, Struct type) {
@@ -42,6 +63,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			return;
 		}
 		Obj param = Tab.insert(Obj.Var, paramName, type);
+		logSymbol("New parameter detected in current method", param, null);
 		currentMethod.setLevel(currentMethod.getLevel() + 1);
 		param.setFpPos(currentMethod.getLevel());
 	}
@@ -79,6 +101,7 @@ public class SemanticChecker extends VisitorAdaptor {
 		if (node.obj.getKind() != Obj.Prog) {
 			error("Program cannot have the same name as one of the predefined types", node);
 		}
+		logSymbol("Defined program type", node.obj, node);
 		Tab.openScope();
 	}
 
@@ -139,6 +162,7 @@ public class SemanticChecker extends VisitorAdaptor {
 		}
 		Obj cnst = Tab.insert(Obj.Con, node.getName(), node.getConst().obj.getType());
 		cnst.setAdr(node.getConst().obj.getAdr());
+		logSymbol("Found constant declaration", cnst, node);
 	}
 
 	@Override
@@ -171,7 +195,9 @@ public class SemanticChecker extends VisitorAdaptor {
 		Obj sym = Tab.insert(isVar ? Obj.Var : Obj.Fld, node.getName(), varType);
 		if (sym == prevSym) {
 			error("Duplicate variable or field declaration", node);
+			return;
 		}
+		logSymbol("Variable declaration detected", sym, node);
 	}
 
 	@Override
@@ -189,7 +215,7 @@ public class SemanticChecker extends VisitorAdaptor {
 		numConstructors = 0;
 		Tab.openScope();
 		Tab.insert(Obj.Fld, "$tvfp", Tab.intType);
-		logger.info("Processing class " + node.getName());
+		logSymbol("Class definition detected", currentClass, node);
 	}
 
 	@Override
@@ -201,7 +227,7 @@ public class SemanticChecker extends VisitorAdaptor {
 		currentClass = Tab.insert(Obj.Type, node.getName(), new Struct(Struct.Class));
 		numConstructors = 0;
 		Tab.openScope();
-		logger.info("Processing class " + node.getName());
+		logSymbol("Class definition with inheritance detected", currentClass, node);
 		Obj inheritedClass = Tab.find(node.getTypeName());
 		if (inheritedClass == Tab.noObj) {
 			error("Class to inherit from, " + node.getTypeName() + ", has not been previously declared", node);
@@ -230,7 +256,6 @@ public class SemanticChecker extends VisitorAdaptor {
 	public void visit(RegularClassDecl node) {
 		Tab.chainLocalSymbols(currentClass.getType());
 		Tab.closeScope();
-		logger.info("Done processing class " + currentClass.getName());
 		node.obj = currentClass;
 		currentClass = null;
 	}
@@ -243,9 +268,9 @@ public class SemanticChecker extends VisitorAdaptor {
 			return;
 		}
 		currentType = null;
-		logger.info("Processing class constructor index " + numConstructors);
 		currentMethod = Tab.insert(Obj.Meth, "$constructor" + (numConstructors++), Tab.noType);
 		currentMethod.setLevel(0);
+		logSymbol("Class constructor index " + numConstructors + " detected", currentMethod, node);
 		node.obj = currentMethod;
 		Tab.openScope();
 		addParam("this", currentClass.getType());
@@ -262,7 +287,6 @@ public class SemanticChecker extends VisitorAdaptor {
 				error("Constructor has the same formal arguments as constructor index " + i, node);
 			}
 		}
-		logger.info("Done processing class constructor index " + (numConstructors - 1));
 		node.obj = currentMethod;
 		currentMethod = null;
 	}
@@ -276,12 +300,12 @@ public class SemanticChecker extends VisitorAdaptor {
 		currentMethod = Tab.insert(Obj.Meth, node.getName(),
 				(currentType == null) ? Tab.noType : currentType.getType());
 		currentMethod.setLevel(0);
+		logSymbol("Method detected", currentMethod, node);
 		currentType = null;
 		Tab.openScope();
 		if (currentClass != null) {
 			addParam("this", currentClass.getType());
 		}
-		logger.info("Processing method " + node.getName());
 		node.obj = currentMethod;
 	}
 
@@ -289,7 +313,6 @@ public class SemanticChecker extends VisitorAdaptor {
 	public void visit(MethodDecl node) {
 		Tab.chainLocalSymbols(currentMethod);
 		Tab.closeScope();
-		logger.info("Done processing method " + currentMethod.getName());
 		node.obj = currentMethod;
 		currentMethod = null;
 	}
@@ -348,7 +371,8 @@ public class SemanticChecker extends VisitorAdaptor {
 			node.struct = Tab.noType;
 			return;
 		}
-		node.struct = node.getDesignator().obj.getType();
+		node.struct = method.getType();
+		logSymbol("Method invocation detected", method, node);
 	}
 
 	@Override
@@ -368,6 +392,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			return;
 		}
 		node.struct = new Struct(Struct.Array, currentType.getType());
+		logSymbol("Array instantiation detected", currentType, node);
 		currentType = null;
 	}
 
@@ -402,6 +427,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			return;
 		}
 		node.struct = currentType.getType();
+		logSymbol("Class instantiation detected", currentType, node);
 		currentType = null;
 	}
 
@@ -521,12 +547,14 @@ public class SemanticChecker extends VisitorAdaptor {
 	public void visit(IdentDesignator node) {
 		node.obj = Tab.find(node.getSymName());
 		if (node.obj != Tab.noObj) {
+			logSymbol("Designator detected", node.obj, node);
 			return;
 		}
 		if (currentClass != null) {
 			Obj methodFromSuperclass = getMethodFromSuperclasses(currentClass.getType(), node.getSymName());
 			if (methodFromSuperclass != null) {
 				node.obj = methodFromSuperclass;
+				logSymbol("Method from superclass detected", node.obj, node);
 				return;
 			}
 		}
@@ -547,12 +575,14 @@ public class SemanticChecker extends VisitorAdaptor {
 		for (Obj field : symbols) {
 			if (field.getName().equals(node.getFieldName())) {
 				node.obj = field;
+				logSymbol("Field access detected", node.obj, node);
 				return;
 			}
 		}
 		Obj methodFromSuperclass = getMethodFromSuperclasses(obj.getType(), node.getFieldName());
 		if (methodFromSuperclass != null) {
 			node.obj = methodFromSuperclass;
+			logSymbol("Method from superclass detected during property access", node.obj, node);
 			return;
 		}
 		error("Field " + node.getFieldName() + " not found in type of the left-hand side", node);
@@ -572,7 +602,8 @@ public class SemanticChecker extends VisitorAdaptor {
 			node.obj = Tab.noObj;
 			return;
 		}
-		node.obj = new Obj(Obj.Elem, "$arrayelem", node.getDesignator().obj.getType().getElemType());
+		node.obj = new Obj(Obj.Elem, "$arrayelem", obj.getType().getElemType());
+		logSymbol("Array element access detected", obj, node);
 	}
 
 	@Override
@@ -613,6 +644,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			error("Incompatible parameter types in method invocation", node);
 			return;
 		}
+		logSymbol("Method invocation detected with return value ignored", method, node);
 	}
 
 	@Override
@@ -770,7 +802,6 @@ public class SemanticChecker extends VisitorAdaptor {
 			return;
 		}
 		List<Designator> designators = node.getArrayAssignmentDesignators().designatorlist.getDesignators();
-		boolean failedCheck = false;
 		for (int i = 0; i < designators.size(); ++i) {
 			if (designators.get(i) == null) {
 				continue;
@@ -782,9 +813,6 @@ public class SemanticChecker extends VisitorAdaptor {
 			if (!ClassUtils.areTypesAssignable(designators.get(i).obj.getType(), designator.getElemType())) {
 				error("Designator at index " + i + " in array assignment expression is of incompatible type", node);
 			}
-		}
-		if (failedCheck) {
-			return;
 		}
 	}
 
