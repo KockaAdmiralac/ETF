@@ -1,0 +1,80 @@
+program list
+
+const int A = 15342, C = 45194;
+const int RAND_MAX = 100000;
+
+class Node {
+	int data;
+	Node next;
+	{
+		Node(int data) {
+			this.data = data;
+			this.next = null;
+		}
+		Node(int data, Node next) {
+			this.data = data;
+			this.next = next;
+		}
+	}
+}
+
+class LinkedList {
+	Node head, tail;
+	{
+		LinkedList() {
+			head = null;
+			tail = null;
+		}
+		void add(int data) Node node; {
+			node = new Node(data, null);
+			if (tail == null) {
+				head = node;
+			} else {
+				tail.next = node;
+			}
+			tail = node;
+		}
+		int remove() int ret; {
+			if (head == null) {
+				return -1;
+			}
+			ret = head.data;
+			head = head.next;
+			if (head == null) {
+				tail = null;
+			}
+			return ret;
+		}
+	}
+}
+
+int seed;
+
+{
+	int rand() {
+		seed = (seed * A + C) % RAND_MAX;
+		return seed;
+	}
+	void main() LinkedList ll; int i; {
+		ll = new LinkedList();
+		ll.add(1);
+		ll.add(2);
+		ll.add(3);
+		print(ll.remove());
+		print(ll.remove());
+		print(ll.remove());
+		print(ll.remove());
+		print(eol);
+		i = 0;
+		while (i < 5000) {
+			if (rand() < RAND_MAX / 2) {
+				ll.add(rand());
+			} else {
+				print(ll.remove());
+				print(eol);
+			}
+			i++;
+		}
+		print('D'); print('o'); print('n'); print('e'); print('!');
+	}
+}
