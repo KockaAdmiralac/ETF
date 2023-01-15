@@ -47,7 +47,7 @@ terminal Integer UADDOP;
 terminal Integer MULOP;
 terminal Integer RELOP;
 
-nonterminal ConstDecl, Type, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, VarDeclMultiple, ClassMethodDecl, PreMainBlock, PreMainBlockList, MethodDeclList, ReturnType, FormPars, FormParamMultiple, FormParamSingle, StatementList, DesignatorStatement, ClassName, LoopHeader, IfHeader, ThenHeader, ElseHeader, Or, NewHeader;
+nonterminal ConstDecl, Type, ConstDeclSingle, ConstDeclList, VarDecl, VarDeclSingle, VarDeclList, VarDeclMultiple, FieldDecl, FieldDeclList, FieldDeclMultiple, ClassMethodDecl, PreMainBlock, PreMainBlockList, MethodDeclList, ReturnType, FormPars, FormParamMultiple, FormParamSingle, StatementList, DesignatorStatement, ClassName, LoopHeader, IfHeader, ThenHeader, ElseHeader, Or, NewHeader;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct ArrayBrackets, Term, Factor, Expr, Condition, CondTerm, CondFact;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Const, Program, ProgName, Designator, MethodName, MethodDecl, ConstructorType, ClassMethodBody, ClassDecl, Statement;
@@ -88,11 +88,23 @@ VarDeclList ::= (ListVarDeclList) VarDeclSingle COMMA VarDeclList
 
 VarDeclMultiple ::= (ListVarDeclMultiple) VarDeclMultiple VarDecl | (EmptyVarDeclMultiple) /* empty */;
 
+FieldDecl ::= (RegularFieldDecl) Type FieldDeclList SEMI
+			| (ErrorFieldDeclSemicolon) Type error:s {: parser.report_error("Error in class field declaration, recovery until semicolon", sleft); :} SEMI
+			| (ErrorFieldDeclBrace) Type error:s
+			/* TODO: Log message */
+			;
+
+FieldDeclList ::= (ListFieldDeclList) FieldDeclList COMMA VarDeclSingle
+			  | (SingleFieldDeclList) VarDeclSingle
+			  ;
+
+FieldDeclMultiple ::= (ListFieldDeclMultiple) FieldDeclMultiple FieldDecl
+					| (EmptyFieldDeclMultiple) /* empty */
+					;
+
 ArrayBrackets ::= (YesArrayBrackets) LBRACKET RBRACKET | (NoArrayBrackets) /* empty */;
 
-ClassDecl ::= (RegularClassDecl) CLASS ClassName LBRACE VarDeclMultiple ClassMethodDecl RBRACE
-			| (FieldErrorClassDecl) CLASS ClassName LBRACE error:s {: parser.report_error("Error in class field declaration, recovery until left brace", sleft); :} ClassMethodDecl RBRACE
-			;
+ClassDecl ::= (ClassDecl) CLASS ClassName LBRACE FieldDeclMultiple ClassMethodDecl RBRACE;
 
 ClassMethodDecl ::= (BodyClassMethodDecl) LBRACE ClassMethodBody RBRACE | (EmptyClassMethodDecl) /* empty */;
 

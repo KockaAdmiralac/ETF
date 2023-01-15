@@ -20,6 +20,7 @@ public class SemanticChecker extends VisitorAdaptor {
 	private int numConstructors = 0;
 	private Obj currentMethod = null;
 	private int loopCount = 0;
+	private boolean mainFound = false;
 	public boolean errorDetected = false;
 	private static final String[] objKindNames = { "Con", "Var", "Type", "Meth", "Fld", "Elem", "Prog" };
 	private static final String[] structKindNames = { "None", "Int", "Char", "Array", "Class", "Bool" };
@@ -99,7 +100,7 @@ public class SemanticChecker extends VisitorAdaptor {
 	public void visit(ProgName node) {
 		node.obj = Tab.insert(Obj.Prog, node.getName(), Tab.noType);
 		if (node.obj.getKind() != Obj.Prog) {
-			error("Program cannot have the same name as one of the predefined types", node);
+			error("Program cannot have the same name as one of the predefined types or methods", node);
 		}
 		logSymbol("Defined program type", node.obj, node);
 		Tab.openScope();
@@ -112,6 +113,9 @@ public class SemanticChecker extends VisitorAdaptor {
 		// Can't chain symbols under the type, as there is no type.
 		Tab.chainLocalSymbols(node.obj);
 		Tab.closeScope();
+		if (!mainFound) {
+			error("No main method found in the program.", null);
+		}
 	}
 
 	@Override
@@ -206,6 +210,11 @@ public class SemanticChecker extends VisitorAdaptor {
 	}
 
 	@Override
+	public void visit(RegularFieldDecl node) {
+		currentType = null;
+	}
+
+	@Override
 	public void visit(RegularClassName node) {
 		if (Tab.find(node.getName()) != Tab.noObj) {
 			error("Class name duplicates another symbol", node);
@@ -253,7 +262,7 @@ public class SemanticChecker extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(RegularClassDecl node) {
+	public void visit(ClassDecl node) {
 		Tab.chainLocalSymbols(currentClass.getType());
 		Tab.closeScope();
 		node.obj = currentClass;
@@ -278,6 +287,10 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(ConstructorClassMethodBody node) {
+		if (currentMethod == null) {
+			// There is no constructor defined.
+			return;
+		}
 		Tab.chainLocalSymbols(currentMethod);
 		Tab.closeScope();
 		ParameterList parameters = new ParameterList(currentMethod);
@@ -293,7 +306,8 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(MethodName node) {
-		if (Tab.find(node.getName()) != Tab.noObj) {
+		Obj prevSym = Tab.find(node.getName());
+		if (prevSym != Tab.noObj && prevSym.getKind() != Obj.Meth && prevSym.getLevel() > 0) {
 			error("Method name duplicates another symbol", node);
 			return;
 		}
@@ -305,12 +319,22 @@ public class SemanticChecker extends VisitorAdaptor {
 		Tab.openScope();
 		if (currentClass != null) {
 			addParam("this", currentClass.getType());
+		} else if (node.getName().equals("main")) {
+			if (currentMethod.getType() != Tab.noType) {
+				error("main() method must be declared void.", node);
+			} else {
+				mainFound = true;
+			}
 		}
 		node.obj = currentMethod;
 	}
 
 	@Override
 	public void visit(MethodDecl node) {
+		if (currentMethod == null) {
+			// We didn't even declare the method.
+			return;
+		}
 		Tab.chainLocalSymbols(currentMethod);
 		Tab.closeScope();
 		node.obj = currentMethod;
@@ -530,12 +554,14 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(RelopCondFact node) {
-		if (!node.getExpr().struct.compatibleWith(node.getExpr1().struct)) {
+		Struct type1 = node.getExpr().struct;
+		Struct type2 = node.getExpr1().struct;
+		if (!type1.compatibleWith(type2)) {
 			error("Both sides of a Relop expression must be compatible", node);
 			node.struct = Tab.noType;
 			return;
 		}
-		if (node.getExpr().struct.isRefType() && (node.getR2() > 1)) {
+		if (type1.isRefType() && node.getR2() > 1) {
 			error("When comparing reference types, only == or != may be used", node);
 			node.struct = Tab.noType;
 			return;
@@ -545,11 +571,6 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(IdentDesignator node) {
-		node.obj = Tab.find(node.getSymName());
-		if (node.obj != Tab.noObj) {
-			logSymbol("Designator detected", node.obj, node);
-			return;
-		}
 		if (currentClass != null) {
 			Obj methodFromSuperclass = getMethodFromSuperclasses(currentClass.getType(), node.getSymName());
 			if (methodFromSuperclass != null) {
@@ -557,6 +578,11 @@ public class SemanticChecker extends VisitorAdaptor {
 				logSymbol("Method from superclass detected", node.obj, node);
 				return;
 			}
+		}
+		node.obj = Tab.find(node.getSymName());
+		if (node.obj != Tab.noObj) {
+			logSymbol("Designator detected", node.obj, node);
+			return;
 		}
 		error("Symbol " + node.getSymName() + " not found", node);
 	}

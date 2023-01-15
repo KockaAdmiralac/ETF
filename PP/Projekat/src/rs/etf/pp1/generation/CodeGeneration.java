@@ -73,7 +73,7 @@ public class CodeGeneration extends VisitorAdaptor {
 	@Override
 	public void visit(MethodName node) {
 		node.obj.setAdr(Code.pc);
-		if (node.obj.getName().equals("main")) {
+		if (node.obj.getName().equals("main") && currentClass == null) {
 			Code.mainPc = Code.pc;
 			for (TVF tvf : vtables.values()) {
 				tvf.generate();
@@ -103,7 +103,7 @@ public class CodeGeneration extends VisitorAdaptor {
 	}
 
 	@Override
-	public void visit(RegularClassDecl node) {
+	public void visit(ClassDecl node) {
 		vtables.put(node.obj.getName(), new TVF(node.obj.getType()));
 		currentClass = null;
 	}
