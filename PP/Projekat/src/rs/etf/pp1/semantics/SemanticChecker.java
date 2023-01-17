@@ -148,6 +148,7 @@ public class SemanticChecker extends VisitorAdaptor {
 			return;
 		}
 		currentType = sym;
+		node.struct = sym.getType();
 	}
 
 	@Override
@@ -422,20 +423,21 @@ public class SemanticChecker extends VisitorAdaptor {
 
 	@Override
 	public void visit(ObjectReferenceFactor node) {
-		if (currentType == null) {
+		Struct type = node.getType().struct;
+		if (type == null) {
 			node.struct = Tab.noType;
 			return;
 		}
-		if (currentType.getType().getKind() != Struct.Class) {
+		if (type.getKind() != Struct.Class) {
 			node.struct = Tab.noType;
 			error("Only classes and arrays may be instatiated with 'new'", node);
 			return;
 		}
 		ParameterList parameters = node.getFunctionCall().parameterlist;
-		Collection<Obj> methods = (currentClass != null && currentClass.equals(currentType))
+		Collection<Obj> methods = (currentClass != null && currentClass.getType().equals(type))
 				? Tab.currentScope.getOuter().getLocals().symbols()
-				: currentType.getType().getMembers();
-		parameters.addThis(currentType.getType());
+				: type.getMembers();
+		parameters.addThis(type);
 		boolean constructorMatches = false;
 		for (Obj method : methods) {
 			if (!method.getName().startsWith("$constructor")) {
@@ -450,8 +452,11 @@ public class SemanticChecker extends VisitorAdaptor {
 			node.struct = Tab.noType;
 			return;
 		}
-		node.struct = currentType.getType();
-		logSymbol("Class instantiation detected", currentType, node);
+		node.struct = type;
+		if (currentType != null) {
+			// HACK
+			logSymbol("Class instantiation detected", currentType, node);
+		}
 		currentType = null;
 	}
 

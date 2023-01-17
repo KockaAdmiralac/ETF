@@ -6,6 +6,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 import rs.etf.pp1.ClassUtils;
+import rs.etf.pp1.Main;
 import rs.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.semantics.ParameterList;
@@ -174,12 +175,15 @@ public class CodeGeneration extends VisitorAdaptor {
 
 	@Override
 	public void visit(PrintNoNumberStatement node) {
-		if (node.getExpr().struct.equals(Tab.intType)) {
-			Code.loadConst(5);
-			Code.put(Code.print);
-		} else {
+		if (node.getExpr().struct.equals(Tab.charType)) {
 			Code.loadConst(1);
 			Code.put(Code.bprint);
+		} else if (node.getExpr().struct.equals(Main.boolType)) {
+			Code.loadConst(1);
+			Code.put(Code.print);
+		} else {
+			Code.loadConst(5);
+			Code.put(Code.print);
 		}
 	}
 
@@ -331,12 +335,12 @@ public class CodeGeneration extends VisitorAdaptor {
 	@Override
 	public void visit(UnaryAddopDesignatorStatement node) {
 		Obj obj = node.getDesignator().obj;
-		Code.load(obj);
 		if (obj.getKind() == Obj.Elem) {
 			Code.put(Code.dup2);
 		} else if (obj.getKind() == Obj.Fld) {
 			Code.put(Code.dup);
 		}
+		Code.load(obj);
 		Code.loadConst(1);
 		Code.put(node.getOp());
 		Code.store(obj);
