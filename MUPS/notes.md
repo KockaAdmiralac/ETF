@@ -1,0 +1,167 @@
+## Adaptivni protokoli
+
+- Poenta je da je na nivou podatka ponekad bolje WI a ponekad WU
+- Neki sistemi su mogli preko sistemskog poziva, na nivou stranice, da postave WI ili WU, ali to nije bilo dovoljno granularno
+- Dinamička detekcija sada radi tako što krene sa WU i kad vidi da se ažurirani podaci ne koriste prelazi na WI
+- RWB: prvi upis WU, drugi WI
+	- Nažalost, prerano je invalidirao podatke za potrebe sinhronizacije
+- EDWP: Umesto jednog upisa, prag je 3 upisa
+	- Stanja: kao u Dragon, sa dodatkom
+		- Sco: shared clean owner, kao Sc, sa vlasništvom, ima ulogu sličnu F
+		- Rw1: nakon detekcije upisa, svi ostali prelaze u Rw1
+		- Rw2: kao Rw1, samo drugi put
+		- Ako se pročita za vreme Rw1 ili Rw2 prelazi u Sc
+		- Ako su svi ostali u Rw2 ili Inv, prelazi se na invalidaciju, na osnovu S linije (ne diže se S linija)
+		- Nova linija: D (da li postoji kontroler u stanju M)
+		- Greška u primeru sa prezentacije: P3: Read X, S treba da bude 1 a ne -
+- Implementacija: ne radimo nešto naročito
+	- Ima mnogo međustanja, protokol od 4 stanja može da ima 20 međustanja
+
+## Directory protokoli
+
+- Na sistemima sa zajedničkom magistralom propusni opseg je ograničen pa se zato koriste snoopy protokoli
+- Drugačiji dijagrami?
+	- Kada pozvati akcije protokola: slično na svim sistemima, na osnovu keš memorije
+	- Pronađi informaciju o stanjima drugih kopija: ranije broadcast i snooping, sada directory zbog skalabilnosti
+	- Pronađi druge kopije: katalog
+	- Izvrši akcije nad ostalim kopijama: unicast porukama
+- Directory (katalog):
+	- Na nekom centralizovanom kontroleru
+	- Za svaki keš blok jedan ulaz tabele, i stanje i lokacija
+	- Za distribuciju memorije i kataloga koriste se: ravne (svi su na istom nivou) ili hijerarhijske (pristupa se po nekoj hijerarhiji) šeme
+	- Ravne šeme mogu biti memory-based i cache-based (u nastavku memory-based)
+	- Matični podaci nekog čvora se organizuju u njegovom katalogu
+	- Full-map: n bitova prisutnosti + 1 dirty bit
+	- Blok u keš memoriji uz sebe ima valid i dirty bit
+- Na read miss:
+	- Na osnovu adrese se gleda matični čvor i dolazi do njegovog direktorijuma
+	- Ako podatak nije dirty, beleži se da je procesor sad postao vlasnik i šalje mu se podatak
+	- Ako jeste dirty, gleda se direktorijum pa se onda ide do tog drugog procesora, koji takođe šalje podatke matičnom čvoru radi ažuriranja podatka i direktorijuma (beleži se prisutnost, uklanja se dirty)
+- Na write miss:
+	- Ako podatak nije dirty, vektor prisutnosti se šalje pozivaocu koji onda ide do svakog i javlja da njegova kopija nije ažurna, a direktorijum se ažurira tako da je pristnost samo u čvoru koji je izmenio a dirty = 1
+	- Ako podatak jeste dirty, čvoru koji ga drži se šalje zahtev za blokom i on ga zatim invalidira
+- Na zamenu:
+	- Ako je dirty, ažurira se memorija i katalog
+	- Ako nije, ne mora da se obaveštava memorija, ali će biti poneka beskorisna invalidaciona poruka
+- Performanse:
+	- Poruke gde drugi procesor vraća podatak i ažurira memoriju mogu u paraleli
+- Implementacija svega ovoga je složena, sa desetinama prelaznih stanja i mogućim utrkivanjima
+- Skaliranje:
+	- Dve karakteristike: saobraćaj (broj transakcija koje se generišu) i latencija (broj transakcija na kritičnom putu)
+	- Potreban prostor za katalog raste sa brojem procesora, ali i sa veličinom memorije
+	- Indikatori: frekvencija invalidacija i broj invalidacija po operaciji
+	- Mi smo pretpostavili da je broadcast veliki spam i zato veliko usporenje, simulacije pokazuju: broj aktivno deljenih kopija je mali i sporo raste sa brojem procesora
+	- To nam kaže da beskorisno koristimo prostor u katalogu
+	- Načini deljenja:
+		- Read-only: bez invalidacije
+		- Migratorni: 1-2 invalidacije
+		- Mostly-read: dosta ali retkih invalidacija
+		- Često upisivani i čitani: česte invalidacije ali malo deljenih kopija
+		- Sinhronizacioni: može veliki broj kopija ali retko, najbolje dodati hardversku podršku
+		- Multiprogramski serveri: samo zbog migracije procesa
+	- Zaključak je da skaliranje nije loše, ali moguće je smanjiti veličinu tabele
+- Full-map optimizacije:
+	- O(P * M) prostorni overhead, P = broj procesora, M = veličina memorije podeljena sa veličinom bloka
+	- Povećanje veličine bloka pomaže, ali postoje ostale posledice toga
+	- Smanjujemo širinu: manji broj pokazivača na keširane kopije (često do 5), svaki ima veličinu log2(P) bitova
+		- Naziv: Dir_i(X), i = broj pokazivača, X = strategija prekoračenja
+		- X=NB (no broadcast): Oslobađa pokazivač invalidacijom jedne deljene kopije, degradacija performansi kod intenzivne deljivosti
+		- X=B (broadcast): postavlja bit koji u narednom upisu šalje broadcast invalidaciju, i time povećava saobraćaj i latenciju upisa
+		- X=CV (coarse vector): isprva isto kao regularan (+ overflow bit), a onda se pretvara u "coarse vector", tako da svaki bit označava grupu procesora, i onda se invalidacije šalju po grupama
+			- Pogodno za multiprogramska okruženja i aplikacije sa dobrom lokalnošću
+			- Navodno bolji od B i NB
+		- X=SW (softverski prekid): prekid pri prekoračenju, pamte se pokazivači u memoriji i postavlja bit, a pri upisu ako je bit postavljen koriste se i zapamćeni pokazivači
+			- Povećava zauzetost procesora
+		- X=DP (dynamic pointers): pointer/link store u memoriji (?)
+	- Smanjujemo visinu: broj memorijskih blokova je mnogo veći od broja keširanih blokova
+		- Organizovati katalog kao keš memoriju, ali bez write-back i bez "blokova kataloga"
+		- Barem red veličine smanjenja, ali kolizije donose 15-20% više saobraćaja
+		- Dva keša: veći sa ograničenim brojem pokazivača, manji sa vektorima prisutnosti, tako da se prvo alocira u većem
+- Cache-based ravne šeme:
+	- Ulaz kataloga za jedan blok je distribuiran, tako da matični čvor ima zaglavlje liste a svaka sledeća kopija pokazuje na sledeću
+	- Blok se dostavlja iz memorije (not dirty) ili sa čela liste (dirty), a nove kopije idu na početak
+	- Pri upisu jedni propagiraju drugim
+	- Pri zameni se izlančavaju (dvostruko ulančana)
+	- Prednosti: manji prostor, decentralizovan overhead, standardizovano
+	- Mane: kompleksnost (sinhronizacija), latencija srazmerna broju kopija
+
+
+## Interkonekcione mreže
+
+- Projektne odluke:
+	1. Topologija: kako je šta povezano
+	2. Rutiranje: kako šta stiže od jednog do drugog čvora
+	3. Baferovanje i kontrola toka
+- Indirektne mreže:
+	- Opšte karakteristike:
+		- Zasnivaju se na prekidačkih elementima koji dozvoljavaju komunikaciju između terminalnih čvorova
+		- Veze se uspostavljaju dinamički
+	- Magistrala:
+		- Prednosti: jednostavna, ekonomski isplativa i omogućava snoopy protokole
+		- Mane: neskalabilna, eksluzivna, električna ograničenja
+	- Krosbar:
+		- Svaki ulaz može da se rutira u svaki izlaz
+		- Prednosti: niska latencija, visok propusni opseg, ne-eksluzivna
+		- Mane: skupa (neskalabilna, kvadratna složenost), distribuirana arbitracija
+		- Obično se veći krosbar implementira podelom na manje
+	- Multistage Interconnection Networks:
+		- Kompromis
+		- Više stepeni prekidača
+		- Prekidači imaju k ulaza i k izlaza koji mogu da se povežu
+		- Složenost O(NlogN), latencija O(logN)
+		- Butterfly mreža menja nulti i drugi a onda nulti i prvi bit, Omega radi perfect shuffle
+		- Rutiranje se vrši tako što ako je bit 0 napuštamo na ... a ako je 1 obrnuto
+		- Mogu biti i blokirajuće i neblokirajuće:
+			- Blokirajuće: zahtev će biti zadržan ako treba da koristi isti link kao neki drugi
+			- Neblokirajuće: ?
+- Direktne mreže:
+	- Opšte karakteristike:
+		- Svaki čvor ima direktne veze sa nekim drugim čvorovima
+		- Za razliku od nekih drugih, koriste lokalnost (latencija nije fiksna)
+	- Parametri:
+		- Stepen čvora (d): broj linkova iz čvora (najbolje manji i konstantan)
+		- Prečnik (D): maksimalno najkraće rastojanje između dva čvora (najbolje manji)
+		- Simetrija: izgleda isto iz svakog čvora
+		- Regularnost: stepen je konstantan
+		- Propusni opseg bisekcije (B): najmanji broj žica koji treba da presečemo da bi se mreža podelila na dva jednaka dela
+	- Linearni niz: d = 2, D = n-1, B = 1, prosečna distanca n/3, nesimetrična
+		- Kao magistrala ali ipak dozvoljava paralelne transfere
+	- Prsten: d = 2, D = n/2, B = 2, prosečna distanca n/4, simetrična
+		- Kordalni prstenovi: dodajemo poprečne veze da smanjimo prečnik
+	- Mesh (grid): d = 4, D = 2 * (sqrt(n) - 1), B = sqrt(n), nesimetrična
+		- Pogodna za algoritme koji koriste lokalnost
+		- Lako izbegava deadlock i laka za implementaciju
+	- Dvodimenzioni torus: d = 4, D = sqrt(n) - 1, B = 2 * sqrt(n), simetrična
+		- Pogodna za algoritme sa 2D nizovima
+		- Teža za implementaciju na čipu
+	- Hiperkocka: d = log2(n), D = d - O(logN), B = n/2
+		- Teža implementacija za veće d, lošija skalabilnost
+		- Adresiranje Grejevim kodom, put je jednak broju različitih bitova
+	- CCC (Cycle Connected Cubes):
+		- Kao hiperkocka ali ima prstenove u temenima, isečeni ćoškovi
+		- Svaki čvor ima stepen 3 nezavisno od d
+		- Negativno: D = 2d (latencija se povećava)
+	- K-narna d-kocka:
+		- k čvorova u jednoj dimenziji
+		- Stepen je 2d
+		- D = dk/2, B = dk/4
+	- Stabla: n = 2^k - 1, d = 3
+		- Latencija nejednaka, dobra ako se koristi lokalnost
+		- Gornji nivoi će imati veću potrebu za bandwidth, "fat tree"
+
+## Hijerarhijski protokoli
+- Pogledati uvodnu priču o hijerarhijama i inkluziji
+- Dvonivoska hijerarhija i nadalje nebitno
+- Samo u kasnijim rokovima
+- Kontradiktorni zahtevi od keš memorije: veća brzina i veći faktor pogotka
+- Hijerarhijske keš memorije: niži slojevi su brži
+- Organizacije:
+	- Privatna: sve keš memorije su privatne
+	- Deljena: bliži nivoi su privatni, dalji su deljeni
+- Inkluzija:
+	- Sadržaj L1 mora biti podskup L2
+	- Modifikovan blok u L1 mora imati isto stanje u L2
+	- Problem sa LRU: jedan blok može biti korišćeniji u jednom bloku nego u drugom
+	- Propagacija: Invalid i Dirty bitovi
+	- Upis se prosleđuje L2 pri promašaju, upisu u deljeni blok ili zamene
+	- L1 se prosleđuju invalidacije i write-back
