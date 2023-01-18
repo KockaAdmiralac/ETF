@@ -1,11 +1,54 @@
 program test
 
 class A {
-	int a+;
-	int a+
-	{}
+	int a;
 }
 
+class B {
+	A a;
+	{
+		B(A a) {
+			this.a = a;
+		}
+	}
+}
+
+class C {
+	B b[];
+}
+
+class D extends C {}
+
 {
-	void main() {}
+	int lol() {
+	}
+
+	void main() D d; B b; int i, j; {
+		d = new D();
+		d.b = new B[1];
+		d.b[0] = new B();
+		d.b[0].a = new A();
+		d.b[0].a.a++;
+		d.b.foreach(b => print(b.a.a););
+		i = 0;
+		while (i < 1000) {
+			i++;
+			if (i % 20 != 0 && i % 4 == 0 || i % 20 != 0 && i % 5 == 0) {
+				continue;
+			} else {
+				j = 0;
+				while (j < 3) {
+					if ((i + j) % 2 == 0) {
+						break;
+					}
+					print('a');
+					j++;
+				}
+				print(((('b'))));
+			}
+			print(i);
+			print(eol);
+		}
+		lol();
+	}
 }
