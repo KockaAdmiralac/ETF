@@ -1,0 +1,32 @@
+#rn-container {
+    display: block;
+}
+
+.map {
+    position: relative;
+}
+
+.like-button {
+    background-color: transparent;
+    border: 0;
+}
+
+.participated-actions {
+    align-items: center;
+    background-color: lightcoral;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    padding: 20px;
+    width: fit-content;
+}
+
+.participated-actions svg {
+    height: 24px;
+    margin-left: 10px;
+    width: 24px;
+}
+
+.liked {
+    fill: red;
+}

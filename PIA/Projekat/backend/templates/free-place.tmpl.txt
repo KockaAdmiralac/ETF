@@ -1,0 +1,1 @@
+There are free places at {name}! You can now sign up at {url}.

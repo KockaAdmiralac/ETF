@@ -1,0 +1,58 @@
+{
+    "name": "pia-backend",
+    "version": "1.0.0",
+    "description": "Backend API service for my PIA project.",
+    "main": "dist/main.js",
+    "scripts": {
+        "start": "ts-node src/index.ts",
+        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/KockaAdmiralac/ETF.git",
+        "directory": "PIA/Projekat"
+    },
+    "keywords": [
+        "etf",
+        "pia",
+        "express"
+    ],
+    "author": {
+        "name": "Luka Simić",
+        "email": "git@kocka.tech",
+        "url": "https://kocka.tech"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@altostra/type-validations": "2.7.0",
+        "bcrypt": "5.1.0",
+        "cors": "2.8.5",
+        "express": "4.18.2",
+        "express-jwt": "8.2.1",
+        "image-size": "1.0.2",
+        "jsonwebtoken": "9.0.0",
+        "multer": "1.4.5-lts.1",
+        "mysql": "2.18.1",
+        "nodemailer": "6.8.0",
+        "typeorm": "0.3.11"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "5.0.0",
+        "@types/cors": "2.8.13",
+        "@types/express": "4.17.15",
+        "@types/multer": "1.4.7",
+        "@types/node": "18.11.18",
+        "@types/nodemailer": "6.4.7",
+        "@typescript-eslint/eslint-plugin": "5.47.1",
+        "@typescript-eslint/parser": "5.47.1",
+        "eslint": "8.31.0",
+        "eslint-plugin-jsdoc": "39.6.4",
+        "eslint-plugin-node": "11.1.0",
+        "eslint-plugin-promise": "6.1.1",
+        "ts-node": "10.9.1",
+        "typescript": "4.9.4"
+    },
+    "engines": {
+        "node": ">=16"
+    }
+}

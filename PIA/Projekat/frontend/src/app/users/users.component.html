@@ -1,0 +1,100 @@
+<h2>User management</h2>
+<h3>All users</h3>
+<div class="table">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr *ngFor="let user of users" [class.unreviewed]="user.status == 'unreviewed'">
+            <td>{{user.id}}</td>
+            <td><input type="text" name="username" [(ngModel)]="user.username"></td>
+            <td><input type="text" name="name" [(ngModel)]="user.name"></td>
+            <td><input type="text" name="surname" [(ngModel)]="user.surname"></td>
+            <td><input type="text" name="phone" [(ngModel)]="user.phone"></td>
+            <td>
+                <select [(ngModel)]="user.role">
+                    <option value="basic">Regular user</option>
+                    <option value="organization">Organization</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </td>
+            <td>
+                <select [(ngModel)]="user.status">
+                    <option value="unreviewed">Unreviewed</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </td>
+            <td><button (click)="editUser(user.id)">Edit</button></td>
+            <td><button (click)="deleteUser(user.id)">Delete</button></td>
+        </tr>
+    </table>
+</div>
+<p class="error">{{managementError}}</p>
+<h3>Organization account registration</h3>
+<form (submit)="register($event)">
+    <p>
+        <label for="username">Username:</label>
+        <input type="text" name="username" [(ngModel)]="username">        
+    </p>
+    <p>
+        <label for="password">Password:</label>
+        <input type="password" name="password" [(ngModel)]="password">        
+    </p>
+    <p>
+        Password rules:
+    </p>
+    <ul>
+        <li>Must be between 8 and 16 characters in length, inclusive.</li>
+        <li>Must contain at least one lowercase letter, uppercase letter, number and special character.</li>
+        <li>Must start with a letter.</li>
+    </ul>
+    <p>
+        <label for="confirm-password">Confirm password:</label>
+        <input type="password" name="confirm-password" [(ngModel)]="confirmPassword">        
+    </p>
+    <p>
+        <label for="email">Email:</label>
+        <input type="email" name="email" [(ngModel)]="email">        
+    </p>
+    <p>
+        <label for="name">Name:</label>
+        <input type="text" name="name" [(ngModel)]="name">        
+    </p>
+    <p>
+        <label for="surname">Surname:</label>
+        <input type="text" name="surname" [(ngModel)]="surname">        
+    </p>
+    <p>
+        <label for="phone">Phone number:</label>
+        <input type="tel" name="phone" [(ngModel)]="phone">        
+    </p>
+    <p>
+        <label for="address">Address:</label>
+        <input type="text" name="address" [(ngModel)]="address">        
+    </p>
+    <p>
+        <label for="organization">Organization name:</label>
+        <input type="text" name="organization" [(ngModel)]="organization">        
+    </p>
+    <p>
+        <label for="oid">Organization ID:</label>
+        <input type="number" name="oid" [(ngModel)]="oid">
+    </p>
+    <p>
+        <label for="avatar">Avatar:</label>
+        <input type="file" name="avatar" id="avatar" (change)="registerAvatar($event)">
+    </p>
+    <p>
+        <input type="submit" value="Register">        
+    </p>
+    <p class="error">{{registrationError}}</p>
+</form>

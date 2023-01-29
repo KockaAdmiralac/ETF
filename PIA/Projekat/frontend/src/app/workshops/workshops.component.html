@@ -1,0 +1,86 @@
+<h2>Workshops</h2>
+<section>
+    <h3>All workshops</h3>
+    <form>
+        <p>
+            <label for="search-name">Search by name:</label>
+            <input type="text" id="search-name" name="search-name" [(ngModel)]="searchName" (input)="updateSearch()">
+        </p>
+        <p>
+            <label for="search-place">Search by place:</label>
+            <input type="text" id="search-place" name="search-place" [(ngModel)]="searchPlace" (input)="updateSearch()">
+        </p>
+    </form>
+    <div class="table">
+        <table>
+            <tr>
+                <th>Photo</th>
+                <th (click)="sortBy('name')">Name</th>
+                <th (click)="sortBy('date')">Date</th>
+                <th (click)="sortBy('place')">Place</th>
+                <th (click)="sortBy('snippet')">Description</th>
+                <th *ngIf="util.isAdmin()">Edit</th>
+                <th *ngIf="util.isAdmin()">Delete</th>
+                <th *ngIf="util.isAdmin()">Approve</th>
+            </tr>
+            <tr *ngFor="let workshop of shownWorkshops" [class.unreviewed]="!workshop.active">
+                <td><img src="{{util.photoUrl(workshop.photos[0])}}"></td>
+                <td>
+                    <a *ngIf="util.isLoggedIn()" [routerLink]="[workshop.id]">{{workshop.name}}</a>
+                    <span *ngIf="!util.isLoggedIn()">{{workshop.name}}</span>
+                </td>
+                <td>{{workshop.date}}</td>
+                <td>{{workshop.place}}</td>
+                <td>{{workshop.snippet}}</td>
+                <td *ngIf="util.isAdmin()"><a [routerLink]="[workshop.id, 'edit']">Edit</a></td>
+                <td *ngIf="util.isAdmin()"><button (click)="deleteWorkshop(workshop.id)">Delete</button></td>
+                <td *ngIf="util.isAdmin()"><button (click)="approveWorkshop(workshop.id)" *ngIf="!workshop.active">Activate</button></td>
+            </tr>
+        </table>
+    </div>
+    <p class="error">{{error}}</p>
+</section>
+<section *ngIf="!util.isLoggedIn()">
+    <h3>Top 5 workshops</h3>
+    <div class="table">
+        <table>
+            <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Place</th>
+                <th>Description</th>
+            </tr>
+            <tr *ngFor="let workshop of top5Workshops">
+                <td><img src="{{util.photoUrl(workshop.photos[0])}}"></td>
+                <td>{{workshop.name}}</td>
+                <td>{{workshop.date}}</td>
+                <td>{{workshop.place}}</td>
+                <td>{{workshop.snippet}}</td>
+            </tr>
+        </table>
+    </div>
+</section>
+<section *ngIf="util.isLoggedIn()">
+    <h3>My workshops</h3>
+    <div class="table">
+        <table>
+            <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Place</th>
+                <th>Description</th>
+                <th *ngIf="util.isOrganization()">Edit</th>
+            </tr>
+            <tr *ngFor="let workshop of myWorkshops">
+                <td><img src="{{util.photoUrl(workshop.photos[0])}}"></td>
+                <td><a [routerLink]="[workshop.id]">{{workshop.name}}</a></td>
+                <td>{{workshop.date}}</td>
+                <td>{{workshop.place}}</td>
+                <td>{{workshop.snippet}}</td>
+                <td *ngIf="util.isOrganization()"><a [routerLink]="[workshop.id, 'edit']">Edit</a></td>
+            </tr>
+        </table>
+    </div>
+</section>

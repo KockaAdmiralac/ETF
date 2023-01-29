@@ -1,0 +1,1 @@
+Workshop {name} at {url} has been cancelled!

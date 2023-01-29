@@ -1,0 +1,56 @@
+<h2>Edit workshop</h2>
+<h3>Edit information</h3>
+<form (submit)="editWorkshop($event)">
+    <p>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="name">
+    </p>
+    <p>
+        <label for="date">Date:</label>
+        <input type="datetime-local" id="date" name="date" [(ngModel)]="date">
+    </p>
+    <p>
+        <label for="place">Place:</label>
+        <input type="text" id="place" name="place" [(ngModel)]="place">
+    </p>
+    <p>
+        <label for="latitude">Latitude:</label>
+        <input type="number" id="latitude" name="latitude" [(ngModel)]="latitude">
+    </p>
+    <p>
+        <label for="longitude">Longitude:</label>
+        <input type="number" id="longitude" name="longitude" [(ngModel)]="longitude">
+    </p>
+    <p>
+        <label for="capacity">Capacity:</label>
+        <input type="number" id="capacity" name="capacity" [(ngModel)]="capacity">
+    </p>
+    <p>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" [(ngModel)]="description">
+    </p>
+    <p>
+        <label for="snippet">Snippet:</label>
+        <input type="text" id="snippet" name="snippet" [(ngModel)]="snippet">
+    </p>
+    <p *ngIf="photos.length < 5">
+        <label for="images">Add images:</label>
+        <input type="file" id="images" name="images" multiple (change)="updateImages($event)">
+    </p>
+    <ul class="gallery">
+        <li *ngFor="let photo of photos"><img src="{{util.photoUrl(photo)}}"></li>
+    </ul>
+    <p>
+        <input type="submit" value="Save">
+    </p>
+    <p class="error">{{error}}</p>
+</form>
+<h3>Accept participants</h3>
+<ul>
+    <li *ngFor="let user of signups">{{user.name}} {{user.surname}} <button (click)="acceptSignup(user)">Accept</button></li>
+</ul>
+<h3>Other actions</h3>
+<ul>
+    <li><button (click)="cancelWorkshop()">Cancel workshop</button></li>
+    <li><button (click)="saveTemplate()">Save as template</button></li>
+</ul>

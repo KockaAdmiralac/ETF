@@ -1,0 +1,59 @@
+.messages {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.thread-list {
+    list-style-type: none;
+    margin: 0;
+    min-width: 150px;
+    padding: 0;
+    width: 150px;
+}
+
+.thread-list li {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.thread-list li:not(:first-child) {
+    border-top: 0;
+}
+
+.thread {
+    box-sizing: border-box;
+    border: 1px solid black;
+    min-height: 300px;
+    min-width: 500px;
+    height: 500px;
+    width: 500px;
+}
+
+.thread form {
+    display: flex;
+}
+
+.thread input[type="text"] {
+    flex-grow: 1;
+}
+
+.message-list {
+    height: 400px;
+    overflow-y: auto;
+}
+
+.message-list input {
+    display: block;
+    width: 100%;
+}
+
+.comment-data {
+    margin-right: 10px;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.comment.mine {
+    flex-direction: row-reverse;
+}

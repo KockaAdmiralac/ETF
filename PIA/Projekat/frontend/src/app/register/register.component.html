@@ -1,0 +1,47 @@
+<h2>Account registration</h2>
+<form (submit)="register($event)">
+    <p>
+        <label for="username">Username:</label>
+        <input type="text" name="username" [(ngModel)]="username">        
+    </p>
+    <p>
+        <label for="password">Password:</label>
+        <input type="password" name="password" [(ngModel)]="password">        
+    </p>
+    <p>
+        Password rules:
+    </p>
+    <ul>
+        <li>Must be between 8 and 16 characters in length, inclusive.</li>
+        <li>Must contain at least one lowercase letter, uppercase letter, number and special character.</li>
+        <li>Must start with a letter.</li>
+    </ul>
+    <p>
+        <label for="confirm-password">Confirm password:</label>
+        <input type="password" name="confirm-password" [(ngModel)]="confirmPassword">        
+    </p>
+    <p>
+        <label for="email">Email:</label>
+        <input type="email" name="email" [(ngModel)]="email">        
+    </p>
+    <p>
+        <label for="name">Name:</label>
+        <input type="text" name="name" [(ngModel)]="name">        
+    </p>
+    <p>
+        <label for="surname">Surname:</label>
+        <input type="text" name="surname" [(ngModel)]="surname">        
+    </p>
+    <p>
+        <label for="phone">Phone number:</label>
+        <input type="tel" name="phone" [(ngModel)]="phone">        
+    </p>
+    <p>
+        <label for="avatar">Avatar:</label>
+        <input type="file" name="avatar" id="avatar" (change)="registerAvatar($event)">
+    </p>
+    <p>
+        <input type="submit" value="Register">
+    </p>
+    <p class="error">{{error}}</p>
+</form>

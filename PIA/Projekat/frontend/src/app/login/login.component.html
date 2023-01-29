@@ -1,0 +1,19 @@
+<h2>Login</h2>
+<form (submit)="login($event)">
+    <p>
+        <label for="username">Username:</label>
+        <input type="text" name="username" [(ngModel)]="username">
+    </p>
+    <p>
+        <label for="password">Password:</label>
+        <input type="password" name="password" [(ngModel)]="password">
+    </p>
+    <p>
+        <input type="submit" value="Login">
+    </p>
+    <p class="error">{{error}}</p>
+    <p>
+        <a class="button" [routerLink]="['/account/register']">Register</a>
+        <a class="button" [routerLink]="['/account/forgot-password']">Forgot password?</a>
+    </p>
+</form>

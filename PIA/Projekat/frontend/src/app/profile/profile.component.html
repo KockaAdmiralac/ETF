@@ -1,0 +1,107 @@
+<h2>Profile</h2>
+<form (submit)="updateProfile($event)">
+    <p>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" [(ngModel)]="password">
+    </p>
+    <p>
+        <label for="confirm-password">Confirm password:</label>
+        <input type="password" name="confirm-password" id="confirm-password" [(ngModel)]="confirmPassword">
+    </p>
+    <p>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" [(ngModel)]="email">
+    </p>
+    <p>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" [(ngModel)]="name">
+    </p>
+    <p>
+        <label for="surname">Surname:</label>
+        <input type="text" name="surname" id="surname" [(ngModel)]="surname">
+    </p>
+    <p>
+        <label for="phone">Phone:</label>
+        <input type="tel" name="phone" id="phone" [(ngModel)]="phone">
+    </p>
+    <p *ngIf="util.isOrganization()">
+        <label for="organization">Organization:</label>
+        <input type="text" name="organization" id="organization" [(ngModel)]="organization">
+    </p>
+    <p *ngIf="util.isOrganization()">
+        <label for="address">Address:</label>
+        <input type="text" name="address" id="address" [(ngModel)]="address">
+    </p>
+    <p *ngIf="util.isOrganization()">
+        <label for="oid">Organization ID:</label>
+        <input type="number" name="oid" id="oid" [(ngModel)]="oid">
+    </p>
+    <p>
+        <label for="avatar">Avatar:</label>
+        <img src="{{user && util.profilePictureUrl(user)}}?cb={{cachebuster}}" *ngIf="user && user.hasAvatar">
+        <input type="file" name="avatar" id="avatar" (change)="updateAvatarFile($event)">
+    </p>
+    <p>
+        <input type="submit" value="Update profile">
+    </p>
+    <p class="error">{{updateProfileError}}</p>
+    <p class="success">{{updateProfileSuccess}}</p>
+</form>
+<h2>Workshops</h2>
+<div class="table">
+    <table>
+        <tr>
+            <th (click)="sortBy('name')">Name</th>
+            <th (click)="sortBy('date')">Date</th>
+            <th (click)="sortBy('place')">Place</th>
+            <th (click)="sortBy('snippet')">Description</th>
+        </tr>
+        <tr *ngFor="let workshop of workshops">
+            <td>{{workshop.name}}</td>
+            <td>{{workshop.date}}</td>
+            <td>{{workshop.place}}</td>
+            <td>{{workshop.snippet}}</td>
+        </tr>
+    </table>
+</div>
+<h2>Audit log</h2>
+<div>
+    <section>
+        <h3>Comments</h3>
+        <ul>
+            <li *ngFor="let comment of comments"><input type="text" [(ngModel)]="comment.text"> (at {{comment.workshop?.name}})<button (click)="editComment(comment)">Edit</button><button (click)="deleteComment(comment)">Delete</button></li>
+        </ul>
+    </section>
+    <section>
+        <h3>Likes</h3>
+        <ul>
+            <li *ngFor="let like of likes">{{like.name}} <button (click)="dislike(like)">Dislike</button></li>
+        </ul>
+    </section>
+</div>
+<h2>Threads</h2>
+<div class="messages">
+    <ul class="thread-list">
+        <li *ngFor="let thread of threads" (click)="openThread(thread)">
+            <span *ngIf="util.isOrganization()">{{thread.workshop.name}}: {{thread.user.name}}</span>
+            <span *ngIf="!util.isOrganization()">{{thread.workshop.name}}</span>
+        </li>
+    </ul>
+    <div class="thread" *ngFor="let thread of openThreads">
+        <h4 *ngIf="util.isOrganization()">{{thread.user.name}}</h4>
+        <h4 *ngIf="!util.isOrganization()">{{thread.workshop.name}}</h4>
+        <div class="message-list">
+            <div class="comment" *ngFor="let message of thread.messages" [class.mine]="user && message.user.id === user.id">
+                <div class="profile-picture"><img src="{{util.profilePictureUrl(message.user)}}"></div>
+                <div class="comment-data">
+                    <p class="comment-user-date"><strong>{{message.user.name}}</strong>, {{message.date}}</p>
+                    <p class="comment-text">{{message.text}}</p>
+                </div>
+            </div>
+        </div>
+        <form (submit)="sendMessage(thread)">
+            <input type="text" [(ngModel)]="messages[thread.id]" name="message">
+            <input type="submit" value="Send">
+        </form>
+    </div>
+</div>

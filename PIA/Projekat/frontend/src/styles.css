@@ -1,0 +1,207 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+}
+
+input, select, button {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
+.unreviewed {
+    background-color: orange;
+}
+
+div[style*="position: fixed;"] {
+    display: none;
+}
+
+header {
+    align-items: stretch;
+    background-color: limegreen;
+    display: flex;
+}
+
+header h1 {
+    margin: 0;
+    padding: 10px;
+}
+
+nav {
+    flex-grow: 1;
+}
+
+nav ul {
+    align-items: stretch;
+    display: flex;
+    height: 100%;
+    justify-content: right;
+    list-style-type: none;
+    margin: 0;
+}
+
+nav li {
+    align-items: center;
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+nav li:hover {
+    background: green;
+}
+
+nav li a, nav button {
+    color: black;
+    font-size: 1em;
+    text-decoration: none;
+}
+
+nav button {
+    background: red;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 3px;
+}
+
+nav button:active {
+    background: darkred;
+}
+
+.see-more {
+    display: none;
+}
+
+main {
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto;
+    padding: 20px;
+    width: 1000px;
+}
+
+.table {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    min-width: 100%;
+}
+
+table td, table th {
+    border: 1px solid black;
+    padding: 3px;
+}
+
+table td input, table td select {
+    border: none;
+}
+
+table td select {
+    background-color: transparent;
+}
+
+form > p {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+}
+
+.gallery {
+    display: flex;
+    gap: 20px;
+    list-style-type: none;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.gallery li {
+    align-items: center;
+    background-color: #EEE;
+    border: 1px solid black;
+    box-sizing: border-box;
+    display: flex;
+    height: 200px;
+    justify-content: center;
+    padding: 20px;
+    width: 200px;
+}
+
+.gallery li img {
+    max-height: 200px;
+    max-width: 200px;
+}
+
+@media screen and (max-width: 500px) {
+    form > p {
+        display: block;
+    }
+    form > p > * {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .see-more {
+        display: block;
+        flex-grow: 1;
+        padding: 10px;
+        text-align: right;
+    }
+    nav ul {
+        display: none;
+    }
+    nav ul.visible {
+        display: block;
+    }
+    header > div {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    header {
+        display: block;
+    }
+    main {
+        width: 100%;
+    }
+}
+
+footer {
+    background-color: lightgray;
+    box-sizing: border-box;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.profile-picture img {
+    border-radius: 5px;
+    max-height: 50px;
+    max-width: 50px;
+}
+
+.comment {
+    align-items: center;
+    display: flex;
+    gap: 20px;
+}
+
+.comment-text {
+    background-color: lightgray;
+    border: 3px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+}
