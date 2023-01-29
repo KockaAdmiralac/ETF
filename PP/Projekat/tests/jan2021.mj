@@ -1,0 +1,22 @@
+program Januar2021
+    const int K = 3;
+    class CL { int p; }
+    CL global;
+{
+    void m(CL arg)
+        int y;
+    {
+        if (y >= K || y == 0)
+            global.p++;
+        else arg.p = K;
+    }
+    void main()
+        int x; int arr[];
+    {
+        global = new CL();
+        arr = new int[3];
+        arr[K-2] = -arr[x];
+        m(global);
+        global.p = 2 + x * arr[0];
+    }
+}
