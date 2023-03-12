@@ -1,0 +1,60 @@
+## Napredne tehnike keš optimizacije
+- Tehnike:
+    - Hit time:
+        - Small and simple first-level caches
+        - Way prediction: Predvidi iz koje banke će da se servira podatak ili instrukcija
+    - Bandwidth:
+        - Pipelined caches: ?
+        - Multibanked caches: Više banki keša, kao memory interleaving samo umesto jednog podatka iz više banki se različitim bankama zadaju različiti podaci
+        - Non-blocking caches: dozvoli dovlačenje nekog drugog podatka dok operativna memorija odgovara za neki prethodni
+    - Miss penalty:
+        - Critical word first: prvo vrati onu reč koja je tražena iz memorije a zatim dovlači ostatak bloka
+        - Merging write buffers: Kada izbacujemo podatak iz keša on se izbaci iz write buffer, a mi možemo da čekamo da nam se napuni write buffer pa da ga upišemo
+            - Ovo ima probleme sa konkurentnim programima i IO
+    - Miss rate:
+        - Compiler optimizations:
+            - Merging arrays: umesto dva niza kompajler napravi niz struktura, ili obrnuto
+            - Loop interchange: ako smo zeznuli redosled pristupa matrici kompajler to može da popravi
+            - Loop fusion: ako dve (nezavisne!) petlje zaredom obilaze istu strukturu on može da ih spoji
+            - Blocking: podeli matricu nad kojom se radi na blokove tako da ti odgovarajući broj blokova stane u keš memoriju
+    - Paralelizacija:
+        - Hardware prefetching: keš može da vidi kako mi redom pristupamo blokovima pa dovuče i sledeće blokove
+        - Software prefetching: kompajler može ovo gore da uradi
+            - U onom njegovom primeru poslednji prefetch radi izbacivanje i zato ne možemo da radimo prefetch b
+    - HBM: High-Bandwidth Memory
+        - Naslažu više slojeva peska kako bi dobili više memorije
+        - Problem: manji blokovi zahtevaju više mesta za čuvanje tagova
+        - Loh-Hill (L-H) keš
+        - Alloy cache: čuvamo tagove u odvojenoj keš memoriji
+            - Pošto nam je set-asocijativnost 29 možemo da ubacimo direktno mapiranje negde?
+            - Memory Access Predictor
+- Algoritmi zamene:
+    - Približni LRU:
+        - Zamena na osnovu jednog bita
+            - Prvo biramo na osnovu jednog bita a kasnije nasumično, ili obrnuto
+            - Složenost: ~~1~~NB? + log2(SA) - 1
+            - 5-10% gori od LRU
+        - Most Recently Used
+            - Postavlja bit na 1 kad se pristupi, resetuje sve kad svi postanu 1
+            - Složenost: NB * SA
+            - 1% bolji do 3% gori
+        - Modifikacija i486
+            - Umesto poslednjeg se čuva pretposlednji pristup
+            - Složenost: NB * SA
+        - SIDE
+            - Hit: postavimo brojač desno od mesta pogotka, ako je mesto pogotka desno
+            - Miss: zamenimo na mestu brojača i inkrementiramo
+            - 0-5% gori za malu asocijativnost
+    - Bolji od LRU (ali teoretski):
+        - 2Q: Tri reda, A1in (jedan pogodak, zaštićen, FIFO), A1out (jedan pogodak, nezaštićen, FIFO), An (više pogodaka, LRU)
+            - Hit An: update LRU
+            - Hit A1in: zameni blok iz An i A1in, update LRU, update FIFOin
+            - Hit A1out: A1out -> An -> A1in -> A1out, update LRU, update FIFOin, update FIFOout
+            - Miss: podatak -> A1in -> A1out -> izbacivanje, update FIFOin, update FIFOout
+        - LRU-K: K šift registara, izbacujemo onog sa najmanje kečeva ili najdaljim kecom
+        - SLRU: zaštićen i moguć segment, oba po LRU
+        - ARC (Adaptive Replacement Cache):
+            - Dva reda (L1 i L2) sa dva segmenta (Top i Bottom)
+            - ||L1|| = ||L2|| = ||T1 + T2|| = c
+            - Podešava se parametar p kojim se određuje dužina T1
+            - Prioritet: T2 > B2 > T1 > B1
