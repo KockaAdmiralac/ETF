@@ -1,4 +1,5 @@
 ## Operativna memorija
+- Iskorišćenje memorije, veličina propusnog opsega
 - `s`: veličina posla
     1. Model jednakih veličina (svi poslovi jednakih veličina)
     2. Sve veličine jednako verovatne (srednja veličina je `a`)
@@ -28,3 +29,49 @@
         - $p_s = x, p_b = 1 - x$, za svaki prelaz verovatnoća je proizvod verovatnoća veličina tih programa, obratiti pažnju na prelaze iz BE
     - Markovljevi lanci:
         - Za svako stanje mašine verovatnoća da se nađe u tom stanju jeste verovatnoća susednih stanja pomnožena sa verovatnoćom prelaza iz tog stanja
+- Knuth-ov model nevirtuelnih dinamičkih particija:
+    - B: blok, H: hole
+    - Procena broja rupa i broja blokova, iskorišćenje memorije
+    - Rupe se spajaju u jednu
+    - `n`: srednji broj rupa, `m`: srednji broj blokova
+    - Gledamo kako se pri alokaciji i dealokaciji menjaju `m` i `n`
+    - `a`: broj blokova samih između rupa, `b`: na početku niza blokova, `c`: na kraju niza blokova, `d`: u sredini niza blokova
+        - $b = c$
+        - $2n = 2a + b + c$
+        - $p$: verovatnoća savršenog popunjavanja rupe pri alokaciji
+        - $\Delta n = p_{dealloc} [ p_d - p_a ] + p_{alloc} [ -p ] = p_{dealloc} \frac{d - a}{m} - p_{alloc} p$
+        - Alociranje i dealociranje jednakoverovatno: $\Delta n = \frac{d - a}{m} - p = 0$
+        - $d = a + pm \implies m = 2a + b + c + pm \implies m (1 - p) = 2n \implies n = \frac{m (1 - p)}{2}$
+    - Iskorišćenje memorije: $U = m \cdot \overline{S}$
+        - $c = \frac{\overline{H}}{\overline{s}}$, odnos veličine rupa i programa
+        $1 = m\overline{S} + n\overline{H} = m(\overline{S} + \frac{n}{m}c\overline{S}) = U (1 + \frac{c}{2})$
+            - $U = \frac{2}{2 + c}$
+- Betteridge model:
+    - Eksponencijalna zavisnost vremena zadržavanja programa od veličine
+    - Programi ne mogu da se završe u isto vreme
+    - Iz B možemo preći u ES ili SE ako nam dođu S pa B, svejedno
+    - U svakom stanju izračunamo iskorišćenje i verovatnoću stanja, na osnovu toga dobijemo ukupno iskorišćenje
+    - Broj stanja automata raste sa brojem particija, $fib_{2m}-1$
+    - Imamo asimptotu u iskorišćenju i sa povećavanjem broja particija, čak i kada dozvolimo realokaciju
+- Statičke stranice:
+    - Kao Betteridge model, ali uračunavamo internu fragmentaciju u kojoj se u proseku baca pola stranice
+    - $n_{avg}$: prosečan stepen multiprogramiranja
+    - $x$: veličina stranice
+    - Škart: $n_{avg} \cdot \frac{1}{2} x$
+- Virtuelna memorija:
+    - $k$: veličina ulaza u PMT
+    - Škart: $n_{avg} \cdot \frac{1}{2} x + M_{pmt}$
+    - $M_{pmt} = M \cdot \frac{k}{k + x} \approx M \cdot \frac{k}{x}$
+    - $W \geq 2 \sqrt{M \frac{k}{x} \frac{n_{avg}}{2} x} = \sqrt{2M k n_{avg}}$ (AG nejednakost)
+        - $x_{opt} = \sqrt{\frac{2Mk}{2_{avg}}}$
+    - Dodajemo $\frac{1}{R}$, verovatnoću da je poslednja stranica programa u memoriji, kao činilac u delu jednačine sa internom fragmentacijom
+
+## Performanse diskova
+- Formula: $T = T_{am} + T_{rd} + T_{dt}$ gde $T_{rd} = \frac{T_{rot}}{2}$, $T_{dt} = \frac{T_{rot}}{12}$ i $T_{rot} = \frac{1}{v_{rot}}$
+- $T_{am}$ ima uračunate verovatnoće da se prelazi sa jednog mesta na drugo koje se množe sa vremenima pristupa od jednog mesta do drugog
+- $t_{12} = \frac{1}{n_{c1}} \int_{s_{c1}}^{e_{c1}} \frac{1}{n_{c2}} \int_{s_{c2}}^{e_{c2}} t(x, y) dx dy$
+- $t_{11} = \frac{2}{n_c^2} \int_0^{n_c} (n_c - x) t(x) dx$
+- $T_{rot}$ samo zavisi od brzine rotacije
+- Ako ti daju grafik, odrediš jednačine pravih i podeliš $T_{am}$ na više integrala
+    - Mogu da ti daju i da sam nacrtaš grafik linearnom aproksimacijom na osnovu maksimalnog i minimalnog vremena kretanja
+- Ako ne čitamo zapis sa diska onda $T_{dt} = 0$
