@@ -58,3 +58,66 @@
             - ||L1|| = ||L2|| = ||T1 + T2|| = c
             - Podešava se parametar p kojim se određuje dužina T1
             - Prioritet: T2 > B2 > T1 > B1
+
+## Operativna memorija
+
+
+## Virtuelizacija
+- Nivoi privilegija:
+    - x86 podržava četiri režima, koriste se samo 0 i 3
+    - Call gates: strukture u zaštićenom segmentu memorije koje ograničavaju prelazak između režima (`lcall`)
+    - Svaki nivo ima svoj stek
+    - Tabele deskriptora: čuvaju informacije o pozvanim procedurama i TSS pokazivač
+    - Task state segment: čuva pokazivače na novi stek nakon lcall (jer se ne čuvaju u deskriptorima), na njega pokazuje task register
+    - Globalna tabela deskriptora sadrži deskriptore memorijskih segmenata, TSS, call gate ili lokalnih tabela deskriptora
+- Virtuelizacija procesora:
+    - Trap and Emulate problem: neke instrukcije se različito izvršavaju u različitim režimima
+    - Binarno prevođenje: VMM proverava instrukcije i prevodi ih u nove
+        - Vrlo sporo bez keširanja
+- Virtuelizacija memorije:
+    - Shadow Page Table: Tabela stranica koju VMM podmeće gostu
+    - Problem: promene u tabelama stranica ne generišu prekid
+        - Rešenje 1: označiti stranice gosta samo za čitanje
+        - Rešenje 2: kada gost doda prevod koji generiše page fault VMM ažurira svoju tabelu, kada gost ukloni prevod VMM presretne INVLPG
+        - Rešenje 3: paravirtuelizacija
+- Proširenja arhitekture:
+    - VT-x i AMD-V
+    - VMCB: Stanje i informacije o instrukcijama i događajima za presretanje
+    - Presretanjem vmrun se omogućava gnežđenje virtuelnih mašina
+
+## Translacija instrukcija
+- CISC vs. RISC:
+    - RISC izvršavanje traje jedan takt
+    - RISC ima ožičenu realizaciju
+    - RISC je load/store
+    - RISC nema mnogo načina adresiranja
+    - RISC instrukcije su fiksne dužine
+    - RISC ima mnogo registara
+- Decode faza:
+    - Jednostavni i složeni dekoderi
+    - Mogu da rade u paraleli
+- Pre-decode faza:
+    - Obeležavaju se granice između instrukcija
+    - Preskače se ukoliko su već prevedene:
+        - Keš mikrooperacija
+        - Trace keš
+- Makrooperacije:
+    - Atomične su
+    - Intel: to su samo instrukcije
+    - AMD: pojednostavljene instrukcije fiksne dužine, ili instrukcije koje su prošle niz transformacija
+        - Mogu imati jednu aritmetičku operaciju i jednu load, store ili load+store operaciju na istu adresu
+    - ARM: ne koristi eksplicitno, ali su to složene instrukcije koje se razlažu na jednostavnije
+- Spajanje i razdvajanje:
+    - Fetch, Decode, Queue, Scheduling, Dispatch, Execute
+    - U Queue fazi mogu se spajati mikroinstrukcije
+        - Čitanje iz memorije (odvojene mikroinstrukcije za izračunavanje adrese i prenos podataka)
+        - Čitanje i modifikovanje
+        - Read-modify-write
+    - U Dispatch fazi mogu se razdvajati mikroinstrukcije ukoliko je to potrebno
+    - Loop Stream Detector: kad detektuje petlju, nema potrebe za ponovnim dekodovanjem i čitanjem
+    - U Queue fazi se takođe mogu razdvajati mikroinstrukcije:
+        - Na primer, kod bazno-indeksnog adresiranja
+        - Ovo se radi ukoliko žele da se uštedi na broju tranzistora i potrošnji struje
+    - Makrooperacije takođe mogu da se spajaju (u Decode fazi):
+        - Poboljšana ALU (EALU)
+        - CMP+JMP
