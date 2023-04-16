@@ -75,3 +75,44 @@
 - Ako ti daju grafik, odrediš jednačine pravih i podeliš $T_{am}$ na više integrala
     - Mogu da ti daju i da sam nacrtaš grafik linearnom aproksimacijom na osnovu maksimalnog i minimalnog vremena kretanja
 - Ako ne čitamo zapis sa diska onda $T_{dt} = 0$
+
+## Serveri
+- Oznake:
+    - Srednje vreme zadržavanja: $\overline{S}$
+        - Označava prosečno vreme koliko jednom zahtevu treba da se obradi
+    - Frekvencija dolaska poslova: $\lambda$
+    - Brzina jednog procesora: $\mu$
+    - Statičke verovatnoće stanja: $p_i$
+    - Uvedena smena, generalno $\frac{\lambda}{\mu}$: $\rho$
+        - Paziti se slučaja kada je $\rho = 1$ jer može da dođe do deljenja nulom
+    - Vreme odziva sistema: $T$
+        - Vreme prolaska kroz ceo sistem
+    - Prosečan broj poslova u sistemu: $J$
+    - Protok kroz red za čekanje: $X$
+- Poasonov proces:
+    - Svi zahtevi pristižu nezavisno
+    - Nijedan zahtev ne može da pristigne u isto vreme
+- Sistem opisujemo automatom stanja gde su stanja broj poslova (balansni graf)
+    - Ne postoje grane tipa 0 -> 2 jer ne mogu dva posla da pristignu u isto vreme
+    - Statičke verovatnoće stanja se sabiraju do 1
+    - Balansne jednačine: množimo statičku verovatnoću stanja sa verovatnoćom odliva i izjednačavamo sa zbirom proizvoda svih ostalih statičkih verovatnoća stanja i njihovih verovatnoća priliva u to stanje
+    - Litlova formula: $T = \frac{J}{X}$
+    - $J = \sum i p_i$
+    - Zakon iskorišćenja: $U = Xs$
+- Redovi:
+    - Geometrijski: $1 + \rho + \rho^2 + ... = \frac{1}{1 - \rho}$
+        - Konvergira ako je $\rho < 1$
+    - Konačni geometrijski: $1 + \rho + \rho^2 + ... + \rho^n = \frac{1 - \rho^{n + 1}}{1 - \rho}$
+    - Potencijalni red: $1 + 2\rho + 3\rho^2 + ... = \frac{1}{(1 - \rho)^2}$
+- Prosečan broj poslova u sistemu sa jednim procesorom (M/M/1): $J = \frac{\rho}{1 - \rho}$
+    - M/M/2: $J = \frac{2\rho}{1 - \rho^2}$
+- Burke je dokazao da ako u sistem ulazi Poasonov proces sa $X$, na izlazu je isto $X$
+    - Kobayashi je dokazao da po granama takođe ide $X$
+- Ciklički sistemi:
+    - Sistem će uvek biti stabilan
+- Gordon-Newell metoda:
+    - Napravimo matricu verovatnoća da se sa jednog stanja prelazi na drugo, transponujemo je i napravimo matricu $D = \mu_1 x_1, \mu_2 x_2, ...$ i iz toga treba da se dobije $0 = (P^T - I) D$, i onda možemo izračunati statičke verovatnoće stanja
+- Bjuzenova metoda:
+    - Napravimo matricu gde levo ide stepen multiprogramiranja a gore broj servera, prva kolona su sve nule a prvi red sve kečevi, i zatim se svaka ćelija pravi kao levo + gore * $x_i$
+    - $U_j(N) = x_j^1 \cdot \frac{G(N-1)}{G(N)}$
+    - Onaj trougaoni način za računanje $J$
