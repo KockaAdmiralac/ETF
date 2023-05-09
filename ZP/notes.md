@@ -108,6 +108,7 @@
 ## Asimetrični algoritmi
 - Jednostrana funkcija: `y = 2^x mod p`
 - Post-kvantni algoritmi: problemi matematičkih rešetki, shortest vector problem, closest vector problem
+- RSA nije otporan na chosen ciphertext napad, štitimo se tako što nasumično dopunimo poruku pre šifrovanja
 
 ## Upravljanje ključevima
 - Metode razmene:
@@ -211,8 +212,38 @@
     - U prvi XOR ulazi IV
 - CFB
     - Prvo se šifruje IV, pa C1, C2...
-    - ...
+    - Razlika je u tome da se ne radi enkripcija nad plaintext već nad ciphertext pa se onda radi XOR
+    - Postoji jedan šift registar pre enkripcije i birač bitova posle tako da veličina bloka plaintext može da bude različita od veličine bloka koji se enkriptuje
 - OFB
+    - Izlaz enkripcije se povezuje na ulaz sledeće, za plaintext se radi XOR
+    - Ovo nam omogućava nezavisno računanje od primanja teksta
+    - Valjda se samo enkripcija radi
 - CTR
+    - Kao OFB ali se šiftuje vrednost brojača umesto output
 - CCM
+    - n: dužina nonce
+    - q: 15 - n, dužina predstave poruke
+    - B0:
+        - Prvi bajt: 0 | AData | (len(MAC) - 2) / 2 | q - 1
+        - Nonce
+        - Dužina poruke
+            - Ako povećamo nonce smanjuje se dužina poruke
+    - B1..n:
+        - Enkodovana veličina pridruženih podataka (2B, ili FFFE 4B, ili FFFF 8B)
+        - Pridruženi podaci
+        - Nule
+        - Sledeći blok ide poruka
+    - B0...Bn idu kao OFB povezani tako da se na kraju formira MAC odvajanjem viših k bita
+    - CTR0..n:
+        - Prvi bajt: q - 1
+        - Nonce
+        - Brojač (inkrementira se za 1 svaki blok)
+    - CTR0..n se enkriptuju odvojeno, MSB iz prvog bloka idu na XOR sa MAC a ostali se spajaju pa idu na XOR sa plaintext
+    - Na kraju se spoje ciphertext i MAC
 - GCM
+    - Proizvoljna dužina IV
+    - CTR0 se generiše na osnovu IV i vrednosti 1, ostali se inkrementiraju po modulu 2^s
+    - CTR1..n se enkriptuju, XOR sa plaintext, pa onda još jednom XOR sa prethodnim izlazom mult H
+    - Poslednji ulaz u mult H je len(Additional data) || len(Ciphertext) (svaki na 8 bajtova)
+    - CTR0 se na kraju XORuje sa poslednjim izlazom mult H
+    - mult H je množenje sa H u Galois polju, inicijalna vrednost H se dobija enkriptovanjem 0000
