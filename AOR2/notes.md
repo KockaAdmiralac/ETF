@@ -66,7 +66,7 @@
 - Nivoi privilegija:
     - x86 podržava četiri režima, koriste se samo 0 i 3
     - Call gates: strukture u zaštićenom segmentu memorije koje ograničavaju prelazak između režima (`lcall`)
-    - Svaki nivo ima svoj stek
+    - Svaki nivo ima svoj stek (sigurnosni razlozi)
     - Tabele deskriptora: čuvaju informacije o pozvanim procedurama i TSS pokazivač
     - Task state segment: čuva pokazivače na novi stek nakon lcall (jer se ne čuvaju u deskriptorima), na njega pokazuje task register
     - Globalna tabela deskriptora sadrži deskriptore memorijskih segmenata, TSS, call gate ili lokalnih tabela deskriptora

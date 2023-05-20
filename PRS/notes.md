@@ -87,8 +87,11 @@
         - Paziti se slučaja kada je $\rho = 1$ jer može da dođe do deljenja nulom
     - Vreme odziva sistema: $T$
         - Vreme prolaska kroz ceo sistem
-    - Prosečan broj poslova u sistemu: $J$
-    - Protok kroz red za čekanje: $X$
+        - M/M/1: $\frac{1}{\mu - \lambda}$
+    - Prosečan broj poslova u sistemu: $J = \frac{U}{1 - U}$
+    - Protok (produktivnost) kroz red za čekanje: $X$
+        - Može da se dobije preko, na primer, $X = (1 - p_0) \mu$ u M/M/1 sistemu
+    - Prosečan broj poslova u redu: $J_q = J - U$
 - Poasonov proces:
     - Svi zahtevi pristižu nezavisno
     - Nijedan zahtev ne može da pristigne u isto vreme
