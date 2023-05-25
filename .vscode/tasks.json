@@ -8,17 +8,28 @@
     "label": "all",
     "tasks": [
         {
+            "label": "clean",
+            "command": "rm",
+            "args": [
+                "-f",
+                "a.out"
+            ]
+        },
+        {
             "label": "build",
-            "command": "make",
-            "dependsOn": [
+            "command": "g++",
+            "args": [
+                "${file}",
+                "-Wall",
+                "-Wextra",
+                "-g",
+                "-std=c++17",
+                "-march=native"
             ],
-            "dependsOrder": "sequence",
-            "options": {
-                "cwd": "${workspaceFolder}/SS/Projekat",
-                "env": {
-                    "DEBUG": 1
-                }
-            }
+            "dependsOn": [
+                "clean"
+            ],
+            "dependsOrder": "sequence"
         }
     ]
 }
