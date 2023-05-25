@@ -121,3 +121,63 @@
     - Makrooperacije takođe mogu da se spajaju (u Decode fazi):
         - Poboljšana ALU (EALU)
         - CMP+JMP
+
+## SIMD
+- Prednosti SIMD:
+    - Manje instrukcija za više posla
+    - Iskorišćava paralelizam na nivou podataka na najbolji način
+    - Energetski efikasniji
+- Optimizacije:
+    - Multiple Lanes: više lejnova u paraleli obrađuju podatke nad kojima SIMD instrukcija radi
+    - Vector Length Registers: određuje koliko elemenata zapravo ima u vektorskom registru
+        - Ako prekoračava dužinu niza možemo u prvoj ili poslednjoj iteraciji da postavimo VLR
+    - Vector Mask Registers: označava nad kojim podacima se radi operacija
+        - Možemo zameniti if-else sa ovim
+    - Memory Banks: treba nam dovoljno banki kako bismo u tokom izvršavanja SIMD instrukcije mogli da sve informacije primimo takt za taktom
+    - Stride: možemo da preskačemo elemente niza koje dohvatamo u registar
+        - Ovo može da nas zajebe ako gađamo svi istu banku
+    - Scatter-Gather: na osnovu maske se elementi niza spakuju u vektorski registar
+    - Programming Vector Architectures: kompajleri autovektorizuju kad mogu, ali najbolje kad to programeri sami rade
+- Vreme izvršavanja zavisi od tri stvari:
+    - dužine operanada
+    - struktralnih hazarda
+    - zavisnosti među podacima
+- Konvoj: kad više instrukcija mogu da se izvršavaju istovremeno
+    - Chaining: instrukcija počinje čim joj operandi postanu dostupni
+    - Chime: dužina izvršavanja jednog konvoja
+    - Računanje konvoja na osnovu latency
+
+## Predikcija skoka
+- Dvo-nivoski
+    - Branch History Register: čuva se istorija skokova
+    - History Pattern Table: tabela u kojoj se pamti automat stanja, adresiran preko BHR
+    - Ako postoji više BHR, jedan može pamtiti ili za jedan skok ili grupu skokova, isto tako može postojati više PHT
+- Korelacioni (M, N)
+    - M širina globalnog BHR
+    - N broj bitova automata stanja
+    - BHR i PC adresiraju tabelu sa automatima stanja
+- gshare
+    - Jedna tabela adresirana heš funkcijom (XOR) BHR i PC
+- tournament
+    - Tri tabele, jedna adresirana preko BHR, druga preko PC, i treća da bira između te dve predikcije na osnovu PC
+- Bimodal
+    - Kao gshare ali ima tabela za često zadovoljen i često nezadovoljen uslov
+- TAGE
+    - Različite tabele u zavisnosti od toga kolika veličina istorije se gleda, pa selektor
+- YAGS
+    - Dva gshare prediktora za taken i not taken keš, i bimodal koji bira između njih
+- gskew
+    - Tri tabele, glasanje
+    - e-gskew: Kao gskew samo je jedna tabela bimodal
+    - 2bc-gskew: metaprediktor koji predviđa da li je bolji samo bimodal ili glasanje
+- LVQ
+- Perceptrons
+- LTP
+    - Predviđa samo kad će se završiti petlja
+- BMP
+    - Gleda na kojim petljama glavni prediktor radi loše i njih popravlja
+- Meltdown
+    - Flush and Reload: pristupamo `niz[zabranjeni_podatak]` i gledamo na kom mestu će biti keširano
+- Spectre
+    - Jedan program sadrži `array2[array1[x] * 4096]`, napadač zadaje `x` i može da izazove spekulativni buffer overflow
+    - Zatrovati `jmp [rax]` tako da skoči na kod koji odaje sadržaj memorije
