@@ -247,3 +247,301 @@
     - Poslednji ulaz u mult H je len(Additional data) || len(Ciphertext) (svaki na 8 bajtova)
     - CTR0 se na kraju XORuje sa poslednjim izlazom mult H
     - mult H je množenje sa H u Galois polju, inicijalna vrednost H se dobija enkriptovanjem 0000
+
+## Postkvantni algoritmi potpisivanja
+- Lamport/Diffie:
+    - f: jednosmerna funkcija
+    - g: heš funkcija
+    - x: ključ za potpisivanje od 2n vektora
+    - y: verifikacioni ključ kao f(x)
+    - d: heš poruke g(M)
+    - sigma: digitalni potpis kao x[d]
+- Winternitz:
+    - f, g
+    - w: Winternitz parametar za računanje t
+    - x: dužine t vektora
+    - y: f(x)
+    - d: heš
+    - b: t delova heša
+- MSS:
+    - generiše se n privatnih ključeva i iz njih se izvedu verifikacioni pa se nad njima radi stablo heševa
+    - javni ključ: koren Merkle stabla
+    - d: heš
+    - sigma: digitalni potpis Lamport-Diff ili Winternitz
+    - i: indeks privatnog ključa
+    - potpis: (i, sigma, y, autentikaciona putanja)
+    - verifikacija: verifikuje se sigma, y kombinacija, a onda se verifikuje stablo autentikacionom putanjom
+    - problemi: veliki ključevi (koristiti PRNG), veličina stabla, pamćenje koji ključevi su iskorišćeni
+- XMSS:
+    - definitivno se koriste PRNG i seed
+    - hiperstablo: više ulančanih stabala, koreni dubljih stabala potpisani prethodnim
+        - MSS: 2^256 listova, 256 nivoa stabla, 2^256 + 2^256 - 1 heširanja, kolizija kao sqrt(2^256)
+        - XMSS: 16 nivoa od 16 nivoa, 16(2^16 + 2^16 - 1) heširanja, ista verovatnoća kolizije
+- SPHINCS+:
+    - veliko stablo kako bi mogli da heš funkciju koriste za adresiranje ključeva za potpisivanje ali se kreira samo deo
+    - optimizacije ako je potrebno manje potpisa
+
+## X.509
+- Sertifikati sadrže:
+    - verziju (1, 2, 3)
+    - serijski broj sertifikata
+    - algoritam za digitalno potpisivanje
+    - ime izdavača
+    - ime vlasnika
+    - vreme važenja
+    - informacije o javnom ključu vlasnika (algoritam, parametri, ključ)
+    - (v2) jedinstveni identifikator izdavača
+    - (v2) jedinstveni identifikator vlasnika
+    - (v3) dodatna polja
+    - potpis (heš svih polja)
+- Povezivanje CA se radi tako što međusobno sebi potpišu javne ključeve
+- Certificate Revocation List:
+    - Nije toliko skalabilno
+    - OCSP, lightweight OCSP
+- Ekstenzije:
+    - sadržaj: identifikator, kritičnost, vrednost
+    - tipovi: informacije o ključevima i polisama, atributi izdavaoca i vlasnika, ograničenja
+- PKI infrastruktura:
+    - krajnji korisnici
+    - repozitorijum sertifikata
+    - registracioni autoriteti
+    - CRL izdavači
+    - sertifikacioni autoriteti (ova dva iznad)
+
+## Zaštita podataka u upotrebi
+- Fully Homomorphic Encryption: operacije nad šifrovanim podacima bez poznavanja ključa za enkripciju, nisu još uvek dovoljno efikasne
+- Trusted Execution environment:
+    - autentičnost izvršnog koda
+    - integritet izvršnog stanja
+    - tajnost koda, podataka i stanja
+    - udaljena atestatacija
+- Tehnologije:
+    - ARM TrustZone: razdvaja zaštićeni i normalni svet
+    - Intel SGX: hardverski zaštićen kontejner na udaljenom računaru
+    - Intel TDX: virtuelna mašina
+    - AMD SEV: šifruje se VM, pogodno za HPC
+    - AMD SEV-SNP: ispravlja slabosti SEV, proizvoljna atestacija
+- Udaljena atestacija:
+    - vremenski ažurni dokazi
+    - opsežne informacije o meti
+    - mehanizam od poverenja
+    - ne postoji standard (RATS)
+- Secure Multi-Party Computation
+- Proces atestacije:
+    - Proizvođač čipa
+    - Vlasnik platforme
+    - Vlasnik gosta
+- Lanac poverenja:
+    - ARK (RSA): potpisuje ASK, sertifikat u KDS
+    - ASK (RSA): potpisuje CEK, sertifikat u KDS
+    - CEK (ECDSA): jedinstven za svaki čip, omogučava verifikaciju da je od AMD i da ima SEV
+    - PEK (ECDSA): generisan od SEV, trajanje određeno vlasništvom nad platformom, povezuje AMD i vlasnika platforme
+    - PDH (DH): služi za uspostavljanje master secret između vlasnika platforme i gosta, trajanje kao PEK
+- Generisanje master secret:
+    - PO šalje PDH
+    - GO šalje svoj javni ključ i nonce N
+    - Kombinacijom svojih ključeva dobijaju Z
+    - Računaju M kao KDF(Z, N) i brišu Z
+- Verifikacija sertifikata:
+    - VERSION: mora da bude podržan
+    - PUBKEY_USAGE: mora da bude postavljen na taj ključ koji očekujemo
+    - SIGx_USAGE: mora da bude postavljen na ključ koji ga potpisuje
+    - SIGx_ALGO: mora da bude jednak PUBKEY_ALGO od tog ključa što potpisuje
+    - SIGx mogu da budu obrnuto
+    - SIGx: verifikovati da je potpis ispravan
+    - PUBEXP_SIZE i MOD_SIZE moraju da budu 4096 ili 2048 kod ASK i ARK
+    - ARK KEY_ID = ASK CERTIFYING_ID
+
+## TLS
+- Obezbeđuje tajnost (handshake protokol) i integritet (HMAC sa deljenim tajnim ključem) poruka
+- Odvojeni ključevi za šifrovanje od klijenta i servera
+- Mogućnost kompresije izbačena u kasnijim verzijama
+- Change Cipher Spec protokol: poruka koja kaže da su naredne poruke šifrovane
+- Alert protokol: jedna strana obaveštava drugu o neregularnostima
+- Vrste razmene ključeva:
+    - RSA
+    - Fixed DH: javne vrednosti su fiksne i potpisane od CA, pa se dobija isti simetričan ključ (izbačen)
+    - Ephemeral DH: javne vrednosti se potpisuju sa RSA ili DSS, dobija se različit ključ
+    - Anonymous DH: bez autentikacije i zaštite od MITM (izbačen)
+- Handshake poruke:
+    - ClientHello (predlog parametara)
+    - ServerHello (prihvaćeni parametri)
+    - Sertifikat
+    - Ako se koristi autentikacija: CertificateRequest
+    - ServerKeyExchange (samo ako se koristi DH, šalje javne vrednosti)
+    - ServerHelloDone
+    - Ako se koristi autentikacija: Sertifikat klijenta
+    - ClientKeyExchange (šalje se premaster secret šifrovan javnim ključem ili DH vrednosti, svakako posle može da krene sa šifrovanjem)
+    - Ako se koristi autentikacija: CertificateVerify
+    - ChangeCipherSpec
+    - Finished
+    - ChangeCipherSpec
+    - Finished
+- Generisanje ključeva:
+    - master-secret = PRF(pre-master-secret, "master secret", client-random, server-random)
+    - sekvenca HMAC-ova koja nam obezbeđuje generisanje svega ostalog (server/client write key/MAC secret/IV)
+- Heartbeat protokol: proverava da li je drugi učesnik komunikacije aktivan
+- QUIC: postoji
+
+## Autentikacija korisnika
+- Replay napad kod Needham-Schreder
+- Token, ticket: podaci enkriptovani ključem servera koji se šalju klijentima koji ne mogu da ih čitaju
+- TGS: Ticket Granting Server
+- Kerberos tiketi sadrže početno vreme i lifetime
+- Paziti na to da napadač ne može ponavljanjem neke poruke da dobije pristup servisima
+- Svaki korak ima timestamp osim 6, koji vraća TS5 + 1, a tiketi imaju i lifetime
+- Koraci komunikacije:
+    1. Klijent šalje AS da želi da se autentikuje, kaže mu koji TGS hoće da koristi i timestamp mu služi za inicijalnu proveru vremenske sinhronizacije
+    2. AS odgovara sa ticket koji sadrži ključ za komunikaciju između klijenta i TGS, identifikator i adresu klijenta, identifikator TGS i trajanje, i sve to isto van ticket osim identifikatora i adrese klijenta, sve je enkriptovano ključem C
+    3. Klijent TGS šalje kojem servisu hoće da pristupi, tiket, i autentikator (svoje ID i AD zajedno sa timestamp protiv replay, enkriptovano)
+    4. TGS mu vraća isto kao u poruci 2 samo bez lifetime, IDtgs je IDv, ključ je za komunikaciju sa V i ticket je odgovarajuće izmenjen
+    5. Korisnik V šalje ticket i autentikator
+    6. V vraća enkriptovano TS5+1 za međusobnu autentikaciju
+- Ako postoji više realm-ova, korisnik svom TGS umesto V kaže da hoće da koristi drugi TGS
+- Kerberos v5:
+    - Nije vezan za DES
+    - Authentication forwarding
+    - Skalabilna interrealm komunikacija
+    - Uklonjeno dvostruko šifrovanje ticket u porukama 2 i 4
+    - Uveden renew time
+    - Nonce pored timestamp
+- SAML:
+    - IdP, Principal (klijent), attribute service, data consumer
+    - Klijent može da bude MITM pa se radi neko potpisivanje
+- OAuth:
+    - Klijent pristupa servisu, servis traži od IdP token, radi preusmerenje, traži novi token nakon autentikacije i onda može da pristupa informacijama
+    - Nema baš smisla da korisnik radi MITM u ovom slučaju, ali može da se radi i potpisivanje
+- RADIUS: ovako radi eduroam, prosleđuje autentikacione zahteve odgovarajućem IdP
+
+## IPSec
+- Zaštita na aplikacionom sloju: više šifrovanih sesija
+- Zaštita na mrežnom sloju: siguran tunel kroz koji se prosleđuje više mrežnih zahteva
+- Zaštita na data link sloju: nema smisla jer je na nivou jednog mrežnog segmenta
+- Sesija se zove sigurnosna asocijacija i određena je sa
+    - Security Parameters Index (jedinstveno određuje asocijaciju),
+    - destinacionom IP, i
+    - Security Protocol Identifier (Authentication Header ili ESP)
+- SA je jednosmerna
+- SPDB: baza sa pravilima koje se primenjuju na SA, a onda se rezultati tih pravila proveravaju u SADB da bi proverili kakvi se sigurnosni parametri koriste
+- Authentication Header:
+    - U transportnom režimu se ubacuje posle IP zaglavlja, u tunel se dodaje novo IP zaglavlje sa AH iza
+    - Next Header kao kod IPv6
+    - Payload (izlaz HMAC) i Payload Length
+    - SPI
+    - Sequence Number kao zaštita od replay napada
+    - Zaštićeno je sve desno od AH i nepromenljivi delovi IP zaglavlja
+- Encapsulating Security Payload:
+    - ESP ima i trejler
+    - Zaglavlje ima SPI i Sequence number
+    - Payload i Next header su u završetku, s tim što je sledeće zaglavlje originalno IP/TCP/UDP a payload je originalni paket
+    - Vrši enkripciju
+    - Na kraju je Authentication Data kao izlaz HMAC od šifrovanih podataka
+- Za razmenu ključeva u IPsec koristi se IKE
+    - Zasnovano na DH, autentikacija pomoću digitalnih potpisa, sertifikata ili unapred razmenjenih ključeva
+    - Razmena:
+        - HDR, koje sve protokole podržavaju
+        - HDR, DH vrednosti, nonce
+        - HDR* (zaštićen DH ključem), identifikacija, heš
+        - Quick mode: tri poruke sa novim DH vrednostima
+            - Ovo se vrši prilikom zamene ključeva
+    - IKEv2 je smanjio broj poruka na 4+2
+
+## Blockchain
+- Wallet ima heš javnog ključa u base58 kao ID, dnevnik transakcija i par asimetričnih ključeva
+- Transakcija: javni ključ, prethodna transkacija, index, koliko se plaća, primalac, digitalni potpis prethodna 4 podatka
+- Jedan blok sadrži heš zaglavlja prethodnog bloka, čime se vrši ulančavanje
+- Miner računa heševe za blok do određenog broja nula, ako uspe dodaje ga na blockchain i dobija neku kompenzaciju
+- Može da dođe do grananja blockchain, ali to se vremenom reši
+
+## Zaštita sistema
+- Uljezi:
+    - Masquerader: korišćenjem tuđeg naloga pristupa resursu
+    - Misfeasor: korišćenjem svog naloga pristupa resursu koji mu nije dozvoljen
+    - Clandestine user: zauzima supervizorsku kontrolu pa može da zaobiđe detekciju
+- Tehnike upada:
+    - Fajl sa šiframa zaštititi heš funkcijama/kontrolom pristupa
+    - Različiti načini za isprobavanje šifara... trebalo bi da je logično, verovatno mogu do 5 njih da traže (lako zaustavljivo)
+- Detekcija upada:
+    - Zašto je dobro... zato što možemo da ih izbacimo, prikupimo informacije i zastrašimo
+    - Detekcija neregularnog ponašanja korisnika
+        - Ovo slabo radi za misfeasor, a nikako za clandestine user
+        - Preko statističkih anomalija, bilo za sve bilo za pojedinačnog korisnika (normalno ponašanje)
+        - Preko unapred postavljenih pravila (ispravno ponašanje)
+        - Kompromis lažni pozitivi vs. lažni negativi
+    - Audit logovi
+        - Sistemski ili custom
+    - Mera sumnje...
+- DDoS:
+    - SYN flood, ping of death
+    - Direktni ili reflektovani
+    - Strategije skeniranja: random, hit list (imamo spisak mašina), topological (hijerarhijska hit lista), local subnet (tražimo mašinu koju možemo da zarazimo iza firewall)
+    - Prevencija (polise za iskorišćenje resursa), detekcija i filtriranje, identifikacija izvora radi budućeg sprečavanja
+- Maliciozni softveri:
+    - virus: zaražava druge programe, pravi kopije sebe
+    - crv: izvršava se nezavisno, propagira se drugim računarima
+    - logička bomba: okida pri određenim uslovima
+    - trojanski konj: deluje korisno ali ima malicioznu funkcionalnost
+    - zadnja vrata: dozvoljava neautorizovani pristup nečemu (mogu da budu namerni, debagovanje)
+    - eksploatator: koncentriše se na jednu slabu tačku
+    - downloader: instalira stvari na mašinu
+    - auto-rooter: the fuck
+    - kit: kolekcija alata za generisanje virusa
+    - spamer: spamuje mejlove
+    - flooder: zatrpava računare
+    - zombi: biva kontrolisan od gazde
+    - keylogger
+    - rootkit: dobija administratorski pristup
+    - adware: reklamira
+    - ransomware
+- Faze virusa i crva:
+    - neaktivan
+    - propagacija: kopira se i podmeće
+    - okidanje: čeka na neki događaj
+    - izvršavanje
+- Struktura virusa:
+    - oznaka zaraženosti
+    - prvo propagira, izvršava, pa nastavlja
+- Klasifikacija virusa:
+    - Meta:
+        - boot sector
+        - file infektor
+        - makro
+        - multipartiate
+    - Strategija:
+        - enkriptovani
+        - nevidljivi
+        - polimorfni
+        - metamorfni
+- Tehnike zaštite: prevencija, detekcija, identifikacija, uklanjanje (bruh), GD skener
+- dI/dt = bIS
+    - slow start, fast spread, slow finish
+
+## S/MIME
+- Zaglavlja i sadržaj (odvojen od zaglavlja jednom praznom linijom)
+- RFC 822 - MIME - S/MIME
+- Obavezna MIME zaglavlja: Content-Type, MIME Version, Content-Transfer-Encoding
+- Tipovi: text, image, video, audio, application, multipart, message
+    - text: plain, rich
+    - multipart: mixed (poštuje se redosled pri slanju), paralelni (ne), alternativni, zapakovana RFC 822 poruka
+    - message: rfc822, partial, spoljašnje telo
+- Kodiranje za prenos: 7 bit, 8 bit (ne moraju biti ASCII), binary (ne moraju biti 80 karaktera), quoted-printable, base64, x-token
+- S/MIME funkcije:
+    - enveloped data (application/pkcs7-mime; smime-type=envelopedData)
+    - signed data (application/pkcs7-mime; smime-type=signedData)
+    - clear-signed data (samo potpis se base64 da bi korisnici bez S/MIME mogli da vide; multipart/signed s tim što je potpis application/pkcs7-signature; smime-type=signedData)
+    - signed and enveloped data
+- Koraci:
+    1. Pripremi se MIME entitet
+    2. MIME entitet se šifruje, potpiše ili oba i od toga nastane PKCS #7 objekat
+        - Šifrovanje se radi isto kao za PGP, priprema se RecepientInfo blok za svakog primaoca, i to sve base64
+        - Potpisivanje isto tako
+    3. PKCS #7 objekat se formatira u MIME entitet i kanonicizuje
+- Sertifikati:
+    - Zahtev ide preko CertificationRequestInfo bloka (application/pkcs10-mime)
+    - Odgovor može da bude application/pkcs7-mime;smime-type=degenerate
+    - Koristi se X.509 hijerarhija sertifikata
+- Postupak izbora algoritma:
+    1. Ako se zna koji algoritmi su podržani, uzima prvi
+    2. Ako je primio neku poruku, uzima iz algoritma korišćenog u poslednjoj poruci
+    3. Ako je voljan da rizikuje, onda šalje korišćenjem algoritma koji je bolji
+    4. Inače šalje algoritmom koji mora da podrži
