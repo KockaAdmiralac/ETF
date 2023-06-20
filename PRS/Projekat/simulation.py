@@ -1,43 +1,47 @@
 from analytical import find_amax, find_flows, write_results
 from argparse import ArgumentParser
 from collections import deque
+from dataclasses import dataclass, field
+from enum import IntEnum
 from itertools import product
 from math import exp
 from multiprocessing import cpu_count, Pool
 from params import *
+from queue import PriorityQueue
 from random import uniform
 from tqdm import tqdm
 from typing import Iterable, List, Optional, Tuple
 import numpy as np
 
-SEC_TO_TICKS = 1000 * 4
-
 SimulationResult = Tuple[int, float, Iterable[float], Iterable[float], Iterable[float], float]
 
 class PoissonProcess:
-    def __init__(self, flow: int):
-        l = 1 / flow
-        self.p0: float = exp(-l)
+    def __init__(self, beta: int):
+        self.beta = beta
 
-    def get(self) -> int:
-        num = uniform(0.0, 1.0)
-        if 0 <= num <= self.p0:
-            return 0
-        return 1
+    def next_event(self) -> float:
+        return np.random.exponential(self.beta)
+
+class EventType(IntEnum):
+    INPUT_FLOW = 0
+    PROCESSING = 1
+
+@dataclass(order=True)
+class Event:
+    time: float
+    type: EventType = field(compare=False)
+    server: Optional['Server']
 
 class Server:
-    def __init__(self, processing_time: int, input_flow: int = 0):
+    def __init__(self, processing_time: float):
         self.processing: PoissonProcess = PoissonProcess(processing_time)
-        self.input_flow: Optional[PoissonProcess] = None if input_flow == 0 else PoissonProcess(input_flow)
         self.probabilities: List[float] = []
         self.connections: List[Server] = []
-        self.jobs: deque[int] = deque()
-        self.stats_num_jobs: List[int] = []
-        self.stats_num_jobs_total: List[int] = []
-        self.stats_has_jobs: List[int] = []
-        self.stats_has_jobs_total: List[int] = []
+        self.jobs: deque[float] = deque()
+        self.last_job_update: float = 0.0
+        self.stats_num_jobs: float = 0.0
+        self.stats_has_jobs: float = 0.0
         self.stats_done_jobs = 0
-        self.stats_done_jobs_total: List[int] = []
 
     def connect(self, server: 'Server', probability: float):
         self.connections.append(server)
@@ -47,61 +51,56 @@ class Server:
             raise ValueError('Total transition probability over 1!')
         self.probabilities.append(new_probability)
 
-    def update(self, tick: int, stats_response_time: List[int]):
-        # Update the number of jobs based on the input flow
-        if self.input_flow is not None:
-            if self.input_flow.get() == 1:
-                self.jobs.append(tick)
-        # Update the number of jobs based on the number of processed jobs
-        if len(self.jobs) > 0:
-            if self.processing.get() == 1:
-                # self.processed = 0
-                job = self.jobs.popleft()
-                self.stats_done_jobs += 1
-                # Determine where the job goes
-                if len(self.probabilities) > 0:
-                    # The job goes to the next server
-                    next_server: Optional[Server] = None
-                    random_number = uniform(0.0, 1.0)
-                    for index, probability in enumerate(self.probabilities):
-                        if probability >= random_number:
-                            next_server = self.connections[index]
-                            break
-                    if next_server is None:
-                        raise ValueError('Could not determine a server to pass the job to!')
-                    next_server.jobs.append(job)
-                else:
-                    # The job goes out of the system
-                    stats_response_time.append(tick - job)
-        self.stats_num_jobs.append(len(self.jobs))
-        self.stats_has_jobs.append(1 if len(self.jobs) > 0 else 0)
+    def add_job(self, job: float, ctime: float, events: PriorityQueue[Event]):
+        if len(self.jobs) == 0:
+            events.put(Event(ctime + self.processing.next_event(), EventType.PROCESSING, self))
+        dt = ctime - self.last_job_update
+        self.last_job_update = ctime
+        self.stats_num_jobs += len(self.jobs) * dt
+        self.stats_has_jobs += (1.0 if len(self.jobs) > 0 else 0.0) * dt
+        self.jobs.append(job)
 
-    def update_stats(self):
-        self.stats_num_jobs_total.append(sum(self.stats_num_jobs))
-        self.stats_num_jobs = []
-        self.stats_has_jobs_total.append(sum(self.stats_has_jobs))
-        self.stats_has_jobs = []
-        self.stats_done_jobs_total.append(self.stats_done_jobs)
-        self.stats_done_jobs = 0
+    def done_job(self, ctime: float, events: PriorityQueue[Event], stats_response_time: List[float]):
+        dt = ctime - self.last_job_update
+        self.last_job_update = ctime
+        self.stats_num_jobs += len(self.jobs) * dt
+        self.stats_has_jobs += (1.0 if len(self.jobs) > 0 else 0.0) * dt
+        job = self.jobs.popleft()
+        self.stats_done_jobs += 1
+        next_server: Optional[Server] = None
+        # Determine where the job goes
+        if len(self.probabilities) > 0:
+            # The job goes to the next server
+            random_number = uniform(0.0, 1.0)
+            for index, probability in enumerate(self.probabilities):
+                if probability >= random_number:
+                    next_server = self.connections[index]
+                    break
+            if next_server is None:
+                raise ValueError('Could not determine a server to pass the job to!')
+            next_server.add_job(job, ctime, events)
+        else:
+            # The job goes out of the system
+            stats_response_time.append(ctime - job)
+        if len(self.jobs) > 0 and not (next_server == self and len(self.jobs) == 1):
+            events.put(Event(ctime + self.processing.next_event(), EventType.PROCESSING, self))
 
-    def get_stats(self):
-        J = sum(self.stats_num_jobs_total) / len(self.stats_num_jobs_total)
-        U = sum(self.stats_has_jobs_total) / len(self.stats_has_jobs_total)
-        X = sum(self.stats_done_jobs_total) / len(self.stats_done_jobs_total)
+    def get_stats(self, ctime: float):
+        J = self.stats_num_jobs / ctime
+        U = self.stats_has_jobs / ctime
+        X = self.stats_done_jobs / ctime
         return J, U, X
-
-def sec_to_ticks(seconds: float) -> int:
-    return int(seconds * SEC_TO_TICKS)
 
 def simulation(K: int, r: float, time: int) -> SimulationResult:
     amax = find_amax(find_flows(K))[0]
     alpha = r * amax
-    input_flow = sec_to_ticks(1 / alpha)
-    p = Server(sec_to_ticks(Sp), input_flow)
-    d1 = Server(sec_to_ticks(Sd1))
-    d2 = Server(sec_to_ticks(Sd2))
-    d3 = Server(sec_to_ticks(Sd3))
-    dks = [Server(sec_to_ticks(Sdk)) for _ in range(K)]
+    # Create all servers.
+    p = Server(Sp)
+    d1 = Server(Sd1)
+    d2 = Server(Sd2)
+    d3 = Server(Sd3)
+    dks = [Server(Sdk) for _ in range(K)]
+    # Connect the servers.
     p.connect(d1, 0.15)
     p.connect(d2, 0.1)
     p.connect(d3, 0.05)
@@ -119,23 +118,31 @@ def simulation(K: int, r: float, time: int) -> SimulationResult:
         d1.connect(dk, dk_probability)
         d2.connect(dk, dk_probability)
         d3.connect(dk, dk_probability)
-    servers = [p, d1, d2, d3, *dks]
-    stats_response_time = []
-    for tick in range(time):
-        for server in servers:
-            server.update(tick, stats_response_time)
-        if tick % SEC_TO_TICKS == SEC_TO_TICKS - 1:
-            for server in servers:
-                server.update_stats()
+    # Start event-based simulation.
+    stats_response_time: List[float] = []
+    events: PriorityQueue[Event] = PriorityQueue()
+    input_flow = PoissonProcess(1 / alpha)
+    events.put(Event(input_flow.next_event(), EventType.INPUT_FLOW, None))
+    ctime = 0.0
+    while ctime < time and not events.empty():
+        event = events.get()
+        ctime = event.time
+        if event.type == EventType.INPUT_FLOW:
+            p.add_job(ctime, ctime, events)
+            events.put(Event(ctime + input_flow.next_event(), EventType.INPUT_FLOW, None))
+        else:
+            event.server.done_job(ctime, events, stats_response_time)
+    # Collect simulation results.
     Js = []
     Us = []
     Xs = []
+    servers = [p, d1, d2, d3, *dks]
     for server in servers:
-        J, U, X = server.get_stats()
-        Js.append(J / SEC_TO_TICKS)
-        Us.append(U / SEC_TO_TICKS)
+        J, U, X = server.get_stats(ctime)
+        Js.append(J)
+        Us.append(U)
         Xs.append(X)
-    T = sum(stats_response_time) / len(stats_response_time) / SEC_TO_TICKS
+    T = sum(stats_response_time) / len(stats_response_time)
     return K, r, Us, Xs, Js, T
 
 def average_results(results: List[SimulationResult]) -> List[SimulationResult]:
@@ -155,12 +162,11 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--time', type=int, default=30 * 60, help='simulation time in seconds (default: 30m)')
     parser.add_argument('-it', '--iterations', type=int, default=1, help='number of simulation iterations (default: 1)')
     args = parser.parse_args()
-    simulation_time_ticks = sec_to_ticks(args.time)
     results = []
     with Pool(processes=cpu_count()) as pool, tqdm(total=len(K_range) * len(r_range) * args.iterations) as bar:
         jobs = []
         for K, r, _ in product(K_range, r_range, range(args.iterations)):
-            jobs.append(pool.apply_async(simulation, (K, r, simulation_time_ticks), callback=lambda res: bar.update()))
+            jobs.append(pool.apply_async(simulation, (K, r, args.time), callback=lambda res: bar.update()))
         for job in jobs:
             results.append(job.get())
     avg_results = average_results(results)
