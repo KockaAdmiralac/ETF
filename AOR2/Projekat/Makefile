@@ -12,7 +12,7 @@ LD = g++
 FLAGS_CC =
 FLAGS_CC += -Wall -Wextra
 FLAGS_CC += -MMD -MP
-FLAGS_CC += -march=native
+FLAGS_CC += -march=native -fopenmp
 FLAGS_CC += -std=c++17
 FLAGS_CC += -Iinc -isystemlib
 ifeq ($(NO_DEBUG), 1)
@@ -23,10 +23,13 @@ ifeq ($(OPTIMIZED_PROCESSOR), 1)
 FLAGS_CC += -DOPTIMIZED_PROCESSOR
 endif
 
+FLAGS_LD =
+FLAGS_LD += -fopenmp
+
 all: $(BUILD_DIR)/$(PROGRAM)
 
 $(BUILD_DIR)/$(PROGRAM): $(OBJECT_FILES)
-	$(LD) -o $(@) $(OBJECT_FILES)
+	$(LD) $(FLAGS_LD) -o $(@) $(OBJECT_FILES)
 
 $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
 	$(CC) $(FLAGS_CC) -o $(@) $(<)

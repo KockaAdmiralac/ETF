@@ -4,7 +4,10 @@
 #include <immintrin.h>
 #include <processors/optimized.hpp>
 #include <stdexcept>
-#include <vectorclass/vectormath_exp.h>
+#pragma GCC push_options
+#pragma GCC optimize 2
+#include <avx_mathfun/avx_mathfun.h>
+#pragma GCC pop_options
 
 OptimizedProcessor::OptimizedProcessor() {
     // Intel:
@@ -109,14 +112,13 @@ void OptimizedProcessor::invdiv(Image& image, const float value) const {
     }
 }
 
-// Optimization GOD
 void OptimizedProcessor::pow(Image& image, const float value) const {
-    // __m256 powVector = _mm256_set_ps(value, value, value, value, value, value, value, value);
+    __m256 powVector = _mm256_set_ps(value, value, value, value, value, value, value, value);
     float* data = image.data.data();
     size_t dataSizeRoundedDown = (image.data.size() / 8) * 8;
     for (size_t i = 0; i < dataSizeRoundedDown; i += 8) {
         __m256 dataVector = _mm256_load_ps(data + i);
-        __m256 powerVector = ::pow(dataVector, value);
+        __m256 powerVector = exp256_ps(_mm256_mul_ps(powVector, log256_ps(dataVector)));
         _mm256_store_ps(data + i, powerVector);
     }
     for (size_t i = dataSizeRoundedDown; i < image.data.size(); ++i) {
@@ -130,8 +132,8 @@ void OptimizedProcessor::log(Image& image, const float value) const {
     size_t dataSizeRoundedDown = (image.data.size() / 8) * 8;
     for (size_t i = 0; i < dataSizeRoundedDown; i += 8) {
         __m256 dataVector = _mm256_load_ps(data + i);
-        __m256 naturalLogarithmVector = ::log(dataVector);
-        __m256 logarithmBaseVector = ::log(logVector);
+        __m256 naturalLogarithmVector = log256_ps(dataVector);
+        __m256 logarithmBaseVector = log256_ps(logVector);
         __m256 logarithmVector = _mm256_div_ps(naturalLogarithmVector, logarithmBaseVector);
         _mm256_store_ps(data + i, logarithmVector);
     }
@@ -236,24 +238,32 @@ void OptimizedProcessor::filter(Image& image, const uint32_t width, const uint32
     const uint32_t heightHalf = height / 2;
     const uint32_t widthMinusOneHalf = (width - 1) / 2;
     const uint32_t heightMinusOneHalf = (height - 1) / 2;
-    for (uint32_t y = heightHalf; y < image.height - heightMinusOneHalf; ++y) {
-        for (uint32_t x = widthHalf; x < image.width - widthMinusOneHalf; ++x) {
-            float valueR = 0.0f;
-            float valueG = 0.0f;
-            float valueB = 0.0f;
-            for (uint32_t filterY = 0; filterY < height; ++filterY) {
-                for (uint32_t filterX = 0; filterX < width; ++filterX) {
-                    uint32_t coeffY = y - heightHalf + filterY;
-                    uint32_t coeffX = x - widthHalf + filterX;
-                    float coeff = value[filterY * width + filterX];
-                    valueR += image.data[coeffY * image.width * 3 + coeffX * 3 + 0] * coeff;
-                    valueG += image.data[coeffY * image.width * 3 + coeffX * 3 + 1] * coeff;
-                    valueB += image.data[coeffY * image.width * 3 + coeffX * 3 + 2] * coeff;
+    const uint32_t strideX = cacheInfo.lineSize / sizeof(float);
+    const float cacheUsageCoeff = 1;
+    const uint32_t strideY = cacheInfo.totalSize() * cacheUsageCoeff / cacheInfo.lineSize / 4;
+    #pragma omp parallel for default(none) shared(image, newPixels, widthHalf, heightHalf, widthMinusOneHalf, heightMinusOneHalf, strideX, strideY, width, height, value)
+    for (uint32_t yBlock = heightHalf; yBlock < image.height - heightMinusOneHalf; yBlock += strideY) {
+        for (uint32_t xBlock = widthHalf; xBlock < image.width - widthMinusOneHalf; xBlock += strideX) {
+            for (uint32_t y = yBlock; y < yBlock + strideY && y < image.height - heightMinusOneHalf; ++y) {
+                for (uint32_t x = xBlock; x < xBlock + strideX && x < image.width - widthMinusOneHalf; ++x) {
+                    float valueR = 0.0f;
+                    float valueG = 0.0f;
+                    float valueB = 0.0f;
+                    for (uint32_t filterY = 0; filterY < height; ++filterY) {
+                        for (uint32_t filterX = 0; filterX < width; ++filterX) {
+                            uint32_t coeffY = y - heightHalf + filterY;
+                            uint32_t coeffX = x - widthHalf + filterX;
+                            float coeff = value[filterY * width + filterX];
+                            valueR += image.data[coeffY * image.width * 3 + coeffX * 3 + 0] * coeff;
+                            valueG += image.data[coeffY * image.width * 3 + coeffX * 3 + 1] * coeff;
+                            valueB += image.data[coeffY * image.width * 3 + coeffX * 3 + 2] * coeff;
+                        }
+                    }
+                    newPixels[y * image.width * 3 + x * 3 + 0] = valueR;
+                    newPixels[y * image.width * 3 + x * 3 + 1] = valueG;
+                    newPixels[y * image.width * 3 + x * 3 + 2] = valueB;
                 }
             }
-            newPixels[y * image.width * 3 + x * 3 + 0] = valueR;
-            newPixels[y * image.width * 3 + x * 3 + 1] = valueG;
-            newPixels[y * image.width * 3 + x * 3 + 2] = valueB;
         }
     }
     memcpy(image.data.data(), newPixels.data(), newPixels.size() * sizeof(float));

@@ -16,3 +16,6 @@
 [submodule "AOR2/Projekat/lib/vectorclass"]
 	path = AOR2/Projekat/lib/vectorclass
 	url = https://github.com/vectorclass/version2.git
+[submodule "AOR2/Projekat/lib/avx_mathfun"]
+	path = AOR2/Projekat/lib/avx_mathfun
+	url = https://github.com/reyoung/avx_mathfun.git
