@@ -5,6 +5,7 @@
 __pycache__
 a.out
 node_modules
+.ipynb_checkpoints
 
 ## Quartus
 # Quartus generated files
